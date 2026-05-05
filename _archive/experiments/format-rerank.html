@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoney War — 게임 포맷 평가 리포트</title>
+<style>
+:root{--bg:#0f0f13;--s:#1a1a24;--s2:#22222f;--b:#2e2e3e;--t:#e8e8f0;--d:#8888a8;--g:#ffd700;--a:#7c6af5;--j:#4ade80;--o:#ef6c6c;--oh:#ff9f43;--ohb:rgba(255,159,67,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:-apple-system,'Noto Sans KR',sans-serif;line-height:1.6}
+header{background:linear-gradient(135deg,#1a0a2e,#0a1a2e);border-bottom:1px solid var(--b);padding:2rem 1.5rem 1.5rem;text-align:center}
+h1{font-size:2rem;font-weight:800;background:linear-gradient(90deg,var(--o),var(--a),var(--j));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.sub{color:var(--d);font-size:.9rem}
+.cr{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem}
+.pill{padding:.4rem .9rem;border-radius:99px;font-size:.78rem;font-weight:600;border:1px solid}
+.pe{background:rgba(124,106,245,.15);border-color:var(--a);color:var(--a)}
+.pv{background:rgba(74,222,128,.12);border-color:var(--j);color:var(--j)}
+.pc{background:rgba(255,159,67,.15);border-color:var(--oh);color:var(--oh);font-size:.85rem}
+main{max-width:920px;margin:0 auto;padding:2rem 1rem 4rem}
+.st{font-size:1.25rem;font-weight:700;margin:2.5rem 0 1.2rem;padding-left:.75rem;border-left:4px solid var(--a)}
+.st.cs{border-color:var(--oh)}
+.st.rs{border-color:var(--g)}
+.top5{display:flex;flex-direction:column;gap:1.25rem}
+.card{background:var(--s);border:1px solid var(--b);border-radius:16px;padding:1.5rem;position:relative}
+.card.r1{border-color:var(--g);box-shadow:0 0 24px rgba(255,215,0,.08)}
+.crk{position:absolute;top:1.25rem;right:1.25rem;font-size:2rem;font-weight:900;color:var(--b)}
+.r1 .crk{color:var(--g);opacity:.5}
+.ch{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem}
+.cn{font-size:1.15rem;font-weight:700}
+.cd{font-size:.83rem;color:var(--d);margin-top:.15rem}
+.wb{display:inline-flex;background:var(--a);color:#fff;font-size:.85rem;font-weight:700;padding:.3rem .7rem;border-radius:8px;white-space:nowrap;flex-shrink:0}
+.r1 .wb{background:var(--g);color:#000}
+.sr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.sb{background:var(--s2);border-radius:10px;padding:.75rem .6rem;text-align:center}
+.sl{font-size:.7rem;color:var(--d);margin-bottom:.3rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.ss{font-size:.9rem;letter-spacing:1px}
+.sw{font-size:.7rem;color:var(--d);margin-top:.2rem}
+.sb.co{background:var(--ohb);border:1px solid rgba(255,159,67,.3)}
+.sb.co .sl{color:var(--oh)}
+.rs{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.rr{display:flex;gap:.6rem;align-items:flex-start;font-size:.83rem}
+.rt{flex-shrink:0;font-size:.68rem;font-weight:700;padding:.2rem .5rem;border-radius:5px;margin-top:.1rem}
+.te{background:rgba(124,106,245,.2);color:var(--a)}
+.tv{background:rgba(74,222,128,.15);color:var(--j)}
+.tc{background:rgba(255,159,67,.18);color:var(--oh)}
+.sc{background:var(--s2);border-left:3px solid var(--a);border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.82rem;color:var(--d);font-style:italic}
+.sc::before{content:"공유 예시  ";font-style:normal;font-size:.7rem;font-weight:700;color:var(--a);letter-spacing:.5px}
+.c5g{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.c5g{grid-template-columns:1fr}}
+.c5c{background:var(--ohb);border:1px solid rgba(255,159,67,.3);border-radius:12px;padding:1.1rem}
+.c5n{font-size:1rem;font-weight:700;margin-bottom:.3rem}
+.c5b{display:inline-block;background:var(--oh);color:#000;font-size:.7rem;font-weight:800;padding:.15rem .5rem;border-radius:5px;margin-bottom:.6rem;letter-spacing:.5px}
+.c5t{font-size:.82rem;color:var(--d);line-height:1.5}
+.c5s{margin-top:.75rem;font-size:.78rem;color:var(--oh);font-style:italic;opacity:.85}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:.5rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:600px}
+th{background:var(--s2);padding:.7rem .75rem;text-align:left;font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--d);border-bottom:1px solid var(--b);white-space:nowrap}
+td{padding:.65rem .75rem;border-bottom:1px solid rgba(46,46,62,.6);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.rn{color:var(--d);font-weight:700;width:30px}
+.gn{font-weight:600}
+.sn{text-align:center;font-weight:600}
+.score-concept{color:var(--oh);font-weight:700}
+.mb{background:var(--oh);color:#000;font-size:.65rem;font-weight:800;padding:.1rem .4rem;border-radius:4px;margin-left:4px}
+.wn{font-weight:800}
+.wn.top{color:var(--g)}
+.sm{color:var(--d);font-size:.75rem;font-style:italic;max-width:240px}
+.rc{display:flex;flex-direction:column;gap:1.25rem}
+.rcard{background:linear-gradient(135deg,rgba(255,215,0,.04),rgba(124,106,245,.04));border:1.5px solid var(--g);border-radius:16px;padding:1.5rem}
+.rh{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem}
+.ri{font-size:1.5rem}
+.rnam{font-size:1.1rem;font-weight:800;color:var(--g)}
+.rsc{font-size:.8rem;color:var(--d)}
+.rb{font-size:.86rem;color:var(--d);line-height:1.7}
+.rb strong{color:var(--t)}
+.rtag{display:inline-block;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);color:var(--g);font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:6px;margin:.75rem 0 0}
+footer{text-align:center;padding:2rem 1rem;color:var(--d);font-size:.78rem;border-top:1px solid var(--b)}
+footer span{display:block;margin-top:.25rem;opacity:.5}
+</style>
+</head>
+<body>
+<header>
+<h1>🍎 Phoney War 🌿</h1>
+<p class="sub">게임 포맷 평가 리포트 — 20개 후보 3기준 재평가</p>
+<div class="cr">
+<span class="pill pe">간편한 진입 25%</span>
+<span class="pill pv">바이럴 25%</span>
+<span class="pill pc">★ 아이폰 vs 갤럭시 컨셉 반영 50% (최중요)</span>
+</div>
+</header>
+<main>
+
+<div class="st">Top 5 상세 분석</div>
+<div class="top5">
+
+<!-- 1위: 배터리 소모전 -->
+<div class="card r1">
+<div class="crk">1</div>
+<div class="ch"><div><div class="cn">🔋 배터리 소모전</div><div class="cd">상대 배터리를 먼저 0%로 만들기</div></div><div class="wb">4.50 / 5.00</div></div>
+<div class="sr">
+<div class="sb"><div class="sl">간편한 진입</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb"><div class="sl">바이럴</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb co"><div class="sl">컨셉 반영 🔥</div><div class="ss">★★★★★</div><div class="sw">50%</div></div>
+</div>
+<div class="rs">
+<div class="rr"><span class="rt te">진입</span><span>배터리 게이지 UI는 누구나 즉시 이해. 별도 설명 불필요</span></div>
+<div class="rr"><span class="rt tv">바이럴</span><span>"갤럭시 배터리 1%" 밈과 직결. 결과 스크린샷이 실제 배터리 상태처럼 보여 공유 욕구 자극</span></div>
+<div class="rr"><span class="rt tc">컨셉</span><span>배터리 수명 최적화(🍎) vs 대용량 배터리(🌿) 문화 충돌이 메커니즘 자체. 설명 없이 "아 맞아 아이폰 배터리" 즉시 느껴짐</span></div>
+</div>
+<div class="sc">🍎 우리 팀 배터리 87% 남았는데 🌿 팀은 3%... Phoney War에서 이겨버렸다</div>
+</div>
+
+<!-- 2위: OS 업데이트 푸시전 -->
+<div class="card">
+<div class="crk">2</div>
+<div class="ch"><div><div class="cn">📲 OS 업데이트 푸시전</div><div class="cd">업데이트 알림 폭탄 투하로 상대 제압</div></div><div class="wb">4.25 / 5.00</div></div>
+<div class="sr">
+<div class="sb"><div class="sl">간편한 진입</div><div class="ss">★★★☆☆</div><div class="sw">25%</div></div>
+<div class="sb"><div class="sl">바이럴</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb co"><div class="sl">컨셉 반영 🔥</div><div class="ss">★★★★★</div><div class="sw">50%</div></div>
+</div>
+<div class="rs">
+<div class="rr"><span class="rt te">진입</span><span>업데이트 알림 개념은 쉽지만 '폭탄 투하' 메커니즘은 한 줄 설명 필요</span></div>
+<div class="rr"><span class="rt tv">바이럴</span><span>"iOS 강제 업데이트" vs "Android 업데이트 안 함" 밈 그대로. 공유 시 폭발적 공감</span></div>
+<div class="rr"><span class="rt tc">컨셉</span><span>iOS 강제 업데이트 정책 / Android 파편화된 업데이트 현실이 게임 규칙 자체로 구현. 설명 없이 즉시 공감</span></div>
+</div>
+<div class="sc">🍎 팀이 업데이트 폭탄 5개 맞았다... 역시 강제 업데이트의 맛 💀 #PhoneyWar</div>
+</div>
+
+<!-- 3위: 충전 레이스 -->
+<div class="card">
+<div class="crk">3</div>
+<div class="ch"><div><div class="cn">⚡ 충전 레이스</div><div class="cd">먼저 100% 충전 달성</div></div><div class="wb">4.25 / 5.00</div></div>
+<div class="sr">
+<div class="sb"><div class="sl">간편한 진입</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb"><div class="sl">바이럴</div><div class="ss">★★★☆☆</div><div class="sw">25%</div></div>
+<div class="sb co"><div class="sl">컨셉 반영 🔥</div><div class="ss">★★★★★</div><div class="sw">50%</div></div>
+</div>
+<div class="rs">
+<div class="rr"><span class="rt te">진입</span><span>충전 바 채우기는 직관적. 즉시 이해 가능</span></div>
+<div class="rr"><span class="rt tv">바이럴</span><span>충전 완료 스크린샷 공유 가능하나 극적 순간이 부족해 바이럴 폭발력은 중간</span></div>
+<div class="rr"><span class="rt tc">컨셉</span><span>MagSafe(느리지만 무선) vs 초고속유선충전 논쟁이 실제 유저 밈. 충전 속도 차이 자체가 진영 비대칭 메커니즘</span></div>
+</div>
+<div class="sc">🌿 우리 팀 초고속 충전으로 먼저 100% 🍎는 아직 67%... MagSafe의 한계 #PhoneyWar</div>
+</div>
+
+<!-- 4위: 앱스토어 점령전 -->
+<div class="card">
+<div class="crk">4</div>
+<div class="ch"><div><div class="cn">📦 앱스토어 점령전</div><div class="cd">앱 출시→다운로드 경쟁으로 차트 점령</div></div><div class="wb">4.25 / 5.00</div></div>
+<div class="sr">
+<div class="sb"><div class="sl">간편한 진입</div><div class="ss">★★★☆☆</div><div class="sw">25%</div></div>
+<div class="sb"><div class="sl">바이럴</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb co"><div class="sl">컨셉 반영 🔥</div><div class="ss">★★★★★</div><div class="sw">50%</div></div>
+</div>
+<div class="rs">
+<div class="rr"><span class="rt te">진입</span><span>앱 출시 개념은 익숙하나 게임 내 루프 이해에 한 단계 필요</span></div>
+<div class="rr"><span class="rt tv">바이럴</span><span>"우리 앱이 차트 1위" 스크린샷이 실제 앱스토어처럼 보여 강한 공유 욕구 유발</span></div>
+<div class="rr"><span class="rt tc">컨셉</span><span>App Store 심사 대기(엄격한 🍎) vs Play Store 즉시 출시(자유로운 🌿) 문화가 게임 규칙 자체</span></div>
+</div>
+<div class="sc">🍎 심사 통과까지 3일... 🌿는 즉시 출시 ㅋㅋ 역시 Play Store #PhoneyWar</div>
+</div>
+
+<!-- 5위: 벤치마크 미니게임 -->
+<div class="card">
+<div class="crk">5</div>
+<div class="ch"><div><div class="cn">🏅 벤치마크 미니게임</div><div class="cd">반응속도/탭속도 올림픽 — 진영 집단 성능 대결</div></div><div class="wb">4.25 / 5.00</div></div>
+<div class="sr">
+<div class="sb"><div class="sl">간편한 진입</div><div class="ss">★★★★★</div><div class="sw">25%</div></div>
+<div class="sb"><div class="sl">바이럴</div><div class="ss">★★★★☆</div><div class="sw">25%</div></div>
+<div class="sb co"><div class="sl">컨셉 반영 🔥</div><div class="ss">★★★★☆</div><div class="sw">50%</div></div>
+</div>
+<div class="rs">
+<div class="rr"><span class="rt te">진입</span><span>반응속도 게임은 설명 제로. 즉시 시작 가능. 진입 장벽 최저</span></div>
+<div class="rr"><span class="rt tv">바이럴</span><span>개인 기록 공유 욕구 강함. "내 반응속도 198ms" + 진영 평균 비교로 자동 공유 유도</span></div>
+<div class="rr"><span class="rt tc">컨셉</span><span>Geekbench / AnTuTu 벤치마크 점수 전쟁이 밈. 맥락 한 줄 추가 시 ★★★★★급으로 상승 가능</span></div>
+</div>
+<div class="sc">🍎 A17 Pro 집단 반응속도 평균 198ms 🌿 Snapdragon 팀 231ms... 칩셋 전쟁 끝 #PhoneyWar</div>
+</div>
+
+</div><!-- /top5 -->
+
+<div class="st cs">컨셉 반영 ★★★★★ 포맷 (3번 기준 만점 획득)</div>
+<div class="c5g">
+<div class="c5c"><div class="c5n">🔋 배터리 소모전</div><span class="c5b">컨셉 ★★★★★</span><div class="c5t">iOS 배터리 최적화(소프트웨어 효율) vs Android 대용량(하드웨어 브루트포스) 철학 충돌. 설명 없이 "아 이거 딱 아이폰/갤럭시 특성이네" 즉시 느껴짐.</div><div class="c5s">🍎 배터리 최적화로 끝까지 살아남았다 vs 🌿 5,000mAh였는데 먼저 죽었다</div></div>
+<div class="c5c"><div class="c5n">📲 OS 업데이트 푸시전</div><span class="c5b">컨셉 ★★★★★</span><div class="c5t">iOS 강제 업데이트(Orchard 팀이 강력한 알림 폭탄 보유) vs Android 업데이트 파편화(Jungle 팀은 업데이트 거부 가능). 현실 그대로가 게임 규칙.</div><div class="c5s">iOS 업데이트 강제 폭탄 맞고 배터리 반 날아감 ㅋㅋ #PhoneyWar</div></div>
+<div class="c5c"><div class="c5n">⚡ 충전 레이스</div><span class="c5b">컨셉 ★★★★★</span><div class="c5t">MagSafe 무선충전(느리지만 편리) vs 65W+ 고속유선충전(빠르지만 선 필요). 충전 속도를 둘러싼 수년간의 진영 논쟁이 게임 메커니즘 자체.</div><div class="c5s">갤럭시 65W 충전 먼저 100% 달성! MagSafe는 아직 57% ㅋㅋ #PhoneyWar</div></div>
+<div class="c5c"><div class="c5n">📦 앱스토어 점령전</div><span class="c5b">컨셉 ★★★★★</span><div class="c5t">App Store 엄격한 심사(강력하지만 느린 출시) vs Play Store 자유로운 출시(빠르지만 관리 부담). 개발자 생태계 철학 차이 그대로.</div><div class="c5s">심사 통과 3일 vs 즉시 출시... 생태계 전쟁 중 #PhoneyWar</div></div>
+</div>
+
+<div class="st">전체 20개 포맷 점수표</div>
+<div class="tw">
+<table>
+<thead><tr>
+<th>순위</th><th>포맷</th>
+<th style="text-align:center">간편한 진입<br><small>(25%)</small></th>
+<th style="text-align:center">바이럴<br><small>(25%)</small></th>
+<th style="text-align:center;color:#ff9f43">컨셉 반영<br><small>(50%)</small></th>
+<th style="text-align:center">가중합산</th>
+<th>공유 카드 예시</th>
+</tr></thead>
+<tbody><tr><td class="rn">1</td><td class="gn">배터리 소모전</td><td class="sn">★★★★☆</td><td class="sn">★★★★☆</td><td class="sn score-concept">★★★★★ <span class="mb">MAX</span></td><td class="sn wn top">4.5</td><td class="sm">🍎 우리 팀 배터리 87% 남았는데 🌿 팀은 3%... Phoney War에서 이겨버렸다</td></tr>
+<tr><td class="rn">2</td><td class="gn">OS 업데이트 푸시전</td><td class="sn">★★★☆☆</td><td class="sn">★★★★☆</td><td class="sn score-concept">★★★★★ <span class="mb">MAX</span></td><td class="sn wn top">4.25</td><td class="sm">🍎 팀이 업데이트 폭탄 5개 맞았다... 역시 강제 업데이트의 맛 💀 #PhoneyWar</td></tr>
+<tr><td class="rn">3</td><td class="gn">충전 레이스</td><td class="sn">★★★★☆</td><td class="sn">★★★☆☆</td><td class="sn score-concept">★★★★★ <span class="mb">MAX</span></td><td class="sn wn top">4.25</td><td class="sm">🌿 우리 팀 초고속 충전으로 먼저 100% 🍎는 아직 67%... MagSafe의 한계 #PhoneyWar</td></tr>
+<tr><td class="rn">4</td><td class="gn">앱스토어 점령전</td><td class="sn">★★★☆☆</td><td class="sn">★★★★☆</td><td class="sn score-concept">★★★★★ <span class="mb">MAX</span></td><td class="sn wn top">4.25</td><td class="sm">🍎 심사 통과까지 3일... 🌿는 즉시 출시 ㅋㅋ 역시 Play Store #PhoneyWar</td></tr>
+<tr><td class="rn">5</td><td class="gn">벤치마크 미니게임</td><td class="sn">★★★★★</td><td class="sn">★★★★☆</td><td class="sn">★★★★☆</td><td class="sn wn top">4.25</td><td class="sm">🍎 A17 Pro 집단 반응속도 평균 198ms 🌿 Snapdragon 팀 231ms... 칩셋 전쟁 끝 #PhoneyWar</td></tr>
+<tr><td class="rn">6</td><td class="gn">앱 런칭 속도 레이스</td><td class="sn">★★★★★</td><td class="sn">★★★☆☆</td><td class="sn">★★★★☆</td><td class="sn wn">4.0</td><td class="sm">🍎 팀 앱 런칭 평균 0.8초 🌿 팀 1.4초... 최적화의 승리 #PhoneyWar</td></tr>
+<tr><td class="rn">7</td><td class="gn">밈 생성 대결</td><td class="sn">★★☆☆☆</td><td class="sn">★★★★★</td><td class="sn">★★★★☆</td><td class="sn wn">3.75</td><td class="sm">우리 🍎 팀 밈이 좋아요 2,847개 달성 ㅋㅋㅋ 🌿 팀아 미안 #PhoneyWar</td></tr>
+<tr><td class="rn">8</td><td class="gn">픽셀 점령전</td><td class="sn">★★★★☆</td><td class="sn">★★★★★</td><td class="sn">★★★☆☆</td><td class="sn wn">3.75</td><td class="sm">우리 🍎 팀이 맵 중앙에 🍎 아이콘 새겼다 ㅋㅋ 🌿팀 막지 못함 #PhoneyWar</td></tr>
+<tr><td class="rn">9</td><td class="gn">집단 투표 전쟁</td><td class="sn">★★★★★</td><td class="sn">★★★★☆</td><td class="sn">★★★☆☆</td><td class="sn wn">3.75</td><td class="sm">"아이폰이 더 낫다" 투표 🍎 78% 압승 ㅋㅋ 🌿팀 항복해라 #PhoneyWar</td></tr>
+<tr><td class="rn">10</td><td class="gn">바이러스 전파전</td><td class="sn">★★★☆☆</td><td class="sn">★★★☆☆</td><td class="sn">★★★★☆</td><td class="sn wn">3.5</td><td class="sm">🍎 생태계 장벽으로 바이러스 100% 차단 🌿는 감염 진행 중... #PhoneyWar</td></tr>
+<tr><td class="rn">11</td><td class="gn">집단 퀴즈 배틀</td><td class="sn">★★★★☆</td><td class="sn">★★★☆☆</td><td class="sn">★★★☆☆</td><td class="sn wn">3.25</td><td class="sm">🍎 팀 폰 지식 퀴즈 94점! 🌿팀은 78점... 역시 아이폰 유저 #PhoneyWar</td></tr>
+<tr><td class="rn">12</td><td class="gn">진영 탭 전쟁</td><td class="sn">★★★★★</td><td class="sn">★★☆☆☆</td><td class="sn">★★☆☆☆</td><td class="sn wn">2.75</td><td class="sm">🍎 12,847탭 vs 🌿 11,203탭 — 우리가 이겼다! #PhoneyWar</td></tr>
+<tr><td class="rn">13</td><td class="gn">소셜 팔로워 전쟁</td><td class="sn">★★★☆☆</td><td class="sn">★★★★☆</td><td class="sn">★★☆☆☆</td><td class="sn wn">2.75</td><td class="sm">🍎 팀 팔로워 50,000 돌파! 🌿는 아직 30,000 #PhoneyWar</td></tr>
+<tr><td class="rn">14</td><td class="gn">신호 강도 전쟁</td><td class="sn">★★★☆☆</td><td class="sn">★★☆☆☆</td><td class="sn">★★★☆☆</td><td class="sn wn">2.75</td><td class="sm">🍎 팀 전국 커버리지 78% 달성! 🌿는 62% #PhoneyWar</td></tr>
+<tr><td class="rn">15</td><td class="gn">Agar.io 진영전</td><td class="sn">★★★★☆</td><td class="sn">★★★☆☆</td><td class="sn">★★☆☆☆</td><td class="sn wn">2.75</td><td class="sm">🍎 세포가 🌿 세포 500개 흡수! Agar.io 완전 지배 #PhoneyWar</td></tr>
+<tr><td class="rn">16</td><td class="gn">자원 경매전</td><td class="sn">★★☆☆☆</td><td class="sn">★★★☆☆</td><td class="sn">★★★☆☆</td><td class="sn wn">2.75</td><td class="sm">🍎 팀 희귀 자원 경매 낙찰 5억! 🌿팀 파산 직전 #PhoneyWar</td></tr>
+<tr><td class="rn">17</td><td class="gn">카드 러시</td><td class="sn">★★☆☆☆</td><td class="sn">★★★☆☆</td><td class="sn">★★☆☆☆</td><td class="sn wn">2.25</td><td class="sm">🍎 AirDrop 카드로 역전 승리! 🌿 팀 Custom ROM 덱 박살 #PhoneyWar</td></tr>
+<tr><td class="rn">18</td><td class="gn">협동 퍼즐 방해전</td><td class="sn">★★★☆☆</td><td class="sn">★★☆☆☆</td><td class="sn">★★☆☆☆</td><td class="sn wn">2.25</td><td class="sm">🍎 팀 퍼즐 완성 방해 50회 성공! 🌿팀 퍼즐 영원히 못 맞춤 #PhoneyWar</td></tr>
+<tr><td class="rn">19</td><td class="gn">집단 핀볼</td><td class="sn">★★★★☆</td><td class="sn">★★☆☆☆</td><td class="sn">★☆☆☆☆</td><td class="sn wn">2.0</td><td class="sm">🍎 팀 핀볼 최고점 15,230! 🌿팀을 이겼다 #PhoneyWar</td></tr>
+<tr><td class="rn">20</td><td class="gn">Snake 집단전</td><td class="sn">★★★★☆</td><td class="sn">★★☆☆☆</td><td class="sn">★☆☆☆☆</td><td class="sn wn">2.0</td><td class="sm">🍎 팀 Snake 최장 길이 247! 🌿팀 추월 #PhoneyWar</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="st rs">최종 추천</div>
+<div class="rc">
+<div class="rcard">
+<div class="rh"><div class="ri">🥇</div><div><div class="rnam">1순위: 배터리 소모전</div><div class="rsc">가중합산 4.50 / 5.00 — 전체 1위</div></div></div>
+<div class="rb">
+<strong>왜 최우선 추천인가:</strong><br>
+"배터리 = 체력"이라는 UI가 세계 어느 스마트폰 유저에게도 0.5초 만에 이해된다.
+Orchard 팀은 소프트웨어 최적화로 배터리를 아끼고, Jungle 팀은 대용량으로 밀어붙이는 전략 비대칭이 설명 없이 느껴진다.
+실제 "아이폰 배터리 1% 챌린지" 밈 문화와 직결되어 스크린샷이 실제 폰 배터리처럼 보여 공유 욕구가 자연 발생한다.<br><br>
+<strong>Phoney War 적합성:</strong> 진영 배정(iOS → Orchard 절약형, Android → Jungle 용량형) 후 배터리 관리 전략 자체가 진영 문화 교육이 된다.
+신규 유저가 URL을 열면 즉시 배터리 게이지가 보이고, 아무 설명 없어도 "우리 팀 배터리 지켜야 한다"를 직감한다.
+</div>
+<div class="rtag">간편 진입 ★★★★ | 바이럴 ★★★★ | 컨셉 ★★★★★</div>
+</div>
+
+<div class="rcard">
+<div class="rh"><div class="ri">🥈</div><div><div class="rnam">2순위: 벤치마크 미니게임</div><div class="rsc">가중합산 4.25 / 5.00 — 공동 2위 중 진입 장벽 최저</div></div></div>
+<div class="rb">
+<strong>왜 2순위인가:</strong><br>
+공동 2위(4.25) 포맷 중 <strong>간편한 진입 ★★★★★</strong>으로 유일하게 만점.
+URL 열자마자 반응속도 게임이 시작되고, 별도 규칙 설명이 전혀 불필요하다.
+"내 반응속도 198ms" 개인 기록 공유가 자연스럽고, Geekbench / AnTuTu 벤치마크 점수 전쟁이라는 오랜 iOS vs Android 밈과 연결된다.<br><br>
+<strong>보완점:</strong> 컨셉 연결이 ★★★★(4점). 인트로 화면에 "A시리즈 vs Snapdragon 집단 성능 대결"이라는 맥락 한 줄을 추가하면 ★★★★★급으로 상승 가능하다.<br><br>
+<strong>추천 조합:</strong> 배터리 소모전(메인) + 벤치마크 미니게임(라운드 간 미니게임)으로 통합 시 Phoney War의 다회 플레이와 바이럴 루프를 동시에 확보하는 최적 구성.
+</div>
+<div class="rtag">간편 진입 ★★★★★ | 바이럴 ★★★★ | 컨셉 ★★★★</div>
+</div>
+</div>
+
+</main>
+<footer>
+Phoney War — 게임 포맷 평가 리포트
+<span>평가 기준: 간편한 진입 25% · 바이럴 25% · 아이폰 vs 갤럭시 컨셉 반영 50%</span>
+<span>This is an independent project. Not affiliated with Apple Inc. or Google LLC.</span>
+</footer>
+</body>
+</html>

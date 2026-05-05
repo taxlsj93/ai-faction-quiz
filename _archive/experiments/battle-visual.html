@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoney War — 전투 비주얼 컨셉</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #07090d; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; }
+
+.nav { display: flex; background: #0b0d12; border-bottom: 1px solid #1c2030; }
+.nav-btn {
+  flex: 1; padding: 14px 6px; text-align: center;
+  font-size: .62rem; font-weight: 800; letter-spacing: .08em;
+  color: #3d4660; cursor: pointer; border-bottom: 3px solid transparent;
+  transition: all .2s; white-space: nowrap;
+}
+.nav-btn.active { color: #fff; }
+#btn1.active { border-color: #3b82f6; color: #93c5fd; }
+#btn2.active { border-color: #22c55e; color: #86efac; }
+#btn3.active { border-color: #f59e0b; color: #fcd34d; }
+
+.scene { display: none; flex-direction: column; min-height: calc(100vh - 48px); }
+.scene.active { display: flex; }
+
+.scene-head {
+  padding: 16px 18px 10px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.scene-title { font-size: 1.1rem; font-weight: 900; }
+.scene-desc { font-size: .7rem; color: #64748b; line-height: 1.5; }
+
+canvas { display: block; width: 100%; touch-action: none; }
+
+.controls {
+  display: flex; gap: 10px; padding: 14px 18px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  flex: 1; min-width: 120px; padding: 14px 10px;
+  border-radius: 14px; font-size: .8rem; font-weight: 800;
+  cursor: pointer; border: 1.5px solid; transition: transform .08s;
+  text-align: center;
+}
+.ctrl-btn:active { transform: scale(.94); }
+.ctrl-orchard {
+  background: rgba(147,197,253,.1); border-color: rgba(147,197,253,.4);
+  color: #bfdbfe;
+}
+.ctrl-jungle {
+  background: rgba(74,222,128,.1); border-color: rgba(74,222,128,.4);
+  color: #bbf7d0;
+}
+
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 18px; font-size: .7rem; color: #475569;
+}
+.pct-bar-wrap {
+  height: 6px; background: #1a1f2e; border-radius: 3px; overflow: hidden;
+  margin: 0 18px 14px;
+}
+.pct-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  transition: width .4s ease;
+}
+
+.concept-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: .6rem; font-weight: 800; letter-spacing: .12em;
+}
+.log-box {
+  margin: 0 18px 12px; padding: 10px 14px;
+  background: #0d1018; border-radius: 10px; border: 1px solid #1a2030;
+  font-size: .68rem; color: #64748b; min-height: 38px;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-btn active" id="btn1" onclick="switchScene('bubble')">💬<br>BUBBLE<br>BATTLE</div>
+  <div class="nav-btn" id="btn2" onclick="switchScene('march')">🪖<br>CROWD<br>MARCH</div>
+  <div class="nav-btn" id="btn3" onclick="switchScene('signal')">📡<br>SIGNAL<br>SPREAD</div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     SCENE 1: BUBBLE BATTLE
+═══════════════════════════════════ -->
+<div class="scene active" id="scene-bubble">
+  <div class="scene-head">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <span class="concept-tag" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">CONCEPT 1</span>
+      <span class="scene-title">💬 Bubble Battle</span>
+    </div>
+    <div class="scene-desc">iMessage 블루 vs 그린 SMS 밈 그 자체. 버블을 번지게 해서 상대방 화면을 점령.</div>
+  </div>
+
+  <div class="info-row">
+    <span style="color:#93c5fd">🍎 Orchard <span id="bb-pct1">50</span>%</span>
+    <span style="color:#64748b;font-size:.62rem">TAP ANYWHERE TO SEND</span>
+    <span style="color:#86efac"><span id="bb-pct2">50</span>% 🌿 Jungle</span>
+  </div>
+  <div class="pct-bar-wrap"><div class="pct-bar-fill" id="bb-bar" style="width:50%"></div></div>
+
+  <canvas id="bb-canvas" style="flex:1"></canvas>
+
+  <div class="controls">
+    <button class="ctrl-btn ctrl-orchard" onclick="bbSend('orchard')">
+      🍎 메시지 보내기<br><span style="font-size:.65rem;opacity:.7">버블 번짐 +3칸</span>
+    </button>
+    <button class="ctrl-btn ctrl-jungle" onclick="bbSend('jungle')">
+      🌿 문자 보내기<br><span style="font-size:.65rem;opacity:.7">버블 번짐 +3칸</span>
+    </button>
+  </div>
+  <div class="log-box" id="bb-log">전쟁을 시작하려면 버튼을 눌러보세요...</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCENE 2: CROWD MARCH
+═══════════════════════════════════ -->
+<div class="scene" id="scene-march">
+  <div class="scene-head">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <span class="concept-tag" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)">CONCEPT 2</span>
+      <span class="scene-title">🪖 Crowd March</span>
+    </div>
+    <div class="scene-desc">🍎 군대와 🌿 군대가 실시간으로 행진하며 충돌. 숫자가 클수록 전선이 밀린다.</div>
+  </div>
+
+  <div class="info-row">
+    <span style="color:#93c5fd">🍎 <span id="cm-count1">0</span>명</span>
+    <span style="color:#64748b">전선</span>
+    <span style="color:#86efac"><span id="cm-count2">0</span>명 🌿</span>
+  </div>
+
+  <canvas id="cm-canvas" style="flex:1;max-height:340px"></canvas>
+
+  <div class="controls">
+    <button class="ctrl-btn ctrl-orchard" onclick="cmRecruit('orchard')">
+      🍎 병력 소환<br><span style="font-size:.65rem;opacity:.7">+10명 행진 시작</span>
+    </button>
+    <button class="ctrl-btn ctrl-jungle" onclick="cmRecruit('jungle')">
+      🌿 병력 소환<br><span style="font-size:.65rem;opacity:.7">+10명 행진 시작</span>
+    </button>
+  </div>
+  <div class="log-box" id="cm-log">병력을 소환하면 전선이 움직입니다...</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCENE 3: SIGNAL SPREAD
+═══════════════════════════════════ -->
+<div class="scene" id="scene-signal">
+  <div class="scene-head">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <span class="concept-tag" style="background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)">CONCEPT 3</span>
+      <span class="scene-title">📡 Signal Spread</span>
+    </div>
+    <div class="scene-desc">신호를 방출해 지도를 물들인다. 여러 명이 동시에 찍으면 빠르게 번짐. Splatoon + 영토전.</div>
+  </div>
+
+  <div class="info-row">
+    <span style="color:#93c5fd">🍎 <span id="ss-pct1">0</span>%</span>
+    <span style="color:#64748b;font-size:.62rem">탭해서 신호 방출</span>
+    <span style="color:#86efac"><span id="ss-pct2">0</span>% 🌿</span>
+  </div>
+  <div class="pct-bar-wrap">
+    <div style="height:100%;background:linear-gradient(90deg,rgba(147,197,253,.5) var(--o),rgba(74,222,128,.5) var(--o));transition:--o .4s" id="ss-bar"></div>
+  </div>
+
+  <canvas id="ss-canvas" style="flex:1;max-height:360px"></canvas>
+
+  <div class="controls">
+    <button class="ctrl-btn ctrl-orchard" onclick="ssSignal('orchard')">
+      📡 신호 방출 🍎<br><span style="font-size:.65rem;opacity:.7">랜덤 위치에서 번짐 시작</span>
+    </button>
+    <button class="ctrl-btn ctrl-jungle" onclick="ssSignal('jungle')">
+      📡 신호 방출 🌿<br><span style="font-size:.65rem;opacity:.7">랜덤 위치에서 번짐 시작</span>
+    </button>
+  </div>
+  <div class="log-box" id="ss-log">신호를 방출하면 지도가 물들기 시작합니다...</div>
+</div>
+
+<script>
+// ─── SCENE SWITCH ─────────────────────────────────────
+function switchScene(name) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('scene-' + name).classList.add('active');
+  const map = { bubble: 'btn1', march: 'btn2', signal: 'btn3' };
+  document.getElementById(map[name]).classList.add('active');
+  if (name === 'bubble') bbResize();
+  if (name === 'march')  cmResize();
+  if (name === 'signal') ssResize();
+}
+window.addEventListener('resize', () => {
+  bbResize(); cmResize(); ssResize();
+});
+
+// ═══════════════════════════════════════════════════════
+//  BUBBLE BATTLE
+// ═══════════════════════════════════════════════════════
+const BB = {
+  canvas: null, ctx: null,
+  cols: 0, rows: 0, cell: 0,
+  grid: [], // 'o' | 'j' | null
+  queue: [],  // pending flips
+  animFrame: null,
+};
+
+const BB_O = { bg: '#1c3a5e', stroke: '#3b82f6', fill: '#2563eb', text: '#bfdbfe' };
+const BB_J = { bg: '#143322', stroke: '#22c55e', fill: '#16a34a', text: '#bbf7d0' };
+const BB_N = { bg: '#0d1018', stroke: '#1a2030' };
+
+function bbInit() {
+  BB.canvas = document.getElementById('bb-canvas');
+  BB.ctx = BB.canvas.getContext('2d');
+  BB.canvas.addEventListener('click', e => {
+    const rect = BB.canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (BB.canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (BB.canvas.height / rect.height);
+    const c = Math.floor(x / BB.cell), r = Math.floor(y / BB.cell);
+    if (c >= 0 && c < BB.cols && r >= 0 && r < BB.rows) {
+      const key = r * BB.cols + c;
+      if (BB.grid[key] === 'j') bbFloodFrom(c, r, 'o', 2);
+      else if (BB.grid[key] === 'o') bbFloodFrom(c, r, 'j', 2);
+    }
+  });
+  BB.canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const rect = BB.canvas.getBoundingClientRect();
+    const x = (t.clientX - rect.left) * (BB.canvas.width / rect.width);
+    const y = (t.clientY - rect.top) * (BB.canvas.height / rect.height);
+    const c = Math.floor(x / BB.cell), r = Math.floor(y / BB.cell);
+    if (c >= 0 && c < BB.cols && r >= 0 && r < BB.rows) {
+      const key = r * BB.cols + c;
+      const side = BB.grid[key] === 'j' ? 'o' : 'j';
+      bbFloodFrom(c, r, side, 2);
+    }
+  }, { passive: false });
+  bbResize();
+  setInterval(bbAutoPlay, 1400);
+  requestAnimationFrame(bbLoop);
+}
+
+function bbResize() {
+  if (!BB.canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = BB.canvas.parentElement.clientWidth;
+  const h = BB.canvas.parentElement.clientHeight;
+  BB.canvas.width = Math.round(w * dpr);
+  BB.canvas.height = Math.round(h * dpr);
+  BB.canvas.style.width = w + 'px';
+  BB.canvas.style.height = h + 'px';
+  BB.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  BB.cell = Math.floor(Math.min(w / 14, h / 9));
+  if (BB.cell < 24) BB.cell = 24;
+  BB.cols = Math.floor(w / BB.cell);
+  BB.rows = Math.floor(h / BB.cell);
+  bbBuildGrid();
+}
+
+function bbBuildGrid() {
+  const total = BB.cols * BB.rows;
+  BB.grid = new Array(total).fill(null);
+  for (let r = 0; r < BB.rows; r++) {
+    for (let c = 0; c < BB.cols; c++) {
+      const key = r * BB.cols + c;
+      // Left half = orchard, right = jungle
+      if (c < BB.cols * 0.42) BB.grid[key] = 'o';
+      else if (c > BB.cols * 0.58) BB.grid[key] = 'j';
+    }
+  }
+}
+
+function bbFloodFrom(startC, startR, side, radius) {
+  const visited = new Set();
+  const frontier = [{ c: startC, r: startR, d: 0 }];
+  while (frontier.length) {
+    const { c, r, d } = frontier.shift();
+    if (d > radius) continue;
+    const key = r * BB.cols + c;
+    if (visited.has(key)) continue;
+    visited.add(key);
+    if (c < 0 || c >= BB.cols || r < 0 || r >= BB.rows) continue;
+    if (BB.grid[key] !== side) {
+      const delay = d * 80;
+      setTimeout(() => {
+        BB.grid[key] = side;
+        bbSpawnParticle(c, r, side);
+      }, delay);
+    }
+    for (const [dc, dr] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+      frontier.push({ c: c+dc, r: r+dr, d: d+1 });
+    }
+  }
+}
+
+function bbSend(side) {
+  // Pick a random cell on our side's edge
+  let c = side === 'o'
+    ? Math.floor(BB.cols * .35 + Math.random() * BB.cols * 0.15)
+    : Math.floor(BB.cols * .5 + Math.random() * BB.cols * 0.15);
+  let r = Math.floor(Math.random() * BB.rows);
+  bbFloodFrom(c, r, side, 3);
+  const msgs_o = ['iMessage 전송됨 ✉️', '애플 기기에서 메시지 전송', '블루 버블 확산 중...', '읽음 ✓✓'];
+  const msgs_j = ['문자 전송됨 📱', '그린 버블 알림', 'RCS 활성화 시도 중', '배달됨 ✓'];
+  const msgs = side === 'o' ? msgs_o : msgs_j;
+  document.getElementById('bb-log').innerHTML =
+    `<span style="color:${side==='o'?'#93c5fd':'#86efac'}">${msgs[Math.floor(Math.random()*msgs.length)]}</span>`;
+}
+
+function bbAutoPlay() {
+  // Auto enemy plays
+  const pctO = bbCalcPct();
+  const side = pctO > 55 ? 'j' : pctO < 45 ? 'o' : (Math.random() > .5 ? 'o' : 'j');
+  const edge = side === 'o'
+    ? Math.floor(BB.cols * .35 + Math.random() * BB.cols * 0.2)
+    : Math.floor(BB.cols * .45 + Math.random() * BB.cols * 0.2);
+  bbFloodFrom(edge, Math.floor(Math.random() * BB.rows), side, 2);
+}
+
+function bbCalcPct() {
+  let o = 0, j = 0;
+  for (const v of BB.grid) { if (v === 'o') o++; else if (v === 'j') j++; }
+  const total = o + j || 1;
+  return Math.round(o / total * 100);
+}
+
+// Particles
+const bbParticles = [];
+function bbSpawnParticle(c, r, side) {
+  const x = c * BB.cell + BB.cell / 2;
+  const y = r * BB.cell + BB.cell / 2;
+  bbParticles.push({ x, y, side, life: 1.0, vx: (Math.random()-.5)*2, vy: (Math.random()-.5)*2 });
+}
+
+function bbLoop() {
+  const ctx = BB.ctx;
+  const cell = BB.cell;
+  const W = BB.canvas.width / (window.devicePixelRatio||1);
+  const H = BB.canvas.height / (window.devicePixelRatio||1);
+
+  ctx.fillStyle = '#07090d';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw bubbles
+  for (let r = 0; r < BB.rows; r++) {
+    for (let c = 0; c < BB.cols; c++) {
+      const key = r * BB.cols + c;
+      const v = BB.grid[key];
+      const x = c * cell, y = r * cell;
+      const pad = 2;
+      const bw = cell - pad * 2, bh = cell - pad * 2;
+      const rx = bw * 0.38;
+      // Bubble tail direction
+      const tail = v === 'o' ? -1 : 1;
+
+      if (v === 'o' || v === 'j') {
+        const col = v === 'o' ? BB_O : BB_J;
+        ctx.fillStyle = col.bg;
+        ctx.strokeStyle = col.stroke;
+        ctx.lineWidth = 1.5;
+        // Rounded rect bubble
+        ctx.beginPath();
+        roundRect(ctx, x+pad, y+pad, bw, bh, rx);
+        ctx.fill();
+        ctx.stroke();
+        // Tail
+        const tx = v === 'o' ? x+pad+4 : x+cell-pad-4;
+        const ty = y + cell - pad;
+        ctx.beginPath();
+        ctx.moveTo(tx, ty - 4);
+        ctx.lineTo(tx + tail * 6, ty + 5);
+        ctx.lineTo(tx + tail * 2, ty - 2);
+        ctx.fillStyle = col.bg;
+        ctx.fill();
+        // Text dots
+        ctx.fillStyle = col.text;
+        ctx.font = `bold ${Math.max(8,cell*0.22)}px system-ui`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('•••', x + cell/2, y + cell/2);
+      } else {
+        ctx.fillStyle = BB_N.bg;
+        ctx.strokeStyle = BB_N.stroke;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        roundRect(ctx, x+pad+2, y+pad+2, bw-4, bh-4, rx*0.6);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Particles
+  for (let i = bbParticles.length - 1; i >= 0; i--) {
+    const p = bbParticles[i];
+    p.life -= 0.04;
+    p.x += p.vx; p.y += p.vy;
+    if (p.life <= 0) { bbParticles.splice(i, 1); continue; }
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.side === 'o' ? '#3b82f6' : '#22c55e';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, cell * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Update stat
+  const pct = bbCalcPct();
+  document.getElementById('bb-pct1').textContent = pct;
+  document.getElementById('bb-pct2').textContent = 100 - pct;
+  document.getElementById('bb-bar').style.width = pct + '%';
+
+  requestAnimationFrame(bbLoop);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CROWD MARCH
+// ═══════════════════════════════════════════════════════
+const CM = {
+  canvas: null, ctx: null,
+  units: [],  // { x, y, side, hp, target }
+  frontX: 0.5,  // normalized 0=left(orchard) 1=right(jungle)
+  W: 0, H: 0,
+};
+
+function cmInit() {
+  CM.canvas = document.getElementById('cm-canvas');
+  CM.ctx = CM.canvas.getContext('2d');
+  cmResize();
+  setInterval(cmAutoSpawn, 2500);
+  requestAnimationFrame(cmLoop);
+}
+
+function cmResize() {
+  if (!CM.canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = CM.canvas.parentElement.clientWidth;
+  const h = 300;
+  CM.canvas.width = Math.round(w * dpr);
+  CM.canvas.height = Math.round(h * dpr);
+  CM.canvas.style.width = w + 'px';
+  CM.canvas.style.height = h + 'px';
+  CM.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  CM.W = w; CM.H = h;
+}
+
+function cmRecruit(side) {
+  const n = 10;
+  for (let i = 0; i < n; i++) {
+    setTimeout(() => {
+      const startX = side === 'o' ? 20 + Math.random() * 40 : CM.W - 20 - Math.random() * 40;
+      const y = 40 + Math.random() * (CM.H - 80);
+      CM.units.push({
+        x: startX, y,
+        side,
+        hp: 3 + Math.random() * 2,
+        vx: side === 'o' ? 1.2 + Math.random() * .6 : -1.2 - Math.random() * .6,
+        vy: (Math.random() - .5) * 0.3,
+        emoji: side === 'o' ? '🍎' : '🌿',
+        size: 13 + Math.random() * 4,
+      });
+    }, i * 80);
+  }
+  document.getElementById('cm-log').innerHTML =
+    `<span style="color:${side==='o'?'#93c5fd':'#86efac'}">${side==='o'?'🍎':'🌿'} 병력 ${n}명 행진 시작! 전선으로 이동 중...</span>`;
+}
+
+function cmAutoSpawn() {
+  const side = CM.units.filter(u => u.side==='o').length < CM.units.filter(u => u.side==='j').length ? 'o' : 'j';
+  for (let i = 0; i < 5; i++) {
+    const startX = side === 'o' ? 20 + Math.random() * 40 : CM.W - 20 - Math.random() * 40;
+    CM.units.push({
+      x: startX,
+      y: 40 + Math.random() * (CM.H - 80),
+      side, hp: 2,
+      vx: side === 'o' ? 1.0 : -1.0,
+      vy: (Math.random()-.5) * 0.3,
+      emoji: side === 'o' ? '🍎' : '🌿',
+      size: 11,
+    });
+  }
+}
+
+const cmDeadParticles = [];
+function cmLoop() {
+  const ctx = CM.ctx;
+  const W = CM.W, H = CM.H;
+
+  // Gradient background
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0,   '#0a1628');
+  grad.addColorStop(0.5, '#07090d');
+  grad.addColorStop(1,   '#071422');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Ground
+  ctx.fillStyle = '#101418';
+  ctx.fillRect(0, H - 24, W, 24);
+  ctx.fillStyle = '#1a2030';
+  ctx.fillRect(0, H - 25, W, 2);
+
+  // Front line
+  const front = W * CM.frontX;
+  ctx.strokeStyle = '#f87171';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(front, 10);
+  ctx.lineTo(front, H - 24);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f87171';
+  ctx.font = 'bold 9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('FRONT LINE', front, 8);
+
+  // Faction zones
+  ctx.fillStyle = 'rgba(59,130,246,.04)';
+  ctx.fillRect(0, 0, front, H);
+  ctx.fillStyle = 'rgba(34,197,94,.04)';
+  ctx.fillRect(front, 0, W - front, H);
+
+  // HQ markers
+  ctx.font = '22px system-ui';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🏠', 26, H/2);
+  ctx.fillText('🏠', W-26, H/2);
+
+  // Move & draw units
+  let oCount = 0, jCount = 0;
+  for (let i = CM.units.length - 1; i >= 0; i--) {
+    const u = CM.units[i];
+
+    // Move toward center
+    u.x += u.vx;
+    u.y += u.vy;
+    u.vy *= 0.98;
+
+    // Clamp y
+    if (u.y < 30) u.y = 30;
+    if (u.y > H - 40) u.y = H - 40;
+
+    // Collision with enemies
+    for (let j = 0; j < CM.units.length; j++) {
+      if (i === j) continue;
+      const e = CM.units[j];
+      if (e.side === u.side) continue;
+      const dx = u.x - e.x, dy = u.y - e.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 20) {
+        // Battle!
+        u.hp -= 0.08;
+        e.hp -= 0.08;
+        // Spark effect
+        if (Math.random() < 0.05) {
+          cmDeadParticles.push({ x: (u.x+e.x)/2, y: (u.y+e.y)/2, life: 1, vx: (Math.random()-.5)*3, vy: (Math.random()-.5)*3, col: '#f87171' });
+        }
+      }
+    }
+
+    // Stop at front-ish zone
+    if (u.side === 'o' && u.x > front - 5) u.vx = Math.max(0, u.vx - 0.1);
+    if (u.side === 'j' && u.x < front + 5) u.vx = Math.min(0, u.vx + 0.1);
+
+    if (u.hp <= 0) {
+      cmDeadParticles.push({ x: u.x, y: u.y, life: 1, vx: (Math.random()-.5)*4, vy: -3, col: u.side === 'o' ? '#3b82f6' : '#22c55e' });
+      CM.units.splice(i, 1);
+      continue;
+    }
+
+    // Draw
+    ctx.font = `${u.size}px system-ui`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(u.emoji, u.x, u.y);
+
+    // HP bar
+    const hpPct = Math.min(1, u.hp / 5);
+    ctx.fillStyle = 'rgba(0,0,0,.5)';
+    ctx.fillRect(u.x - 8, u.y - u.size/2 - 6, 16, 3);
+    ctx.fillStyle = u.side === 'o' ? '#3b82f6' : '#22c55e';
+    ctx.fillRect(u.x - 8, u.y - u.size/2 - 6, 16 * hpPct, 3);
+
+    if (u.side === 'o') oCount++; else jCount++;
+  }
+
+  // Update front line (proportional to unit counts)
+  const total = oCount + jCount;
+  if (total > 0) {
+    const targetFront = 0.2 + (oCount / total) * 0.6;
+    CM.frontX += (targetFront - CM.frontX) * 0.005;
+  }
+
+  // Dead particles
+  for (let i = cmDeadParticles.length - 1; i >= 0; i--) {
+    const p = cmDeadParticles[i];
+    p.life -= 0.04; p.x += p.vx; p.y += p.vy; p.vy += 0.1;
+    if (p.life <= 0) { cmDeadParticles.splice(i, 1); continue; }
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.col;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Stats
+  document.getElementById('cm-count1').textContent = oCount;
+  document.getElementById('cm-count2').textContent = jCount;
+
+  // Victory check
+  if (oCount === 0 && jCount > 0 && CM.units.length > 0) {
+    document.getElementById('cm-log').innerHTML = '<span style="color:#86efac">🌿 Jungle 승리! 전선이 왼쪽으로 무너졌습니다.</span>';
+  } else if (jCount === 0 && oCount > 0 && CM.units.length > 0) {
+    document.getElementById('cm-log').innerHTML = '<span style="color:#93c5fd">🍎 Orchard 승리! 전선을 오른쪽으로 밀었습니다.</span>';
+  }
+
+  requestAnimationFrame(cmLoop);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SIGNAL SPREAD
+// ═══════════════════════════════════════════════════════
+const SS = {
+  canvas: null, ctx: null,
+  grid: null,
+  cols: 0, rows: 0, cell: 0,
+  W: 0, H: 0,
+  spreading: [],  // active spread fronts
+  strengthO: null,  // Float32Array
+  strengthJ: null,
+};
+
+function ssInit() {
+  SS.canvas = document.getElementById('ss-canvas');
+  SS.ctx = SS.canvas.getContext('2d');
+  SS.canvas.addEventListener('click', e => {
+    const rect = SS.canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (SS.canvas.width / rect.width);
+    const my = (e.clientY - rect.top) * (SS.canvas.height / rect.height);
+    ssSignalAt(Math.floor(mx / SS.cell), Math.floor(my / SS.cell), 'o');
+  });
+  SS.canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const rect = SS.canvas.getBoundingClientRect();
+    const mx = (t.clientX - rect.left) * (SS.canvas.width / rect.width);
+    const my = (t.clientY - rect.top) * (SS.canvas.height / rect.height);
+    ssSignalAt(Math.floor(mx / SS.cell), Math.floor(my / SS.cell), 'o');
+  }, { passive: false });
+  ssResize();
+  setInterval(ssAutoPlay, 1800);
+  requestAnimationFrame(ssLoop);
+}
+
+function ssResize() {
+  if (!SS.canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = SS.canvas.parentElement.clientWidth;
+  const h = 320;
+  SS.canvas.width = Math.round(w * dpr);
+  SS.canvas.height = Math.round(h * dpr);
+  SS.canvas.style.width = w + 'px';
+  SS.canvas.style.height = h + 'px';
+  SS.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  SS.W = w; SS.H = h;
+
+  SS.cell = Math.floor(Math.min(w / 22, h / 14));
+  if (SS.cell < 16) SS.cell = 16;
+  SS.cols = Math.floor(w / SS.cell);
+  SS.rows = Math.floor(h / SS.cell);
+  const N = SS.cols * SS.rows;
+  SS.grid = new Uint8Array(N);      // 0=neutral, 1=orchard, 2=jungle
+  SS.strengthO = new Float32Array(N);
+  SS.strengthJ = new Float32Array(N);
+  SS.spreading = [];
+}
+
+function ssSignal(side) {
+  const c = side === 'o'
+    ? Math.floor(Math.random() * SS.cols * 0.6)
+    : Math.floor(SS.cols * 0.4 + Math.random() * SS.cols * 0.6);
+  const r = Math.floor(Math.random() * SS.rows);
+  ssSignalAt(c, r, side);
+  const msgs_o = ['📡 신호 방출 — 블루존 확장 중', '🍎 주파수 장악 시작', '신호 강도 MAX →'];
+  const msgs_j = ['📡 신호 방출 — 그린존 침투 중', '🌿 오픈 대역 확보', '← 신호 덮어쓰기 시작'];
+  const msgs = side === 'o' ? msgs_o : msgs_j;
+  document.getElementById('ss-log').innerHTML =
+    `<span style="color:${side==='o'?'#93c5fd':'#86efac'}">${msgs[Math.floor(Math.random()*msgs.length)]}</span>`;
+}
+
+function ssSignalAt(c, r, side) {
+  if (c < 0 || c >= SS.cols || r < 0 || r >= SS.rows) return;
+  SS.spreading.push({ c, r, side, power: 1.0, delay: 0 });
+}
+
+function ssAutoPlay() {
+  const pct = ssCalcPct();
+  const side = pct.o > 55 ? 'j' : pct.o < 45 ? 'o' : (Math.random() > .5 ? 'o' : 'j');
+  ssSignal(side);
+}
+
+function ssCalcPct() {
+  let o = 0, j = 0;
+  for (let i = 0; i < SS.grid.length; i++) {
+    if (SS.grid[i] === 1) o++; else if (SS.grid[i] === 2) j++;
+  }
+  const total = o + j || 1;
+  return { o: Math.round(o/total*100), j: Math.round(j/total*100) };
+}
+
+let ssLastSpread = 0;
+const ssWaveParticles = [];
+
+function ssLoop(ts) {
+  const ctx = SS.ctx;
+  const W = SS.W, H = SS.H;
+  const cell = SS.cell;
+
+  ctx.fillStyle = '#07090d';
+  ctx.fillRect(0, 0, W, H);
+
+  // Process spreading (BFS pulses)
+  if (ts - ssLastSpread > 90) {
+    ssLastSpread = ts;
+    const next = [];
+    for (const front of SS.spreading) {
+      if (front.power < 0.05) continue;
+      const key = front.r * SS.cols + front.c;
+      const already = SS.grid[key] === (front.side === 'o' ? 1 : 2);
+      if (!already) {
+        SS.grid[key] = front.side === 'o' ? 1 : 2;
+        if (front.side === 'o') SS.strengthO[key] = front.power;
+        else SS.strengthJ[key] = front.power;
+        // Spawn ripple
+        ssWaveParticles.push({
+          x: front.c * cell + cell/2, y: front.r * cell + cell/2,
+          r: 0, maxR: cell * 1.4, life: 1,
+          col: front.side === 'o' ? '#3b82f6' : '#22c55e'
+        });
+      }
+      for (const [dc, dr] of [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,-1],[-1,1],[1,1]]) {
+        const nc = front.c + dc, nr = front.r + dr;
+        if (nc < 0 || nc >= SS.cols || nr < 0 || nr >= SS.rows) continue;
+        const nkey = nr * SS.cols + nc;
+        const enemySide = front.side === 'o' ? 2 : 1;
+        const newPower = front.power * (SS.grid[nkey] === enemySide ? 0.55 : 0.82);
+        if (newPower > 0.04) {
+          next.push({ c: nc, r: nr, side: front.side, power: newPower });
+        }
+      }
+    }
+    SS.spreading = next;
+  }
+
+  // Draw hexagonal grid cells
+  for (let r = 0; r < SS.rows; r++) {
+    for (let c = 0; c < SS.cols; c++) {
+      const key = r * SS.cols + c;
+      const v = SS.grid[key];
+      const x = c * cell, y = r * cell;
+      const pad = 1.5;
+
+      let fillColor, strokeColor, alpha = 1;
+      if (v === 1) {
+        const str = SS.strengthO[key] || 0.5;
+        fillColor = `rgba(37,99,235,${Math.min(0.15 + str * 0.55, 0.7).toFixed(2)})`;
+        strokeColor = `rgba(59,130,246,${Math.min(0.3 + str * 0.5, 0.8).toFixed(2)})`;
+      } else if (v === 2) {
+        const str = SS.strengthJ[key] || 0.5;
+        fillColor = `rgba(22,163,74,${Math.min(0.15 + str * 0.55, 0.7).toFixed(2)})`;
+        strokeColor = `rgba(74,222,128,${Math.min(0.3 + str * 0.5, 0.8).toFixed(2)})`;
+      } else {
+        fillColor = '#0d1018';
+        strokeColor = '#151b28';
+      }
+
+      ctx.fillStyle = fillColor;
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = v ? 1 : 0.5;
+      ctx.beginPath();
+      roundRect(ctx, x+pad, y+pad, cell-pad*2, cell-pad*2, 4);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  // Wave particles
+  for (let i = ssWaveParticles.length - 1; i >= 0; i--) {
+    const p = ssWaveParticles[i];
+    p.r += (p.maxR - p.r) * 0.3;
+    p.life -= 0.08;
+    if (p.life <= 0) { ssWaveParticles.splice(i, 1); continue; }
+    ctx.globalAlpha = p.life * 0.5;
+    ctx.strokeStyle = p.col;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // Active spread indicators
+  for (const f of SS.spreading) {
+    if (f.power < 0.2) continue;
+    const x = f.c * cell + cell/2, y = f.r * cell + cell/2;
+    ctx.globalAlpha = f.power * 0.4;
+    ctx.fillStyle = f.side === 'o' ? '#93c5fd' : '#86efac';
+    ctx.beginPath();
+    ctx.arc(x, y, cell * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Update UI
+  const pct = ssCalcPct();
+  document.getElementById('ss-pct1').textContent = pct.o;
+  document.getElementById('ss-pct2').textContent = pct.j;
+  const bar = document.getElementById('ss-bar');
+  bar.style.background = `linear-gradient(90deg, rgba(147,197,253,.6) ${pct.o}%, rgba(74,222,128,.5) ${pct.o}%)`;
+
+  requestAnimationFrame(ssLoop);
+}
+
+// ─── BOOT ────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  bbInit();
+  cmInit();
+  ssInit();
+});
+</script>
+</body>
+</html>

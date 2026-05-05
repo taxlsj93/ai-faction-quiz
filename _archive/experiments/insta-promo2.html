@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Instagram Post 2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; gap: 20px; }
+  button {
+    padding: 14px 40px;
+    background: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: sans-serif;
+    cursor: pointer;
+  }
+  button:hover { background: #6d28d9; }
+  p { color: #888; font-family: sans-serif; font-size: 13px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1080" style="width:540px;height:540px"></canvas>
+<button onclick="download()">JPG 다운로드</button>
+<p>1080×1080 · Instagram 최적화</p>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 1080, H = 1080;
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#0a0a14';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < W; i += 54) {
+    ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
+  }
+
+  // Header
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  roundRect(ctx, 40, 40, 1000, 110, 20);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 48px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('MEET THE 4 AI FACTIONS', 540, 107);
+
+  // Faction cards (vertical stack)
+  const factions = [
+    {
+      color: '#c084fc',
+      border: '#7c3aed',
+      glow: '#7c3aed',
+      name: 'CLAUDE',
+      tag: 'The Philosopher',
+      desc: 'Careful • Ethical • Deep Thinker',
+      pct: '12%',
+      pctLabel: 'of AI users prefer Claude',
+    },
+    {
+      color: '#34d399',
+      border: '#059669',
+      glow: '#059669',
+      name: 'GPT',
+      tag: 'The Overachiever',
+      desc: 'Fast • Versatile • Always Ready',
+      pct: '61%',
+      pctLabel: 'market share worldwide',
+    },
+    {
+      color: '#60a5fa',
+      border: '#2563eb',
+      glow: '#2563eb',
+      name: 'GEMINI',
+      tag: 'The Multimodal Genius',
+      desc: 'Creative • Visual • Google-powered',
+      pct: '750M',
+      pctLabel: 'monthly active users',
+    },
+    {
+      color: '#f87171',
+      border: '#dc2626',
+      glow: '#dc2626',
+      name: 'GROK',
+      tag: 'The Wildcard',
+      desc: 'Bold • Real-time • No Filter',
+      pct: '+1.3M%',
+      pctLabel: 'visitor growth YoY',
+    },
+  ];
+
+  const cardH = 170;
+  const startY = 185;
+  const gap = 18;
+
+  factions.forEach((f, i) => {
+    const y = startY + i * (cardH + gap);
+
+    // Glow
+    const glow = ctx.createRadialGradient(200, y + cardH / 2, 0, 200, y + cardH / 2, 200);
+    glow.addColorStop(0, f.glow + '22');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(40, y, 1000, cardH);
+
+    // Card bg
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    roundRect(ctx, 40, y, 1000, cardH, 16);
+    ctx.fill();
+
+    // Left accent bar
+    ctx.fillStyle = f.color;
+    roundRect(ctx, 40, y, 8, cardH, 4);
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = f.border + '50';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 40, y, 1000, cardH, 16);
+    ctx.stroke();
+
+    // Faction name
+    ctx.fillStyle = f.color;
+    ctx.font = 'bold 40px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(f.name, 80, y + 58);
+
+    // Tag
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '26px Arial';
+    ctx.fillText(f.tag, 80, y + 95);
+
+    // Desc
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '22px Arial';
+    ctx.fillText(f.desc, 80, y + 132);
+
+    // Stat pill (right side)
+    ctx.fillStyle = f.border + '30';
+    roundRect(ctx, 780, y + 35, 230, 100, 12);
+    ctx.fill();
+    ctx.strokeStyle = f.border + '60';
+    ctx.lineWidth = 1;
+    roundRect(ctx, 780, y + 35, 230, 100, 12);
+    ctx.stroke();
+
+    ctx.fillStyle = f.color;
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(f.pct, 895, y + 80);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '16px Arial';
+    const words = f.pctLabel.split(' ');
+    if (words.length <= 3) {
+      ctx.fillText(f.pctLabel, 895, y + 108);
+    } else {
+      ctx.fillText(words.slice(0, 3).join(' '), 895, y + 104);
+      ctx.fillText(words.slice(3).join(' '), 895, y + 122);
+    }
+  });
+
+  // Bottom CTA
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  roundRect(ctx, 40, 1010, 1000, 52, 26);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.font = '24px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Find your faction → ai-faction-quiz.vercel.app', 540, 1043);
+}
+
+function download() {
+  const a = document.createElement('a');
+  a.download = 'ai-faction-instagram2.jpg';
+  a.href = canvas.toDataURL('image/jpeg', 0.95);
+  a.click();
+}
+
+draw();
+</script>
+</body>
+</html>

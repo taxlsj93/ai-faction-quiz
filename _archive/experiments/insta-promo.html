@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Instagram Promo Card</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; gap: 20px; }
+  #preview { width: 540px; height: 540px; }
+  button {
+    padding: 14px 40px;
+    background: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: sans-serif;
+    cursor: pointer;
+  }
+  button:hover { background: #6d28d9; }
+  p { color: #888; font-family: sans-serif; font-size: 13px; }
+</style>
+</head>
+<body>
+<canvas id="preview" width="1080" height="1080" style="width:540px;height:540px"></canvas>
+<button onclick="download()">JPG 다운로드</button>
+<p>1080×1080 · Instagram 최적화</p>
+
+<script>
+const canvas = document.getElementById('preview');
+const ctx = canvas.getContext('2d');
+const W = 1080, H = 1080;
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#0a0a14';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < W; i += 60) {
+    ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
+  }
+
+  // Four faction glow blobs
+  const factions = [
+    { x: 270, y: 270, color: '#7c3aed' },  // Claude - top left
+    { x: 810, y: 270, color: '#059669' },  // GPT - top right
+    { x: 270, y: 810, color: '#2563eb' },  // Gemini - bottom left
+    { x: 810, y: 810, color: '#dc2626' },  // Grok - bottom right
+  ];
+
+  factions.forEach(f => {
+    const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 340);
+    grad.addColorStop(0, f.color + '55');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+  });
+
+  // Center divider lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(540, 80); ctx.lineTo(540, 1000); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(80, 540); ctx.lineTo(1000, 540); ctx.stroke();
+
+  // Faction cards (4 corners)
+  const cards = [
+    { x: 60, y: 60, color: '#c084fc', border: '#7c3aed', name: 'Claude', emoji: '🟣', trait: 'Thoughtful · Precise' },
+    { x: 600, y: 60, color: '#34d399', border: '#059669', name: 'GPT', emoji: '🟢', trait: 'Versatile · Popular' },
+    { x: 60, y: 600, color: '#60a5fa', border: '#2563eb', name: 'Gemini', emoji: '🔵', trait: 'Creative · Fast' },
+    { x: 600, y: 600, color: '#f87171', border: '#dc2626', name: 'Grok', emoji: '🔴', trait: 'Bold · Edgy' },
+  ];
+
+  cards.forEach(c => {
+    // Card bg
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    roundRect(ctx, c.x, c.y, 420, 420, 20);
+    ctx.fill();
+
+    // Card border
+    ctx.strokeStyle = c.border + '60';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, c.x, c.y, 420, 420, 20);
+    ctx.stroke();
+
+    // Faction name
+    ctx.fillStyle = c.color;
+    ctx.font = 'bold 52px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.name, c.x + 210, c.y + 140);
+
+    // Trait
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '24px Arial';
+    ctx.fillText(c.trait, c.x + 210, c.y + 185);
+
+    // Big colored dot
+    ctx.fillStyle = c.color;
+    ctx.beginPath();
+    ctx.arc(c.x + 210, c.y + 290, 36, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Check mark inside dot
+    ctx.fillStyle = '#0a0a14';
+    ctx.font = 'bold 36px Arial';
+    ctx.fillText('?', c.x + 210, c.y + 303);
+  });
+
+  // Center badge
+  const cx = 540, cy = 540;
+  ctx.fillStyle = '#0a0a14';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 110, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 110, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('WHICH AI', cx, cy - 18);
+  ctx.fillText('ARE YOU?', cx, cy + 18);
+
+  // Bottom CTA
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  roundRect(ctx, 140, 950, 800, 80, 40);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = '28px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('ai-faction-quiz.vercel.app', 540, 998);
+
+  // Top label
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.font = '22px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('AI PERSONALITY QUIZ  ·  6 QUESTIONS  ·  FREE', 540, 1048);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function download() {
+  const a = document.createElement('a');
+  a.download = 'ai-faction-instagram.jpg';
+  a.href = canvas.toDataURL('image/jpeg', 0.95);
+  a.click();
+}
+
+draw();
+</script>
+</body>
+</html>

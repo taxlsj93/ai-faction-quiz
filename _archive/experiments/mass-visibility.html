@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>대규모 기여 가시성 — 솔루션 비교</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #06080b; color: #e2e8f0; font-family: system-ui,-apple-system,sans-serif; }
+
+.nav { display: flex; background: #0b0d12; border-bottom: 1px solid #1a2030; overflow-x: auto; }
+.nav-btn {
+  flex: 1; min-width: 80px; padding: 12px 6px; text-align: center;
+  font-size: .58rem; font-weight: 800; letter-spacing: .06em;
+  color: #3d4660; cursor: pointer; border-bottom: 3px solid transparent;
+  transition: all .2s; white-space: nowrap; line-height: 1.4;
+}
+.nav-btn.active { color: #fff; }
+#nb1.active { border-color: #ef4444; color: #fca5a5; }
+#nb2.active { border-color: #f59e0b; color: #fcd34d; }
+#nb3.active { border-color: #8b5cf6; color: #c4b5fd; }
+#nb4.active { border-color: #06b6d4; color: #67e8f9; }
+
+.scene { display: none; min-height: calc(100vh - 48px); flex-direction: column; }
+.scene.active { display: flex; }
+
+.problem-banner {
+  background: rgba(239,68,68,.08); border-bottom: 1px solid rgba(239,68,68,.2);
+  padding: 10px 16px; font-size: .68rem; color: #fca5a5; line-height: 1.5;
+}
+.solution-banner {
+  padding: 10px 16px; font-size: .68rem; line-height: 1.5;
+  border-bottom: 1px solid #1a2030;
+}
+
+canvas { display: block; width: 100%; touch-action: none; }
+
+.ctrl { padding: 12px 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  flex: 1; min-width: 110px; padding: 14px 10px; border-radius: 14px;
+  font-size: .75rem; font-weight: 800; cursor: pointer; border: 1.5px solid;
+  text-align: center; transition: transform .08s; line-height: 1.4;
+}
+.btn:active { transform: scale(.94); }
+.btn-me {
+  background: rgba(139,92,246,.15); border-color: rgba(139,92,246,.4); color: #c4b5fd;
+}
+.btn-sim {
+  background: rgba(30,41,59,.6); border-color: #1e293b; color: #64748b;
+}
+
+.stats-row {
+  display: flex; gap: 8px; padding: 8px 16px; flex-wrap: wrap;
+}
+.stat-chip {
+  flex: 1; min-width: 80px; padding: 8px 10px; border-radius: 10px;
+  background: #0d1018; border: 1px solid #1a2030;
+  font-size: .65rem; text-align: center; line-height: 1.6;
+}
+.stat-val { font-size: 1.1rem; font-weight: 900; display: block; }
+
+.insight-box {
+  margin: 12px 16px; padding: 12px 14px; border-radius: 12px;
+  font-size: .68rem; line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-btn active" id="nb1" onclick="sw('problem')">❌<br>문제<br>상황</div>
+  <div class="nav-btn" id="nb2" onclick="sw('wave')">🌊<br>내 파동<br>표시</div>
+  <div class="nav-btn" id="nb3" onclick="sw('color')">🎨<br>개인<br>색상</div>
+  <div class="nav-btn" id="nb4" onclick="sw('score')">🏅<br>기여<br>순위</div>
+</nav>
+
+<!-- ═══ PROBLEM ═══ -->
+<div class="scene active" id="scene-problem">
+  <div class="problem-banner">
+    ❌ <strong>현재 문제</strong> — 500명이 동시에 탭하면 내가 뭘 했는지 전혀 안 보임.<br>
+    아래에서 "500명 시뮬레이션" 버튼을 눌러보세요.
+  </div>
+  <canvas id="c-problem" style="flex:1;max-height:340px"></canvas>
+  <div class="ctrl">
+    <button class="btn btn-me" onclick="probAttack('me')">👤 내가 탭</button>
+    <button class="btn btn-sim" onclick="probSimulate()">👥 500명 동시 탭</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-val" id="prob-mine" style="color:#c4b5fd">0</span>
+      내가 점령한 타일
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="prob-total" style="color:#64748b">0</span>
+      전체 점령 타일
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="prob-vis" style="color:#ef4444">0%</span>
+      내 기여 가시성
+    </div>
+  </div>
+  <div class="insight-box" style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);color:#fca5a5">
+    💀 <strong>Reddit Place 이전 문제:</strong> 수만 명이 함께 그림을 그렸지만 처음엔 내가 찍은 픽셀이 보이지 않았다. 그 결과? 초반 유저 이탈 폭증.
+  </div>
+</div>
+
+<!-- ═══ WAVE ═══ -->
+<div class="scene" id="scene-wave">
+  <div class="solution-banner" style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2);color:#fcd34d">
+    ✅ <strong>해결책 1: 내 파동이 보인다</strong> — 내가 탭하면 내 고유 파동이 퍼진다.<br>
+    500명이 동시에 탭해도 <strong>내 파동은 내 색</strong>으로 구별됨.
+  </div>
+  <canvas id="c-wave" style="flex:1;max-height:340px"></canvas>
+  <div class="ctrl">
+    <button class="btn btn-me" onclick="waveAttack('me')">👤 내 파동 발사</button>
+    <button class="btn btn-sim" onclick="waveSimulate()">👥 499명도 동시 발사</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-val" id="wave-mine" style="color:#c4b5fd">0</span>
+      내 파동 도달 타일
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="wave-total" style="color:#64748b">0</span>
+      전체 공격 파동
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="wave-vis" style="color:#22c55e">100%</span>
+      내 기여 가시성
+    </div>
+  </div>
+  <div class="insight-box" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);color:#fcd34d">
+    ✨ <strong>Splatoon 원리:</strong> 잉크를 뿌리면 내 색이 남는다. 500명이 같이 뿌려도 내 보라색 잉크는 내 것. 지도가 완성됐을 때 "저기 보라 구역이 내가 칠한 곳"이라는 소속감.
+  </div>
+</div>
+
+<!-- ═══ COLOR ═══ -->
+<div class="scene" id="scene-color">
+  <div class="solution-banner" style="background:rgba(139,92,246,.06);border-color:rgba(139,92,246,.2);color:#c4b5fd">
+    ✅ <strong>해결책 2: 개인 색상 타일</strong> — 내가 마지막으로 점령한 타일이 내 고유 색으로 표시됨.<br>
+    (Jungle=초록 계열 개인색, Orchard=파랑 계열 통일색)
+  </div>
+  <canvas id="c-color" style="flex:1;max-height:340px"></canvas>
+  <div class="ctrl">
+    <button class="btn btn-me" onclick="colorAttack()">👤 내 타일 찍기</button>
+    <button class="btn btn-sim" onclick="colorSimulate()">👥 499명도 찍기</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-val" id="col-mine" style="color:#c4b5fd">0</span>
+      내 색 타일
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="col-pct" style="color:#86efac">0%</span>
+      내 진영 점유율
+    </div>
+    <div class="stat-chip">
+      <span class="stat-val" id="col-rank" style="color:#fcd34d">-</span>
+      진영 내 순위
+    </div>
+  </div>
+  <div class="insight-box" style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);color:#c4b5fd">
+    ✨ <strong>Reddit Place 해결책:</strong> 모든 픽셀에 "마지막으로 찍은 사람" 기록. 나는 내 픽셀을 찍을 때 내 색이 보인다. 500만 명이 함께했지만 각자 자기 픽셀이 있었다.
+  </div>
+</div>
+
+<!-- ═══ SCORE ═══ -->
+<div class="scene" id="scene-score">
+  <div class="solution-banner" style="background:rgba(6,182,212,.06);border-color:rgba(6,182,212,.2);color:#67e8f9">
+    ✅ <strong>해결책 3: 실시간 기여 순위</strong> — 진영 내 내 기여도를 항상 보여줌.<br>
+    1등이 아니어도 "나는 진영의 일부"라는 소속감.
+  </div>
+  <canvas id="c-score" style="flex:1;max-height:260px"></canvas>
+  <div class="ctrl">
+    <button class="btn btn-me" onclick="scoreAttack()">👤 공격 (기여 +1)</button>
+    <button class="btn btn-sim" onclick="scoreSimulate()">👥 시간 경과 시뮬</button>
+  </div>
+  <!-- Live leaderboard -->
+  <div style="padding:10px 16px;font-size:.68rem;color:#475569;margin-bottom:4px">🏅 진영 내 실시간 순위</div>
+  <div id="leaderboard" style="padding:0 16px;display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden"></div>
+  <div class="insight-box" style="background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);color:#67e8f9;margin-bottom:10px">
+    ✨ <strong>League of Legends 원리:</strong> KDA 점수. 팀이 이겨도 지더라도 내 퍼포먼스는 항상 보인다. Kahoot도 같은 원리 — 학급 전체가 참여해도 내 순위가 화면에 보임.
+  </div>
+</div>
+
+<script>
+// ─── UTILS ─────────────────────────────────────────
+function sw(name) {
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('scene-'+name).classList.add('active');
+  const m={problem:'nb1',wave:'nb2',color:'nb3',score:'nb4'};
+  document.getElementById(m[name]).classList.add('active');
+  if(name==='problem') probResize();
+  if(name==='wave')    waveResize();
+  if(name==='color')   colorResize();
+  if(name==='score')   scoreResize();
+}
+
+function makeCanvas(id) {
+  const el = document.getElementById(id);
+  const dpr = window.devicePixelRatio||1;
+  const w = el.parentElement.clientWidth||360;
+  const hStyle = parseInt(el.style.maxHeight)||340;
+  const h = Math.min(hStyle, window.innerHeight*0.45);
+  el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+  el.style.width=w+'px'; el.style.height=h+'px';
+  el.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+  return { el, ctx: el.getContext('2d'), W: w, H: h };
+}
+
+// ═══════════════════════════════════════
+// PROBLEM SCENE
+// ═══════════════════════════════════════
+let P = {};
+let probMine = 0, probTotal = 0;
+
+function probInit() { P = makeCanvas('c-problem'); probBuild(); }
+function probResize() { P = makeCanvas('c-problem'); probBuild(); }
+
+const CELL_P = 36;
+let probGrid = []; // 0=neutral,1=o,2=j
+let probCols, probRows;
+
+function probBuild() {
+  probCols = Math.floor(P.W/CELL_P); probRows = Math.floor(P.H/CELL_P);
+  probGrid = new Array(probCols*probRows).fill(0);
+  for(let r=0;r<probRows;r++) for(let c=0;c<probCols;c++) {
+    const k=r*probCols+c;
+    if(c<probCols*.4) probGrid[k]=1;
+    else if(c>probCols*.6) probGrid[k]=2;
+  }
+  probDraw();
+}
+
+function probDraw() {
+  const {ctx,W,H}=P;
+  ctx.fillStyle='#06080b'; ctx.fillRect(0,0,W,H);
+  for(let r=0;r<probRows;r++) for(let c=0;c<probCols;c++) {
+    const k=r*probCols+c, v=probGrid[k];
+    const x=c*CELL_P,y=r*CELL_P,pad=1.5;
+    ctx.fillStyle=v===1?'rgba(37,99,235,.5)':v===2?'rgba(22,163,74,.5)':'#0d1018';
+    ctx.strokeStyle=v===1?'#3b82f6':v===2?'#22c55e':'#151c28';
+    ctx.lineWidth=v?1:.5;
+    ctx.beginPath(); ctx.roundRect(x+pad,y+pad,CELL_P-pad*2,CELL_P-pad*2,4);
+    ctx.fill(); ctx.stroke();
+  }
+}
+
+function probAttack(who) {
+  // Capture a few random neutral/enemy tiles — no visual distinction
+  const targets=[];
+  for(let i=0;i<3;i++) {
+    const c=Math.floor(probCols*.35+Math.random()*probCols*.3);
+    const r=Math.floor(Math.random()*probRows);
+    targets.push({c,r});
+  }
+  for(const {c,r} of targets) {
+    const k=r*probCols+c;
+    if(probGrid[k]!==1) { probGrid[k]=1; probTotal++; if(who==='me') probMine++; }
+  }
+  probDraw();
+  updateProbStats();
+}
+
+function probSimulate() {
+  // 500 people attack — my tiles become invisible
+  for(let i=0;i<500;i++) {
+    const c=Math.floor(Math.random()*probCols);
+    const r=Math.floor(Math.random()*probRows);
+    const k=r*probCols+c;
+    if(probGrid[k]!==1) { probGrid[k]=1; probTotal++; }
+  }
+  probDraw();
+  updateProbStats();
+}
+
+function updateProbStats() {
+  document.getElementById('prob-mine').textContent=probMine;
+  document.getElementById('prob-total').textContent=probTotal;
+  const vis=probTotal>0?Math.round(probMine/probTotal*100):0;
+  document.getElementById('prob-vis').textContent=vis+'%';
+}
+
+// ═══════════════════════════════════════
+// WAVE SCENE — My wave has my color
+// ═══════════════════════════════════════
+let WS = {};
+let waves = []; // {x,y,r,maxR,col,life,isMine}
+let waveGrid = [];
+let waveCols, waveRows;
+let waveMine=0, waveTotal=0;
+const MY_COLOR = '#a855f7'; // purple = "me"
+
+function waveInit() { WS = makeCanvas('c-wave'); waveBuild(); requestAnimationFrame(waveLoop); }
+function waveResize() { WS = makeCanvas('c-wave'); waveBuild(); }
+
+function waveBuild() {
+  waveCols=Math.floor(WS.W/CELL_P); waveRows=Math.floor(WS.H/CELL_P);
+  waveGrid=new Array(waveCols*waveRows).fill(0);
+  for(let r=0;r<waveRows;r++) for(let c=0;c<waveCols;c++) {
+    const k=r*waveCols+c;
+    if(c<waveCols*.4) waveGrid[k]=1;
+    else if(c>waveCols*.6) waveGrid[k]=2;
+  }
+}
+
+function waveAttack(who) {
+  const cx = WS.W*(who==='me'?0.5:Math.random());
+  const cy = WS.H*Math.random();
+  const isMine = who==='me';
+  waves.push({x:cx,y:cy,r:0,maxR:isMine?80:60,col:isMine?MY_COLOR:'#3b82f6',life:1,isMine,speed:isMine?2.5:3.5});
+  if(isMine) { waveMine++; } waveTotal++;
+  document.getElementById('wave-mine').textContent=waveMine;
+  document.getElementById('wave-total').textContent=waveTotal;
+}
+
+function waveSimulate() {
+  for(let i=0;i<20;i++) {
+    setTimeout(()=>{
+      const cx=WS.W*Math.random(), cy=WS.H*Math.random();
+      const f=Math.random()>.5;
+      waves.push({x:cx,y:cy,r:0,maxR:50+Math.random()*30,col:f?'#3b82f6':'#22c55e',life:1,isMine:false,speed:3+Math.random()*2});
+      waveTotal++;
+      document.getElementById('wave-total').textContent=waveTotal;
+    },i*40);
+  }
+}
+
+function waveLoop() {
+  const {ctx,W,H}=WS;
+  ctx.fillStyle='#06080b'; ctx.fillRect(0,0,W,H);
+  // Grid
+  for(let r=0;r<waveRows;r++) for(let c=0;c<waveCols;c++) {
+    const k=r*waveCols+c, v=waveGrid[k];
+    const x=c*CELL_P,y=r*CELL_P,pad=1.5;
+    ctx.fillStyle=v===1?'rgba(37,99,235,.35)':v===2?'rgba(22,163,74,.35)':'#0d1018';
+    ctx.strokeStyle=v===1?'rgba(59,130,246,.4)':v===2?'rgba(74,222,128,.4)':'#151c28';
+    ctx.lineWidth=.5;
+    ctx.beginPath(); ctx.roundRect(x+pad,y+pad,CELL_P-pad*2,CELL_P-pad*2,4);
+    ctx.fill(); ctx.stroke();
+  }
+  // Draw waves — mine on top
+  const sorted=[...waves].sort((a,b)=>a.isMine-b.isMine);
+  for(let i=sorted.length-1;i>=0;i--) {
+    const w=sorted[i];
+    w.r+=(w.maxR-w.r)*0.12*w.speed/3;
+    w.life-=0.025;
+    if(w.life<=0){waves.splice(waves.indexOf(w),1);continue;}
+    const lineW=w.isMine?3:1.5;
+    ctx.globalAlpha=w.life*(w.isMine?0.9:0.4);
+    ctx.strokeStyle=w.col;
+    ctx.lineWidth=lineW;
+    ctx.beginPath(); ctx.arc(w.x,w.y,w.r,0,Math.PI*2); ctx.stroke();
+    if(w.isMine&&w.r>10){
+      ctx.globalAlpha=w.life*0.3;
+      ctx.fillStyle=w.col;
+      ctx.beginPath(); ctx.arc(w.x,w.y,w.r*0.4,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+  // "YOU" label on my waves center
+  if(waveMine>0) {
+    ctx.fillStyle='rgba(168,85,247,.8)';
+    ctx.font='bold 9px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  }
+  requestAnimationFrame(waveLoop);
+}
+
+// ═══════════════════════════════════════
+// COLOR SCENE — Personal tile color
+// ═══════════════════════════════════════
+let CS = {};
+let colorGrid=[]; // {faction,playerIdx}
+let colorCols, colorRows;
+const ORCHARD_PLAYERS=[...Array(50)].map((_,i)=>({idx:i,col:genBlue(i,50)}));
+const JUNGLE_PLAYERS=[...Array(50)].map((_,i)=>({idx:i,col:genGreen(i,50)}));
+const ME_IDX=0; // I am player 0
+let colMine=0;
+
+function genBlue(i,n) {
+  // Orchard: all blue but slightly different saturation (faction unity)
+  const l=35+i/n*20;
+  return `hsl(215,${70+i/n*20}%,${l}%)`;
+}
+function genGreen(i,n) {
+  // Jungle: wider green range (individual variety)
+  const h=130+i/n*40, l=25+i/n*25;
+  return `hsl(${h},${65+i/n*25}%,${l}%)`;
+}
+
+function colorInit() { CS=makeCanvas('c-color'); colorBuild(); colorDraw(); }
+function colorResize() { CS=makeCanvas('c-color'); colorBuild(); colorDraw(); }
+
+function colorBuild() {
+  colorCols=Math.floor(CS.W/CELL_P); colorRows=Math.floor(CS.H/CELL_P);
+  colorGrid=new Array(colorCols*colorRows).fill(null).map(()=>({faction:null,playerIdx:-1}));
+  for(let r=0;r<colorRows;r++) for(let c=0;c<colorCols;c++) {
+    const k=r*colorCols+c;
+    if(c<colorCols*.4) {
+      colorGrid[k]={faction:'o',playerIdx:Math.floor(Math.random()*50)};
+    } else if(c>colorCols*.6) {
+      colorGrid[k]={faction:'j',playerIdx:Math.floor(Math.random()*50)};
+    }
+  }
+}
+
+function colorDraw() {
+  const {ctx,W,H}=CS;
+  ctx.fillStyle='#06080b'; ctx.fillRect(0,0,W,H);
+  for(let r=0;r<colorRows;r++) for(let c=0;c<colorCols;c++) {
+    const k=r*colorCols+c,cell=colorGrid[k];
+    const x=c*CELL_P,y=r*CELL_P,pad=1.5;
+    let fill='#0d1018', stroke='#151c28', lw=.5;
+    if(cell.faction==='o') {
+      const p=ORCHARD_PLAYERS[cell.playerIdx]||ORCHARD_PLAYERS[0];
+      fill=p.col; stroke=cell.playerIdx===ME_IDX?'#fff':'rgba(147,197,253,.3)'; lw=cell.playerIdx===ME_IDX?2:.5;
+    } else if(cell.faction==='j') {
+      const p=JUNGLE_PLAYERS[cell.playerIdx]||JUNGLE_PLAYERS[0];
+      fill=p.col; stroke=cell.playerIdx===ME_IDX?'#fff':'rgba(74,222,128,.3)'; lw=cell.playerIdx===ME_IDX?2:.5;
+    }
+    ctx.fillStyle=fill; ctx.strokeStyle=stroke; ctx.lineWidth=lw;
+    ctx.beginPath(); ctx.roundRect(x+pad,y+pad,CELL_P-pad*2,CELL_P-pad*2,4);
+    ctx.fill(); ctx.stroke();
+    if(cell.playerIdx===ME_IDX&&cell.faction) {
+      ctx.fillStyle='rgba(255,255,255,.7)';
+      ctx.font='bold 8px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('나', x+CELL_P/2, y+CELL_P/2);
+    }
+  }
+  updateColorStats();
+}
+
+function colorAttack() {
+  const targets=[];
+  for(let i=0;i<4;i++) {
+    const c=Math.floor(colorCols*.38+Math.random()*colorCols*.26);
+    const r=Math.floor(Math.random()*colorRows);
+    targets.push({c,r});
+  }
+  for(const{c,r}of targets){
+    const k=r*colorCols+c;
+    if(colorGrid[k].faction!=='o') { colorGrid[k]={faction:'o',playerIdx:ME_IDX}; colMine++; }
+  }
+  colorDraw();
+}
+
+function colorSimulate() {
+  for(let i=0;i<60;i++) {
+    const c=Math.floor(Math.random()*colorCols), r=Math.floor(Math.random()*colorRows);
+    const k=r*colorCols+c;
+    const faction=c<colorCols*.55?'o':'j';
+    const pIdx=1+Math.floor(Math.random()*49);
+    colorGrid[k]={faction,playerIdx:pIdx};
+  }
+  colorDraw();
+}
+
+function updateColorStats() {
+  let myTiles=0,oPct=0,oTotal=0;
+  const counts={};
+  for(const cell of colorGrid){
+    if(cell.faction==='o'){
+      oTotal++;
+      if(cell.playerIdx===ME_IDX) myTiles++;
+      counts[cell.playerIdx]=(counts[cell.playerIdx]||0)+1;
+    }
+  }
+  const total=colorGrid.filter(c=>c.faction).length||1;
+  oPct=Math.round(oTotal/total*100);
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const myRank=sorted.findIndex(([idx])=>parseInt(idx)===ME_IDX)+1||'-';
+  document.getElementById('col-mine').textContent=myTiles;
+  document.getElementById('col-pct').textContent=oPct+'%';
+  document.getElementById('col-rank').textContent=myRank==='-'?'-':myRank+'위';
+}
+
+// ═══════════════════════════════════════
+// SCORE SCENE — Live contribution rank
+// ═══════════════════════════════════════
+let SS2={};
+let scoreGrid=[];
+let scoreCols,scoreRows;
+const PLAYERS=[
+  {name:'나 (YOU)',col:'#a855f7',score:0,isMe:true},
+  {name:'🍎 Tiger',col:'#3b82f6',score:Math.floor(Math.random()*20),isMe:false},
+  {name:'🍎 Apple9',col:'#2563eb',score:Math.floor(Math.random()*20),isMe:false},
+  {name:'🍎 Seoul_i',col:'#1d4ed8',score:Math.floor(Math.random()*20),isMe:false},
+  {name:'🍎 Minjun',col:'#60a5fa',score:Math.floor(Math.random()*20),isMe:false},
+  {name:'🍎 KimJ',col:'#93c5fd',score:Math.floor(Math.random()*15),isMe:false},
+  {name:'🍎 iOS16',col:'#bfdbfe',score:Math.floor(Math.random()*12),isMe:false},
+];
+
+function scoreInit() { SS2=makeCanvas('c-score'); scoreBuild(); scoreDraw(); renderLeaderboard(); }
+function scoreResize() { SS2=makeCanvas('c-score'); scoreBuild(); scoreDraw(); }
+
+function scoreBuild() {
+  scoreCols=Math.floor(SS2.W/CELL_P); scoreRows=Math.floor(SS2.H/CELL_P);
+  scoreGrid=new Array(scoreCols*scoreRows).fill(null).map(()=>({faction:null,playerIdx:-1}));
+  for(let r=0;r<scoreRows;r++) for(let c=0;c<scoreCols;c++) {
+    const k=r*scoreCols+c;
+    if(c<scoreCols*.5) scoreGrid[k]={faction:'o',playerIdx:1+Math.floor(Math.random()*6)};
+    else scoreGrid[k]={faction:'j',playerIdx:-1};
+  }
+}
+
+function scoreDraw() {
+  const {ctx,W,H}=SS2;
+  ctx.fillStyle='#06080b'; ctx.fillRect(0,0,W,H);
+  for(let r=0;r<scoreRows;r++) for(let c=0;c<scoreCols;c++) {
+    const k=r*scoreCols+c,cell=scoreGrid[k];
+    const x=c*CELL_P,y=r*CELL_P,pad=1.5;
+    let fill='#0a1020',stroke='#151c28',lw=.5;
+    if(cell.faction==='o'&&cell.playerIdx>=0) {
+      const p=PLAYERS[cell.playerIdx]||PLAYERS[1];
+      fill=p.col+'44'; stroke=p.col+'88'; lw=.8;
+      if(cell.playerIdx===0){fill=PLAYERS[0].col+'66';stroke=PLAYERS[0].col;lw=2;}
+    } else if(cell.faction==='j') {
+      fill='rgba(22,163,74,.3)'; stroke='rgba(74,222,128,.25)'; lw=.5;
+    }
+    ctx.fillStyle=fill; ctx.strokeStyle=stroke; ctx.lineWidth=lw;
+    ctx.beginPath(); ctx.roundRect(x+pad,y+pad,CELL_P-pad*2,CELL_P-pad*2,4);
+    ctx.fill(); ctx.stroke();
+  }
+}
+
+function scoreAttack() {
+  PLAYERS[0].score++;
+  const targets=[];
+  for(let i=0;i<3;i++) {
+    const c=Math.floor(scoreCols*.45+Math.random()*scoreCols*.25);
+    const r=Math.floor(Math.random()*scoreRows);
+    targets.push({c,r});
+  }
+  for(const{c,r}of targets){
+    const k=r*scoreCols+c;
+    scoreGrid[k]={faction:'o',playerIdx:0};
+  }
+  scoreDraw(); renderLeaderboard();
+}
+
+function scoreSimulate() {
+  for(let i=1;i<PLAYERS.length;i++) PLAYERS[i].score+=Math.floor(Math.random()*4)+1;
+  for(let i=0;i<20;i++){
+    const c=Math.floor(Math.random()*scoreCols),r=Math.floor(Math.random()*scoreRows);
+    const k=r*scoreCols+c;
+    const pIdx=1+Math.floor(Math.random()*6);
+    scoreGrid[k]={faction:'o',playerIdx:pIdx};
+  }
+  scoreDraw(); renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const sorted=[...PLAYERS].sort((a,b)=>b.score-a.score);
+  const lb=document.getElementById('leaderboard');
+  lb.innerHTML=sorted.slice(0,7).map((p,i)=>{
+    const isMe=p.isMe;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;background:${isMe?'rgba(168,85,247,.1)':'#0d1018'};border:1px solid ${isMe?'rgba(168,85,247,.3)':'#1a2030'}">
+      <span style="color:#475569;font-size:.65rem;font-weight:800;min-width:18px">${i+1}</span>
+      <div style="width:10px;height:10px;border-radius:50%;background:${p.col};flex-shrink:0"></div>
+      <span style="font-size:.7rem;font-weight:${isMe?900:600};color:${isMe?'#c4b5fd':'#94a3b8'};flex:1">${p.name}</span>
+      <span style="font-size:.8rem;font-weight:900;color:${isMe?'#c4b5fd':'#64748b'}">${p.score}</span>
+      <span style="font-size:.6rem;color:#334155">타일</span>
+    </div>`;
+  }).join('');
+}
+
+// ─── BOOT ─────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  probInit(); waveInit(); colorInit(); scoreInit();
+});
+window.addEventListener('resize',()=>{
+  probResize(); waveResize(); colorResize(); scoreResize();
+});
+</script>
+</body>
+</html>

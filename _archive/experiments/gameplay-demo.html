@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoney War — 게임플레이 데모</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #08090c; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
+
+/* ── NAV ── */
+.nav { display: flex; background: #0d0f14; border-bottom: 1px solid #1a1f2e; overflow-x: auto; }
+.nav-btn {
+  flex: 1; min-width: 100px; padding: 14px 8px; text-align: center;
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+  color: #475569; cursor: pointer; border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: all .2s;
+}
+.nav-btn.active { color: #fff; border-bottom-color: currentColor; }
+.nav-btn:nth-child(1).active { color: #f87171; }
+.nav-btn:nth-child(2).active { color: #60a5fa; }
+.nav-btn:nth-child(3).active { color: #34d399; }
+
+/* ── SCENES ── */
+.scene { display: none; min-height: calc(100vh - 50px); }
+.scene.active { display: flex; flex-direction: column; }
+
+/* ── SHARED ── */
+.scene-header {
+  padding: 16px 20px 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.scene-title { font-size: 1.05rem; font-weight: 800; }
+.scene-sub { font-size: .7rem; color: #64748b; margin-top: 2px; }
+.badge {
+  padding: 3px 10px; border-radius: 20px; font-size: .6rem;
+  font-weight: 800; letter-spacing: .15em;
+}
+
+/* ══════════════════════════════════════════
+   DEMO 1: BATTERY WAR
+══════════════════════════════════════════ */
+#scene-battery {
+  background: radial-gradient(ellipse at 50% 0%, #1a0808 0%, #08090c 60%);
+}
+
+.batt-top { padding: 0 20px 8px; }
+
+.batt-bar-wrap {
+  margin-bottom: 14px;
+  background: #0f1318;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid #1a1f2e;
+}
+.batt-label {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.batt-faction { font-size: .72rem; font-weight: 700; }
+.batt-pct { font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.batt-track {
+  height: 28px; background: #141820; border-radius: 8px; overflow: hidden;
+  position: relative;
+}
+.batt-fill {
+  height: 100%; border-radius: 8px; transition: width .3s ease;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 8px;
+}
+.batt-icon {
+  font-size: .75rem; animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+.vs-row {
+  text-align: center; font-size: .75rem; font-weight: 700;
+  color: #f87171; margin: 4px 0 12px; letter-spacing: .2em;
+}
+
+/* Action area */
+.batt-action {
+  padding: 0 20px;
+  flex: 1;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.tap-btn {
+  width: 100%; padding: 22px;
+  border-radius: 18px;
+  font-size: 1.1rem; font-weight: 800; letter-spacing: .05em;
+  cursor: pointer; border: none;
+  position: relative; overflow: hidden;
+  transition: transform .08s, opacity .1s;
+  active:opacity .8;
+}
+.tap-btn:active { transform: scale(.96); }
+.tap-btn-orchard {
+  background: linear-gradient(135deg, rgba(210,228,252,.15), rgba(147,197,253,.08));
+  border: 1.5px solid rgba(190,218,255,.4);
+  color: #dbeafe;
+}
+.tap-btn-jungle {
+  background: linear-gradient(135deg, rgba(34,197,94,.15), rgba(74,222,128,.08));
+  border: 1.5px solid rgba(74,222,128,.4);
+  color: #bbf7d0;
+}
+
+.ability-row { display: flex; gap: 8px; }
+.ability-chip {
+  flex: 1; padding: 10px 8px; border-radius: 12px;
+  font-size: .65rem; font-weight: 700; text-align: center;
+  cursor: pointer; border: 1px solid; transition: all .15s;
+}
+.ability-chip:active { transform: scale(.94); }
+.ability-orchard {
+  background: rgba(191,219,254,.07); border-color: rgba(191,219,254,.2); color: #93c5fd;
+}
+.ability-jungle {
+  background: rgba(74,222,128,.07); border-color: rgba(74,222,128,.2); color: #4ade80;
+}
+.ability-chip.on-cooldown { opacity: .4; pointer-events: none; }
+
+.event-feed {
+  margin: 0 20px; padding: 10px 14px;
+  background: #0d1018; border-radius: 10px; border: 1px solid #1a1f2e;
+  font-size: .7rem; color: #64748b; min-height: 42px;
+}
+.event-item { animation: fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+.batt-timer {
+  text-align: center; font-size: .7rem; color: #475569;
+  padding: 10px; letter-spacing: .1em;
+}
+
+/* Float damage numbers */
+.float-num {
+  position: fixed; font-size: .9rem; font-weight: 800;
+  pointer-events: none; animation: floatUp .8s ease forwards;
+  z-index: 999;
+}
+@keyframes floatUp {
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-50px) scale(1.3)}
+}
+
+/* ══════════════════════════════════════════
+   DEMO 2: BENCHMARK MINIGAME
+══════════════════════════════════════════ */
+#scene-bench {
+  background: radial-gradient(ellipse at 50% 0%, #080e1a 0%, #08090c 60%);
+}
+
+.bench-scoreboard {
+  display: flex; gap: 1px; background: #1a1f2e;
+  margin: 0 20px 16px; border-radius: 12px; overflow: hidden;
+}
+.bench-score-cell {
+  flex: 1; background: #0d1018; padding: 12px 10px; text-align: center;
+}
+.bench-score-label { font-size: .58rem; color: #475569; letter-spacing: .1em; margin-bottom: 4px; }
+.bench-score-val { font-size: 1.2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.bench-game-area {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 20px; gap: 20px;
+}
+
+.bench-challenge {
+  width: 100%; max-width: 360px;
+  background: #0d1018; border-radius: 16px;
+  border: 1px solid #1a1f2e; padding: 24px 20px;
+  text-align: center;
+}
+.bench-challenge-title { font-size: .65rem; letter-spacing: .25em; color: #475569; margin-bottom: 8px; }
+.bench-challenge-main { font-size: 1.3rem; font-weight: 800; margin-bottom: 16px; }
+
+.bench-target {
+  width: 120px; height: 120px; border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; cursor: pointer;
+  transition: transform .08s;
+  border: 2px solid;
+  animation: targetPop .3s ease;
+}
+.bench-target:active { transform: scale(.9); }
+@keyframes targetPop {
+  0%{transform:scale(.5);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1}
+}
+
+.bench-progress {
+  width: 100%; height: 6px; background: #141820; border-radius: 3px; overflow: hidden;
+}
+.bench-progress-fill {
+  height: 100%; border-radius: 3px; transition: width .2s;
+}
+
+.bench-result {
+  font-size: .72rem; color: #64748b; text-align: center;
+}
+
+/* ══════════════════════════════════════════
+   DEMO 3: APP STORE WAR
+══════════════════════════════════════════ */
+#scene-apps {
+  background: radial-gradient(ellipse at 50% 0%, #0a0514 0%, #08090c 60%);
+}
+
+.apps-hud {
+  display: flex; gap: 1px; background: #1a1f2e;
+  border-bottom: 1px solid #1a1f2e;
+}
+.apps-hud-cell {
+  flex: 1; background: #0d1018; padding: 10px 12px; text-align: center;
+}
+.apps-hud-label { font-size: .55rem; color: #475569; letter-spacing: .1em; }
+.apps-hud-val { font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+.apps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; padding: 12px 14px;
+}
+.app-slot {
+  border-radius: 12px; padding: 12px 8px;
+  text-align: center; cursor: pointer;
+  border: 1px solid #1a1f2e;
+  background: #0d1018;
+  transition: transform .1s, border-color .2s;
+  min-height: 90px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+}
+.app-slot:active { transform: scale(.95); }
+.app-slot.orchard { border-color: rgba(190,218,255,.35); background: rgba(210,228,252,.07); }
+.app-slot.jungle  { border-color: rgba(74,222,128,.35); background: rgba(34,197,94,.07); }
+.app-slot.neutral { border-color: #1a2230; }
+.app-slot.contested { border-color: #facc15; animation: pulse-border 1s infinite; }
+@keyframes pulse-border { 0%,100%{border-color:#facc15} 50%{border-color:#78350f} }
+
+.app-emoji { font-size: 1.6rem; }
+.app-name { font-size: .6rem; color: #94a3b8; }
+.app-bar { width: 100%; height: 4px; background: #1a1f2e; border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.app-bar-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.app-downloads { font-size: .6rem; font-weight: 700; }
+
+.apps-action { padding: 12px 14px; }
+.apps-btn-row { display: flex; gap: 8px; }
+.apps-btn {
+  flex: 1; padding: 14px 8px; border-radius: 14px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .05em;
+  cursor: pointer; border: 1.5px solid; text-align: center;
+  transition: transform .1s;
+}
+.apps-btn:active { transform: scale(.96); }
+.apps-btn-orchard {
+  background: rgba(210,228,252,.08); border-color: rgba(190,218,255,.3); color: #bfdbfe;
+}
+.apps-btn-jungle {
+  background: rgba(34,197,94,.08); border-color: rgba(74,222,128,.3); color: #86efac;
+}
+
+.apps-log { margin: 10px 14px 0; padding: 10px 14px;
+  background: #0d1018; border-radius: 10px; border: 1px solid #1a1f2e;
+  font-size: .68rem; color: #64748b; min-height: 40px;
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-btn active" onclick="showScene('battery')">🔋 배터리 소모전</div>
+  <div class="nav-btn" onclick="showScene('bench')">🏅 벤치마크 대결</div>
+  <div class="nav-btn" onclick="showScene('apps')">🏪 앱스토어 점령전</div>
+</div>
+
+<!-- ══ DEMO 1: BATTERY WAR ══ -->
+<div class="scene active" id="scene-battery">
+  <div class="scene-header">
+    <div>
+      <div class="scene-title">🔋 배터리 소모전</div>
+      <div class="scene-sub">상대 진영 배터리를 먼저 0%로 만들어라</div>
+    </div>
+    <div class="badge" style="background:rgba(248,113,113,.15);color:#f87171">1위 추천</div>
+  </div>
+
+  <div class="batt-top">
+    <!-- Orchard bar -->
+    <div class="batt-bar-wrap">
+      <div class="batt-label">
+        <span class="batt-faction" style="color:#bfdbfe">🍎 Orchard</span>
+        <span class="batt-pct" id="b-orchard-pct" style="color:#bfdbfe">100%</span>
+      </div>
+      <div class="batt-track">
+        <div class="batt-fill" id="b-orchard-fill"
+          style="width:100%;background:linear-gradient(90deg,rgba(147,197,253,.6),rgba(210,228,252,.9))">
+          <span class="batt-icon">🔋</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vs-row">⚔ LIVE BATTLE</div>
+
+    <!-- Jungle bar -->
+    <div class="batt-bar-wrap">
+      <div class="batt-label">
+        <span class="batt-faction" style="color:#86efac">🌿 Jungle</span>
+        <span class="batt-pct" id="b-jungle-pct" style="color:#86efac">100%</span>
+      </div>
+      <div class="batt-track">
+        <div class="batt-fill" id="b-jungle-fill"
+          style="width:100%;background:linear-gradient(90deg,rgba(34,197,94,.6),rgba(74,222,128,.9))">
+          <span class="batt-icon">🔋</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="batt-action">
+    <!-- Tap buttons -->
+    <button class="tap-btn tap-btn-orchard" id="b-orchard-tap"
+      ontouchstart="battTap('orchard',event)" onclick="battTap('orchard',event)">
+      🍎 ATTACK — 탭해서 갤럭시 배터리 깎기
+    </button>
+
+    <button class="tap-btn tap-btn-jungle" id="b-jungle-tap"
+      ontouchstart="battTap('jungle',event)" onclick="battTap('jungle',event)">
+      🌿 ATTACK — 탭해서 아이폰 배터리 깎기
+    </button>
+
+    <!-- Abilities -->
+    <div class="ability-row">
+      <div class="ability-chip ability-orchard" id="b-lowpower" onclick="battAbility('lowpower',event)">
+        🔋 저전력 모드<br><span style="opacity:.6">방어력 2배 (15초)</span>
+      </div>
+      <div class="ability-chip ability-jungle" id="b-fastcharge" onclick="battAbility('fastcharge',event)">
+        ⚡ 65W 급속충전<br><span style="opacity:.6">공격력 3배 (8초)</span>
+      </div>
+      <div class="ability-chip ability-orchard" id="b-airshare" onclick="battAbility('airshare',event)">
+        🌐 Air Share<br><span style="opacity:.6">팀 에너지 전송</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event-feed" id="b-events">게임 시작! 탭해서 상대 배터리를 소모시켜라 ⚡</div>
+
+  <div class="batt-timer" id="b-timer">⏱ 7:00 남음 · 배터리를 먼저 0%로!</div>
+</div>
+
+<!-- ══ DEMO 2: BENCHMARK ══ -->
+<div class="scene" id="scene-bench">
+  <div class="scene-header">
+    <div>
+      <div class="scene-title">🏅 벤치마크 대결</div>
+      <div class="scene-sub">A시리즈 vs Snapdragon — 성능 총력전</div>
+    </div>
+  </div>
+
+  <div class="bench-scoreboard">
+    <div class="bench-score-cell">
+      <div class="bench-score-label">🍎 ORCHARD 팀</div>
+      <div class="bench-score-val" id="bench-orchard-score" style="color:#bfdbfe">0</div>
+    </div>
+    <div class="bench-score-cell">
+      <div class="bench-score-label">라운드</div>
+      <div class="bench-score-val" id="bench-round" style="color:#facc15">1/5</div>
+    </div>
+    <div class="bench-score-cell">
+      <div class="bench-score-label">🌿 JUNGLE 팀</div>
+      <div class="bench-score-val" id="bench-jungle-score" style="color:#86efac">0</div>
+    </div>
+  </div>
+
+  <div class="bench-game-area">
+    <div class="bench-challenge" id="bench-challenge">
+      <div class="bench-challenge-title" id="bench-type">반응속도 테스트</div>
+      <div class="bench-challenge-main" id="bench-instruction">화면이 바뀌면 즉시 탭!</div>
+
+      <div class="bench-target" id="bench-target"
+        style="background:rgba(255,255,255,.05);border-color:#1a1f2e;color:#1a1f2e"
+        ontouchstart="benchTap(event)" onclick="benchTap(event)">
+        대기중
+      </div>
+
+      <div class="bench-progress">
+        <div class="bench-progress-fill" id="bench-prog" style="width:0%;background:#475569"></div>
+      </div>
+    </div>
+
+    <div class="bench-result" id="bench-result">탭해서 시작하세요</div>
+
+    <div style="display:flex;gap:8px;width:100%;max-width:360px">
+      <button onclick="benchStart('orchard')" style="flex:1;padding:14px;border-radius:12px;border:1.5px solid rgba(190,218,255,.3);background:rgba(210,228,252,.08);color:#bfdbfe;font-weight:800;font-size:.8rem;cursor:pointer">
+        🍎 Orchard로 플레이
+      </button>
+      <button onclick="benchStart('jungle')" style="flex:1;padding:14px;border-radius:12px;border:1.5px solid rgba(74,222,128,.3);background:rgba(34,197,94,.08);color:#86efac;font-weight:800;font-size:.8rem;cursor:pointer">
+        🌿 Jungle로 플레이
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DEMO 3: APP STORE ══ -->
+<div class="scene" id="scene-apps">
+  <div class="scene-header">
+    <div>
+      <div class="scene-title">🏪 앱스토어 점령전</div>
+      <div class="scene-sub">앱 출시 → 다운로드 경쟁 → 카테고리 점령</div>
+    </div>
+  </div>
+
+  <div class="apps-hud">
+    <div class="apps-hud-cell">
+      <div class="apps-hud-label">🍎 자원</div>
+      <div class="apps-hud-val" id="apps-orchard-res" style="color:#bfdbfe">50</div>
+    </div>
+    <div class="apps-hud-cell">
+      <div class="apps-hud-label">⏱ 세션</div>
+      <div class="apps-hud-val" id="apps-timer" style="color:#facc15">15:00</div>
+    </div>
+    <div class="apps-hud-cell">
+      <div class="apps-hud-label">🌿 자원</div>
+      <div class="apps-hud-val" id="apps-jungle-res" style="color:#86efac">50</div>
+    </div>
+  </div>
+
+  <!-- App category grid -->
+  <div class="apps-grid" id="apps-grid"></div>
+
+  <div class="apps-action">
+    <div style="font-size:.65rem;color:#475569;letter-spacing:.1em;margin-bottom:8px;text-align:center">
+      앱 출시 (자원 15 소비) → 다운로드 경쟁 시작
+    </div>
+    <div class="apps-btn-row">
+      <div class="apps-btn apps-btn-orchard" onclick="appsLaunch('orchard')">
+        🍎 앱 출시<br><span style="font-size:.6rem;opacity:.6">심사 후 고품질 출시</span>
+      </div>
+      <div class="apps-btn apps-btn-jungle" onclick="appsLaunch('jungle')">
+        🌿 앱 출시<br><span style="font-size:.6rem;opacity:.6">즉시 출시 · 사이드로드</span>
+      </div>
+    </div>
+  </div>
+  <div class="apps-log" id="apps-log">앱을 출시해서 카테고리를 점령하세요!</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// SCENE NAV
+// ══════════════════════════════════════════
+function showScene(id) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('scene-' + id).classList.add('active');
+  document.querySelector(`.nav-btn[onclick*="${id}"]`).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// DEMO 1: BATTERY WAR
+// ══════════════════════════════════════════
+const batt = {
+  orchard: 100, jungle: 100,
+  orchardShield: false, junglePower: false,
+  orchardShieldUntil: 0, junglePowerUntil: 0,
+  gameOver: false,
+  timer: 420, timerInterval: null,
+};
+
+function battInit() {
+  batt.timerInterval = setInterval(() => {
+    if (batt.gameOver) return;
+    batt.timer--;
+    const m = Math.floor(batt.timer/60), s = batt.timer%60;
+    document.getElementById('b-timer').textContent =
+      `⏱ ${m}:${s.toString().padStart(2,'0')} 남음 · 배터리를 먼저 0%로!`;
+    if (batt.timer <= 0) battEnd('time');
+  }, 1000);
+}
+
+function battTap(faction, e) {
+  if (batt.gameOver) return;
+  e.preventDefault();
+  const now = Date.now();
+  const isOrchardShielded = batt.orchardShield && now < batt.orchardShieldUntil;
+  const isJunglePowered = batt.junglePower && now < batt.junglePowerUntil;
+
+  let dmg = 1.5;
+  if (isJunglePowered && faction === 'jungle') dmg *= 3;
+  if (isOrchardShielded && faction === 'orchard') dmg *= 0.3;
+
+  if (faction === 'orchard') {
+    // Orchard attacks Jungle
+    batt.jungle = Math.max(0, batt.jungle - dmg);
+    showFloat(e, `-${dmg.toFixed(1)}%`, '#f87171');
+    addEvent('🍎 Orchard 공격! 🌿 배터리 -' + dmg.toFixed(1) + '%');
+  } else {
+    batt.orchard = Math.max(0, batt.orchard - dmg);
+    const blocked = isOrchardShielded;
+    showFloat(e, blocked ? `🛡 ${dmg.toFixed(1)}%` : `-${dmg.toFixed(1)}%`, blocked ? '#93c5fd' : '#f87171');
+    addEvent(blocked ? '🛡 저전력 모드가 공격 차단! (-' + dmg.toFixed(1) + '%)' : '🌿 Jungle 공격! 🍎 배터리 -' + dmg.toFixed(1) + '%');
+  }
+
+  battUpdate();
+  if (batt.orchard <= 0) battEnd('orchard');
+  else if (batt.jungle <= 0) battEnd('jungle');
+}
+
+function battAbility(type, e) {
+  e.preventDefault();
+  const now = Date.now();
+  const el = document.getElementById('b-' + type);
+
+  if (type === 'lowpower') {
+    batt.orchardShield = true;
+    batt.orchardShieldUntil = now + 15000;
+    el.classList.add('on-cooldown');
+    addEvent('🛡 저전력 모드 발동! 15초간 방어력 2배');
+    setTimeout(() => el.classList.remove('on-cooldown'), 30000);
+  } else if (type === 'fastcharge') {
+    batt.junglePower = true;
+    batt.junglePowerUntil = now + 8000;
+    el.classList.add('on-cooldown');
+    addEvent('⚡ 65W 급속충전 발동! 8초간 공격력 3배');
+    setTimeout(() => el.classList.remove('on-cooldown'), 25000);
+  } else if (type === 'airshare') {
+    batt.orchard = Math.min(100, batt.orchard + 8);
+    el.classList.add('on-cooldown');
+    addEvent('🌐 Air Share! 🍎 Orchard 배터리 +8% 회복');
+    battUpdate();
+    setTimeout(() => el.classList.remove('on-cooldown'), 20000);
+  }
+}
+
+function battUpdate() {
+  const op = Math.round(batt.orchard), jp = Math.round(batt.jungle);
+  document.getElementById('b-orchard-pct').textContent = op + '%';
+  document.getElementById('b-jungle-pct').textContent = jp + '%';
+  document.getElementById('b-orchard-fill').style.width = op + '%';
+  document.getElementById('b-jungle-fill').style.width = jp + '%';
+
+  // Color warning when low
+  if (op < 20) {
+    document.getElementById('b-orchard-fill').style.background =
+      'linear-gradient(90deg,#ef4444,#f87171)';
+    document.getElementById('b-orchard-pct').style.color = '#f87171';
+  }
+  if (jp < 20) {
+    document.getElementById('b-jungle-fill').style.background =
+      'linear-gradient(90deg,#ef4444,#f87171)';
+    document.getElementById('b-jungle-pct').style.color = '#f87171';
+  }
+}
+
+function battEnd(winner) {
+  batt.gameOver = true;
+  clearInterval(batt.timerInterval);
+  const msg = winner === 'time'
+    ? `⏱ 시간 종료! 🍎 ${Math.round(batt.orchard)}% vs 🌿 ${Math.round(batt.jungle)}% → ${batt.orchard > batt.jungle ? '🍎 Orchard 승리!' : '🌿 Jungle 승리!'}`
+    : winner === 'orchard'
+      ? '🌿 Jungle이 아이폰 배터리를 0%로 만들었다! Jungle 승리! 💀🍎'
+      : '🍎 Orchard가 갤럭시 배터리를 0%로! Orchard 승리! 💀🌿';
+  document.getElementById('b-events').innerHTML =
+    `<div class="event-item" style="color:#facc15;font-weight:700">${msg}</div>`;
+  document.getElementById('b-timer').textContent = '게임 종료! 새로고침으로 다시';
+}
+
+function addEvent(txt) {
+  const el = document.getElementById('b-events');
+  el.innerHTML = `<div class="event-item">${txt}</div>`;
+}
+
+function showFloat(e, text, color) {
+  const el = document.createElement('div');
+  el.className = 'float-num';
+  el.style.color = color;
+  el.style.left = (e.clientX || window.innerWidth/2) + 'px';
+  el.style.top = (e.clientY || 200) + 'px';
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+battInit();
+
+// Auto Jungle attack every 2.5s (simulate other players)
+setInterval(() => {
+  if (batt.gameOver) return;
+  const dmg = (0.8 + Math.random() * 0.8);
+  batt.orchard = Math.max(0, batt.orchard - dmg);
+  battUpdate();
+  if (batt.orchard <= 0) battEnd('orchard');
+}, 2500);
+
+// ══════════════════════════════════════════
+// DEMO 2: BENCHMARK
+// ══════════════════════════════════════════
+const bench = {
+  myFaction: null,
+  round: 0, maxRound: 5,
+  orchard: 0, jungle: 0,
+  waiting: true, waitTimer: null,
+  started: false, startTime: 0,
+  challenges: ['react','react','tap','tap','react'],
+  tapCount: 0, tapTarget: 15,
+  colors: {orchard:'#bfdbfe',jungle:'#86efac'},
+};
+
+function benchStart(faction) {
+  bench.myFaction = faction;
+  bench.round = 0; bench.orchard = 0; bench.jungle = 0;
+  bench.started = true;
+  benchNextRound();
+}
+
+function benchNextRound() {
+  if (bench.round >= bench.maxRound) { benchFinish(); return; }
+  const type = bench.challenges[bench.round];
+  document.getElementById('bench-round').textContent = (bench.round+1) + '/' + bench.maxRound;
+  document.getElementById('bench-prog').style.width = '0%';
+
+  if (type === 'react') {
+    document.getElementById('bench-type').textContent = '⚡ 반응속도 테스트';
+    document.getElementById('bench-instruction').textContent = '🎯 노란 신호가 뜨면 즉시 탭!';
+    document.getElementById('bench-result').textContent = '대기 중...';
+    const t = document.getElementById('bench-target');
+    t.style.background = 'rgba(255,255,255,.05)';
+    t.style.borderColor = '#1a1f2e';
+    t.textContent = '대기';
+    bench.waiting = true;
+    bench.waitTimer = setTimeout(() => {
+      t.style.background = 'rgba(250,204,21,.2)';
+      t.style.borderColor = '#facc15';
+      t.textContent = '🎯';
+      bench.waiting = false;
+      bench.startTime = Date.now();
+      // Progress bar countdown
+      let pct = 0;
+      const pi = setInterval(() => {
+        pct += 2;
+        document.getElementById('bench-prog').style.width = pct + '%';
+        document.getElementById('bench-prog').style.background = '#facc15';
+        if (pct >= 100) {
+          clearInterval(pi);
+          benchMiss();
+        }
+      }, 30);
+      bench._progInterval = pi;
+    }, 1000 + Math.random() * 2000);
+  } else {
+    document.getElementById('bench-type').textContent = '👆 탭 속도 테스트';
+    document.getElementById('bench-instruction').textContent = `5초 안에 최대한 많이 탭!`;
+    bench.tapCount = 0;
+    const t = document.getElementById('bench-target');
+    t.style.background = 'rgba(99,102,241,.2)';
+    t.style.borderColor = '#818cf8';
+    t.textContent = '탭!';
+    bench.waiting = false;
+    bench.startTime = Date.now();
+    let pct = 0;
+    const pi = setInterval(() => {
+      pct += 2;
+      document.getElementById('bench-prog').style.width = pct + '%';
+      document.getElementById('bench-prog').style.background = '#818cf8';
+      document.getElementById('bench-result').textContent = `탭 수: ${bench.tapCount} / 시간 내 최대한!`;
+      if (pct >= 100) {
+        clearInterval(pi);
+        // Score based on tap count
+        const score = Math.min(100, bench.tapCount * 6);
+        benchScore(score);
+      }
+    }, 100);
+    bench._progInterval = pi;
+  }
+}
+
+function benchTap(e) {
+  e.preventDefault();
+  if (!bench.started) return;
+  const type = bench.challenges[bench.round];
+
+  if (type === 'react') {
+    if (bench.waiting) {
+      document.getElementById('bench-result').textContent = '❌ 너무 일찍! -10점';
+      benchScore(-10);
+      return;
+    }
+    clearInterval(bench._progInterval);
+    const rt = Date.now() - bench.startTime;
+    const score = Math.max(0, 100 - Math.floor(rt / 5));
+    document.getElementById('bench-result').textContent = `⚡ 반응속도: ${rt}ms → ${score}점`;
+    benchScore(score);
+  } else {
+    bench.tapCount++;
+  }
+}
+
+function benchMiss() {
+  document.getElementById('bench-result').textContent = '😴 반응 실패! 0점';
+  benchScore(0);
+}
+
+function benchScore(score) {
+  if (bench.myFaction === 'orchard') {
+    bench.orchard += Math.max(0, score);
+  } else {
+    bench.jungle += Math.max(0, score);
+  }
+  // Simulate opponent
+  const oppScore = 20 + Math.floor(Math.random() * 70);
+  if (bench.myFaction === 'orchard') bench.jungle += oppScore;
+  else bench.orchard += oppScore;
+
+  document.getElementById('bench-orchard-score').textContent = bench.orchard;
+  document.getElementById('bench-jungle-score').textContent = bench.jungle;
+
+  bench.round++;
+  clearTimeout(bench.waitTimer);
+  setTimeout(() => benchNextRound(), 1200);
+}
+
+function benchFinish() {
+  const winner = bench.orchard > bench.jungle ? 'Orchard 🍎' : 'Jungle 🌿';
+  document.getElementById('bench-result').textContent =
+    `🏆 ${winner} 승리! A시리즈: ${bench.orchard}점 vs Snapdragon: ${bench.jungle}점`;
+  const t = document.getElementById('bench-target');
+  t.textContent = bench.orchard > bench.jungle ? '🍎' : '🌿';
+  t.style.background = bench.orchard > bench.jungle ? 'rgba(191,219,254,.2)' : 'rgba(74,222,128,.2)';
+  t.style.borderColor = bench.orchard > bench.jungle ? '#93c5fd' : '#4ade80';
+  document.getElementById('bench-prog').style.width = '100%';
+  document.getElementById('bench-prog').style.background = '#4ade80';
+}
+
+// ══════════════════════════════════════════
+// DEMO 3: APP STORE WAR
+// ══════════════════════════════════════════
+const appsData = {
+  orchard: 50, jungle: 50,
+  timer: 900,
+  slots: [
+    {name:'음악',emoji:'🎵',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'결제',emoji:'💳',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'카메라',emoji:'📷',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'메신저',emoji:'💬',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'게임',emoji:'🎮',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'지도',emoji:'🗺️',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'클라우드',emoji:'☁️',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'보안',emoji:'🔒',owner:null,orchardDl:0,jungleDl:0,max:100},
+    {name:'유틸',emoji:'🔧',owner:null,orchardDl:0,jungleDl:0,max:100},
+  ],
+};
+
+function appsRender() {
+  const grid = document.getElementById('apps-grid');
+  grid.innerHTML = '';
+  appsData.slots.forEach((s, i) => {
+    const cls = s.owner ? s.owner : (s.orchardDl > 0 || s.jungleDl > 0 ? 'contested' : 'neutral');
+    const totalDl = s.orchardDl + s.jungleDl;
+    const orchardPct = totalDl > 0 ? (s.orchardDl / s.max * 100) : 0;
+    const junglePct = totalDl > 0 ? (s.jungleDl / s.max * 100) : 0;
+    grid.innerHTML += `
+      <div class="app-slot ${cls}" onclick="appsSlotClick(${i})">
+        <div class="app-emoji">${s.emoji}</div>
+        <div class="app-name">${s.name}</div>
+        ${totalDl > 0 ? `
+          <div class="app-bar">
+            <div class="app-bar-fill" style="width:${orchardPct}%;background:rgba(191,219,254,.7)"></div>
+          </div>
+          <div class="app-downloads" style="color:${s.owner === 'orchard' ? '#bfdbfe' : s.owner === 'jungle' ? '#86efac' : '#94a3b8'}">
+            ${s.owner ? (s.owner === 'orchard' ? '🍎 점령' : '🌿 점령') : `🍎${s.orchardDl} 🌿${s.jungleDl}`}
+          </div>
+        ` : '<div class="app-downloads" style="color:#334155">미출시</div>'}
+      </div>`;
+  });
+}
+
+function appsLaunch(faction) {
+  const cost = faction === 'orchard' ? 15 : 12; // Jungle cheaper (open ecosystem)
+  if (faction === 'orchard' && appsData.orchard < cost) {
+    appsLog('🍎 자원 부족! (필요: ' + cost + ')'); return;
+  }
+  if (faction === 'jungle' && appsData.jungle < cost) {
+    appsLog('🌿 자원 부족! (필요: ' + cost + ')'); return;
+  }
+
+  // Pick random available slot
+  const available = appsData.slots.filter(s => !s.owner);
+  if (available.length === 0) { appsLog('모든 카테고리 점령 완료!'); return; }
+  const slot = available[Math.floor(Math.random() * available.length)];
+
+  if (faction === 'orchard') {
+    appsData.orchard -= cost;
+    // Orchard: slower release but higher quality (more downloads)
+    setTimeout(() => {
+      slot.orchardDl = Math.min(slot.max, slot.orchardDl + 35 + Math.floor(Math.random()*20));
+      checkCapture(slot);
+      appsRender();
+      appsLog(`🍎 ${slot.emoji}${slot.name} 앱 출시 완료! 다운로드 ${slot.orchardDl}`);
+      document.getElementById('apps-orchard-res').textContent = appsData.orchard;
+    }, 800); // Simulate App Store review delay
+    appsLog(`🍎 ${slot.emoji}${slot.name} 심사 중... (출시 대기)`);
+  } else {
+    appsData.jungle -= cost;
+    slot.jungleDl = Math.min(slot.max, slot.jungleDl + 25 + Math.floor(Math.random()*25));
+    checkCapture(slot);
+    appsRender();
+    appsLog(`🌿 ${slot.emoji}${slot.name} 즉시 출시! 다운로드 ${slot.jungleDl}`);
+    document.getElementById('apps-jungle-res').textContent = appsData.jungle;
+  }
+  appsRender();
+}
+
+function checkCapture(slot) {
+  if (slot.orchardDl >= slot.max * 0.6 && slot.orchardDl > slot.jungleDl * 1.5) slot.owner = 'orchard';
+  else if (slot.jungleDl >= slot.max * 0.6 && slot.jungleDl > slot.orchardDl * 1.5) slot.owner = 'jungle';
+}
+
+function appsSlotClick(i) {
+  const s = appsData.slots[i];
+  if (s.owner) {
+    appsLog(`${s.emoji} ${s.name}: ${s.owner === 'orchard' ? '🍎 Orchard' : '🌿 Jungle'} 점령 중`);
+  } else {
+    appsLog(`${s.emoji} ${s.name}: 🍎${s.orchardDl} / 🌿${s.jungleDl} 다운로드 (목표: ${s.max})`);
+  }
+}
+
+function appsLog(msg) {
+  document.getElementById('apps-log').textContent = msg;
+}
+
+// Passive income
+setInterval(() => {
+  appsData.orchard = Math.min(200, appsData.orchard + 1);
+  appsData.jungle = Math.min(100, appsData.jungle + 1.5); // Jungle earns more individually
+
+  // Natural downloads
+  appsData.slots.forEach(s => {
+    if (!s.owner) {
+      if (s.orchardDl > 0) s.orchardDl = Math.min(s.max, s.orchardDl + Math.random()*2);
+      if (s.jungleDl > 0) s.jungleDl = Math.min(s.max, s.jungleDl + Math.random()*3);
+      checkCapture(s);
+    }
+  });
+
+  document.getElementById('apps-orchard-res').textContent = Math.floor(appsData.orchard);
+  document.getElementById('apps-jungle-res').textContent = Math.floor(appsData.jungle);
+  appsRender();
+}, 1000);
+
+// Timer
+setInterval(() => {
+  appsData.timer = Math.max(0, appsData.timer - 1);
+  const m = Math.floor(appsData.timer/60), s = appsData.timer%60;
+  document.getElementById('apps-timer').textContent = m + ':' + s.toString().padStart(2,'0');
+}, 1000);
+
+appsRender();
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoney War — 컨셉 비교</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111; color: #fff; font-family: system-ui, sans-serif; padding: 20px; }
+  h1 { text-align: center; font-size: 1.4rem; letter-spacing: .2em; color: #aaa; margin-bottom: 6px; }
+  .subtitle { text-align: center; font-size: .8rem; color: #555; margin-bottom: 32px; }
+
+  .concepts { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+  .concept { flex: 1; min-width: 280px; max-width: 360px; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
+  .concept-title { text-align: center; font-size: .75rem; letter-spacing: .25em; padding: 14px; font-weight: 700; }
+
+  /* ── HEX CANVAS ── */
+  .hex-area { padding: 16px; display: flex; justify-content: center; }
+  canvas { border-radius: 10px; }
+
+  /* ── MINI HUD ── */
+  .hud { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; font-size: .72rem; }
+  .bar-wrap { flex: 1; height: 6px; border-radius: 3px; margin: 0 10px; overflow: hidden; background: rgba(255,255,255,.1); }
+  .bar-fill { height: 100%; border-radius: 3px; width: 55%; }
+  .pct { font-size: .65rem; opacity: .7; }
+
+  /* ── SHARE CARD PREVIEW ── */
+  .share-preview { margin: 0 14px 14px; border-radius: 10px; padding: 12px; text-align: center; font-size: .75rem; }
+  .share-line { font-size: 1.1rem; margin-bottom: 4px; }
+  .share-sub { opacity: .6; font-size: .65rem; }
+
+  /* ── FEEL TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 14px; justify-content: center; }
+  .tag { border-radius: 20px; padding: 3px 10px; font-size: .65rem; border: 1px solid; }
+
+  /* ── CONCEPT A ── */
+  .ca { background: linear-gradient(160deg, #0d1117 0%, #0a1a10 100%); }
+  .ca .concept-title { background: linear-gradient(90deg, #f5f0e8 30%, #1a2e1a 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .ca .bar-fill { background: linear-gradient(90deg, #c8a882, #22c55e); }
+  .ca .share-preview { background: #0f1f0f; border: 1px solid #22c55e33; }
+  .ca .tag { color: #c8a882; border-color: #c8a88244; }
+
+  /* ── CONCEPT B ── */
+  .cb { background: linear-gradient(160deg, #080b10 0%, #0c150c 100%); }
+  .cb .concept-title { color: #e8e8e8; background: linear-gradient(90deg, #007AFF 0%, #2d5016 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .cb .bar-fill { background: linear-gradient(90deg, #007AFF, #4a7c2f); }
+  .cb .share-preview { background: #0a0f1a; border: 1px solid #007aff33; }
+  .cb .tag { color: #7ab8f5; border-color: #007aff44; }
+
+  /* ── CONCEPT C ── */
+  .cc { background: #0a0a0a; }
+  .cc .concept-title { color: #fff; }
+  .cc .bar-fill { background: linear-gradient(90deg, #ff6b6b, #06d6a0); }
+  .cc .share-preview { background: #111; border: 1px solid #333; }
+  .cc .tag { color: #aaa; border-color: #333; }
+
+  .label-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: .6rem; font-weight: 700; letter-spacing: .1em; margin-left: 6px; vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<h1>PHONEY WAR — 컨셉 비교</h1>
+<p class="subtitle">세 가지 시각 정체성 방향 · 탭해서 느낌 확인</p>
+
+<div class="concepts">
+
+  <!-- ── CONCEPT A: Garden vs Wild ── -->
+  <div class="concept ca">
+    <div class="concept-title">A. 정원 vs 야생의 숲</div>
+    <div class="hex-area"><canvas id="ca" width="240" height="160"></canvas></div>
+    <div class="hud">
+      <span style="color:#c8a882">🍎 55%</span>
+      <div class="bar-wrap"><div class="bar-fill"></div></div>
+      <span style="color:#22c55e">🌿 45%</span>
+    </div>
+    <div class="share-preview" style="color:#c8a882">
+      <div class="share-line">🍎🍎🍎🍎🌿🌿🌿</div>
+      <div style="color:#22c55e" class="share-line">정원이 숲을 이겼다 · 55:45</div>
+      <div class="share-sub">phoney-war.fly.dev</div>
+    </div>
+    <div class="tags">
+      <span class="tag">아이보리·베이지골드</span>
+      <span class="tag">꽃잎 파티클</span>
+      <span class="tag">따뜻함·프리미엄</span>
+      <span class="tag">내러티브 강함</span>
+    </div>
+  </div>
+
+  <!-- ── CONCEPT B: Empire vs Guerrilla ── -->
+  <div class="concept cb">
+    <div class="concept-title">B. 제국의 성 vs 게릴라 진지</div>
+    <div class="hex-area"><canvas id="cb" width="240" height="160"></canvas></div>
+    <div class="hud">
+      <span style="color:#e8e8e8">🍎 55%</span>
+      <div class="bar-wrap"><div class="bar-fill"></div></div>
+      <span style="color:#4a7c2f">🌿 45%</span>
+    </div>
+    <div class="share-preview" style="color:#7ab8f5">
+      <div class="share-line" style="font-size:.85rem;letter-spacing:.1em">ORCHARD 55 · JUNGLE 45</div>
+      <div class="share-line" style="color:#aaa;font-size:.75rem">제국이 전선을 지켰다</div>
+      <div class="share-sub">phoney-war.fly.dev</div>
+    </div>
+    <div class="tags">
+      <span class="tag">순백·실버·007AFF</span>
+      <span class="tag">군복그린·카키</span>
+      <span class="tag">전략·긴장감</span>
+      <span class="tag">각 플레이어 다른톤</span>
+    </div>
+  </div>
+
+  <!-- ── CONCEPT C: Emoji First ── -->
+  <div class="concept cc">
+    <div class="concept-title">
+      C. 이모지 퍼스트
+      <span class="label-badge" style="background:#facc15;color:#000">추천</span>
+    </div>
+    <div class="hex-area"><canvas id="cc" width="240" height="160"></canvas></div>
+    <div class="hud">
+      <span style="color:#ff6b6b">🍎 55%</span>
+      <div class="bar-wrap"><div class="bar-fill"></div></div>
+      <span style="color:#06d6a0">🌿 45%</span>
+    </div>
+    <div class="share-preview">
+      <div class="share-line">🍎🍎🍎🌿🌿 55:45</div>
+      <div class="share-line" style="font-size:.8rem">🍎 Orchard Wins!</div>
+      <div class="share-sub">phoney-war.fly.dev · Wordle식 공유</div>
+    </div>
+    <div class="tags">
+      <span class="tag">이모지 중심</span>
+      <span class="tag">언어 불필요</span>
+      <span class="tag">공유성 최강</span>
+      <span class="tag">Wordle 패턴</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── BONUS: 인트로 화면 Split Preview ── -->
+<div style="margin: 32px auto; max-width: 740px;">
+  <div style="text-align:center;font-size:.75rem;letter-spacing:.2em;color:#555;margin-bottom:12px">INTRO SCREEN 비교</div>
+  <div style="display:flex;border-radius:16px;overflow:hidden;height:200px;border:1px solid #333">
+    <!-- Orchard side -->
+    <div id="intro-a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:flex .4s ease;cursor:pointer">
+      <div style="font-size:2.5rem">🍎</div>
+      <div style="font-size:.75rem;letter-spacing:.3em;font-weight:700">THE ORCHARD</div>
+      <div style="font-size:.6rem;opacity:.5">Stay in the Garden.</div>
+    </div>
+    <!-- Divider -->
+    <div style="width:2px;background:linear-gradient(180deg,transparent,#ffffff33,transparent);flex-shrink:0"></div>
+    <!-- Jungle side -->
+    <div id="intro-b" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:flex .4s ease;cursor:pointer">
+      <div style="font-size:2.5rem">🌿</div>
+      <div style="font-size:.75rem;letter-spacing:.3em;font-weight:700">THE JUNGLE</div>
+      <div style="font-size:.6rem;opacity:.5">Break the Fence.</div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:.65rem;color:#444;margin-top:8px">← 좌우 눌러보기</div>
+</div>
+
+<script>
+// ── HEX HELPERS ──────────────────────────────────────────────
+function hexPath(ctx, cx, cy, sz) {
+  ctx.beginPath();
+  for (let i = 0; i < 6; i++) {
+    const a = Math.PI / 3 * i + Math.PI / 6;
+    i === 0 ? ctx.moveTo(cx + sz * Math.cos(a), cy + sz * Math.sin(a))
+            : ctx.lineTo(cx + sz * Math.cos(a), cy + sz * Math.sin(a));
+  }
+  ctx.closePath();
+}
+
+function drawGrid(canvasId, opts) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const { bg, orchardFill, orchardStroke, jungleFill, jungleStroke, neutralFill, neutralStroke, hqEmoji, showEmoji, font } = opts;
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const sz = 18;
+  const cols = 7, rows = 5;
+  const startX = 28, startY = 22;
+
+  // sample map: 0=neutral, 1=orchard, 2=jungle, 3=orchard HQ, 4=jungle HQ
+  const map = [
+    [1,1,1,0,2,2,2],
+    [1,3,1,1,2,4,2],
+    [1,1,1,0,2,2,2],
+    [0,1,1,0,0,2,2],
+    [0,0,1,0,2,2,0],
+  ];
+  const strength = [
+    [2,3,2,0,2,3,2],
+    [2,5,3,1,2,5,2],
+    [2,3,2,0,2,3,2],
+    [0,2,1,0,0,2,1],
+    [0,0,1,0,2,1,0],
+  ];
+
+  for (let r = 0; r < rows; r++) {
+    for (let q = 0; q < cols; q++) {
+      const x = startX + sz * Math.sqrt(3) * (q + r * 0.5);
+      const y = startY + sz * 1.5 * r;
+      const cell = map[r][q];
+      const str = strength[r][q];
+
+      hexPath(ctx, x, y, sz - 1.5);
+
+      if (cell === 0) {
+        ctx.fillStyle = neutralFill;
+        ctx.fill();
+        ctx.strokeStyle = neutralStroke;
+        ctx.lineWidth = 0.8;
+      } else if (cell === 1) {
+        const a = showEmoji ? 0.4 + str * 0.12 : 0.3 + str * 0.14;
+        ctx.fillStyle = orchardFill(a);
+        ctx.fill();
+        ctx.strokeStyle = orchardStroke;
+        ctx.lineWidth = 1.5;
+      } else if (cell === 3) {
+        ctx.fillStyle = orchardFill(1);
+        ctx.fill();
+        ctx.strokeStyle = orchardStroke;
+        ctx.lineWidth = 2.5;
+        ctx.save();
+        ctx.shadowColor = orchardStroke;
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+        ctx.restore();
+      } else if (cell === 2) {
+        const a = showEmoji ? 0.35 + str * 0.13 : 0.3 + str * 0.14;
+        ctx.fillStyle = jungleFill(a);
+        ctx.fill();
+        ctx.strokeStyle = jungleStroke;
+        ctx.lineWidth = 1.5;
+      } else if (cell === 4) {
+        ctx.fillStyle = jungleFill(1);
+        ctx.fill();
+        ctx.strokeStyle = jungleStroke;
+        ctx.lineWidth = 2.5;
+        ctx.save();
+        ctx.shadowColor = jungleStroke;
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.stroke();
+
+      // Labels
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (cell === 3) {
+        ctx.font = `${Math.floor(sz * 0.55)}px sans-serif`;
+        ctx.fillText('🍎', x, y + 1);
+      } else if (cell === 4) {
+        ctx.font = `${Math.floor(sz * 0.55)}px sans-serif`;
+        ctx.fillText('🌿', x, y + 1);
+      } else if (cell !== 0 && showEmoji && str > 0) {
+        const emojis = ['','🌱','🌿','🌿','🍃','🌳'];
+        const oe = ['','⭐','✦','✦✦','★','🍎'];
+        if (cell === 2) {
+          ctx.font = `${Math.floor(sz * 0.4)}px sans-serif`;
+          ctx.globalAlpha = 0.5;
+          ctx.fillText(str, x, y);
+          ctx.globalAlpha = 1;
+        } else {
+          ctx.font = `700 ${Math.floor(sz * 0.38)}px ${font || 'monospace'}`;
+          ctx.fillStyle = cell === 1 ? 'rgba(10,22,40,0.7)' : 'rgba(255,255,255,0.7)';
+          ctx.fillText(str, x, y);
+        }
+      } else if (cell !== 0 && str > 0) {
+        ctx.font = `700 ${Math.floor(sz * 0.4)}px ${font || 'monospace'}`;
+        ctx.fillStyle = cell === 1 ? 'rgba(10,22,40,0.75)' : 'rgba(255,255,255,0.7)';
+        ctx.fillText(str, x, y);
+      }
+    }
+  }
+}
+
+// ── CONCEPT A: Garden vs Wild ─────────────────────────────────
+drawGrid('ca', {
+  bg: '#0a140a',
+  orchardFill: a => `rgba(245,240,232,${a})`,
+  orchardStroke: 'rgba(200,168,130,0.9)',
+  jungleFill: a => `rgba(34,197,94,${a})`,
+  jungleStroke: '#4ade80',
+  neutralFill: '#0d1a0d',
+  neutralStroke: '#152015',
+  font: 'Georgia, serif',
+  showEmoji: false,
+});
+
+// ── CONCEPT B: Empire vs Guerrilla ────────────────────────────
+drawGrid('cb', {
+  bg: '#06090f',
+  orchardFill: a => `rgba(232,238,248,${a})`,
+  orchardStroke: 'rgba(0,122,255,0.8)',
+  jungleFill: a => `rgba(74,124,47,${a})`,
+  jungleStroke: '#6aaa40',
+  neutralFill: '#0a0d14',
+  neutralStroke: '#151d15',
+  font: 'monospace',
+  showEmoji: false,
+});
+
+// ── CONCEPT C: Emoji First ────────────────────────────────────
+drawGrid('cc', {
+  bg: '#0a0a0a',
+  orchardFill: a => `rgba(255,107,107,${a})`,
+  orchardStroke: '#ff9898',
+  jungleFill: a => `rgba(6,214,160,${a})`,
+  jungleStroke: '#06d6a0',
+  neutralFill: '#111',
+  neutralStroke: '#1e1e1e',
+  font: 'system-ui',
+  showEmoji: true,
+});
+
+// ── INTRO HOVER EFFECT ────────────────────────────────────────
+const introA = document.getElementById('intro-a');
+const introB = document.getElementById('intro-b');
+
+const styleA = ['background:linear-gradient(135deg,#0a0d12,#1a2a3a)', 'color:#e8f0ff'];
+const styleB = ['background:linear-gradient(135deg,#0a1a0a,#0d2e12)', 'color:#a8e8c8'];
+
+// Default
+introA.setAttribute('style', introA.getAttribute('style') + ';' + styleA.join(';'));
+introB.setAttribute('style', introB.getAttribute('style') + ';' + styleB.join(';'));
+
+introA.addEventListener('click', () => {
+  introA.style.flex = '2.5';
+  introB.style.flex = '1';
+  introA.style.opacity = '1';
+  introB.style.opacity = '0.4';
+});
+introB.addEventListener('click', () => {
+  introB.style.flex = '2.5';
+  introA.style.flex = '1';
+  introB.style.opacity = '1';
+  introA.style.opacity = '0.4';
+});
+</script>
+</body>
+</html>

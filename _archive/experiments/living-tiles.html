@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoney War — Living Tiles (최종 컨셉)</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #06080b; color: #e2e8f0; font-family: system-ui,-apple-system,sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── HEADER ── */
+.hd {
+  background: #0b0d12; border-bottom: 1px solid #1a2030;
+  padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.hd-title { font-size: .75rem; font-weight: 900; letter-spacing: .15em; color: #475569; }
+.hd-concept { font-size: 1.1rem; font-weight: 900; }
+.hd-desc { font-size: .67rem; color: #64748b; line-height: 1.5; }
+
+/* ── SCOREBAR ── */
+.scorebar-wrap {
+  background: #0d1018; border-bottom: 1px solid #1a2030;
+  padding: 10px 16px;
+}
+.score-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.score-label { font-size: .72rem; font-weight: 800; }
+.score-live {
+  font-size: .6rem; color: #f87171; font-weight: 700;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.bar-track {
+  height: 10px; background: #141820; border-radius: 6px;
+  overflow: hidden; display: flex;
+}
+.bar-o { background: linear-gradient(90deg,#1d4ed8,#3b82f6); transition: width .5s ease; }
+.bar-j { background: linear-gradient(90deg,#16a34a,#4ade80); transition: width .5s ease; }
+.player-row {
+  display: flex; justify-content: space-between;
+  margin-top: 6px; font-size: .62rem; color: #475569;
+}
+
+/* ── CANVAS ── */
+#main-canvas { display: block; width: 100%; flex: 1; touch-action: none; }
+
+/* ── BOTTOM ── */
+.bottom {
+  background: #0b0d12; border-top: 1px solid #1a2030;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.btn-row { display: flex; gap: 10px; }
+.attack-btn {
+  flex: 1; padding: 18px 10px; border-radius: 16px;
+  font-size: .82rem; font-weight: 900; cursor: pointer;
+  border: 1.5px solid; transition: transform .08s, box-shadow .1s;
+  text-align: center; line-height: 1.4;
+}
+.attack-btn:active { transform: scale(.94); }
+.btn-o {
+  background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.4);
+  color: #bfdbfe;
+}
+.btn-o:active { box-shadow: 0 0 20px rgba(59,130,246,.3); }
+.btn-j {
+  background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.4);
+  color: #bbf7d0;
+}
+.btn-j:active { box-shadow: 0 0 20px rgba(34,197,94,.3); }
+
+.trait-row {
+  display: flex; gap: 8px;
+}
+.trait-chip {
+  flex: 1; padding: 7px 8px; border-radius: 10px;
+  font-size: .6rem; font-weight: 700; text-align: center;
+  line-height: 1.4;
+}
+.trait-o { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2); color: #93c5fd; }
+.trait-j { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.2); color: #86efac; }
+
+.event-log {
+  font-size: .68rem; color: #475569; min-height: 22px;
+  text-align: center;
+}
+
+/* ── OVERLAY ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(6,8,11,.9);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; z-index: 100;
+}
+.overlay.hidden { display: none; }
+.result-box {
+  background: #0d1018; border: 1px solid #1a2030;
+  border-radius: 20px; padding: 28px 32px; text-align: center;
+  max-width: 320px; width: 90%;
+}
+.result-icon { font-size: 2.8rem; margin-bottom: 8px; }
+.result-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
+.result-sub { font-size: .72rem; color: #64748b; margin-bottom: 16px; }
+.share-card {
+  background: #141820; border-radius: 12px; padding: 14px;
+  margin-bottom: 14px; text-align: left;
+}
+.share-top { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: .7rem; font-weight: 700; }
+.share-bar { height: 8px; background: #0d1018; border-radius: 4px; overflow: hidden; display: flex; margin-bottom: 8px; }
+.share-o { background: #3b82f6; transition: width .5s; }
+.share-j { background: #4ade80; transition: width .5s; }
+.share-tag { font-size: .6rem; color: #475569; }
+.result-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  color: #e2e8f0; font-size: .82rem; font-weight: 800; cursor: pointer;
+  margin-bottom: 8px;
+}
+.result-btn:active { background: rgba(255,255,255,.14); }
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-title">PHONEY WAR — LIVING TILES CONCEPT</div>
+  <div class="hd-concept">🍎 Orchard vs 🌿 Jungle</div>
+  <div class="hd-desc">
+    진영마다 움직임이 다르다 — Orchard는 <strong style="color:#93c5fd">일제히 같은 방향</strong>으로,
+    Jungle은 <strong style="color:#86efac">각자 다른 방향</strong>으로.
+    탭해서 영토를 빼앗아라.
+  </div>
+</div>
+
+<div class="scorebar-wrap">
+  <div class="score-row">
+    <div class="score-label" style="color:#93c5fd">🍎 <span id="pct-o">50</span>%</div>
+    <div class="score-live">● LIVE 전쟁 중</div>
+    <div class="score-label" style="color:#86efac"><span id="pct-j">50</span>% 🌿</div>
+  </div>
+  <div class="bar-track">
+    <div class="bar-o" id="bar-o" style="width:50%"></div>
+    <div class="bar-j" id="bar-j" style="width:50%"></div>
+  </div>
+  <div class="player-row">
+    <span id="players-o">🍎 ??? 명 참전 중</span>
+    <span id="players-j">??? 명 참전 중 🌿</span>
+  </div>
+</div>
+
+<canvas id="main-canvas"></canvas>
+
+<div class="bottom">
+  <div class="trait-row">
+    <div class="trait-chip trait-o">🍎 일제히 행동<br>에코시스템 보너스</div>
+    <div class="trait-chip trait-j">🌿 개인 능력치<br>루팅·커스텀 가능</div>
+  </div>
+  <div class="btn-row">
+    <button class="attack-btn btn-o" onclick="playerAttack('o')">
+      🍎 공격<br><span style="font-size:.64rem;opacity:.7">타일 점령 +burst</span>
+    </button>
+    <button class="attack-btn btn-j" onclick="playerAttack('j')">
+      🌿 공격<br><span style="font-size:.64rem;opacity:.7">개인 침투 +scatter</span>
+    </button>
+  </div>
+  <div class="event-log" id="event-log">탭해서 전쟁에 참여하세요...</div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="overlay hidden" id="overlay">
+  <div class="result-box">
+    <div class="result-icon" id="res-icon">🏆</div>
+    <div class="result-title" id="res-title">Orchard 승리</div>
+    <div class="result-sub" id="res-sub">아이폰 군단이 갤럭시를 압도했습니다</div>
+    <div class="share-card">
+      <div class="share-top">
+        <span style="color:#93c5fd">🍎 Orchard</span>
+        <span style="color:#475569">PHONEY WAR</span>
+        <span style="color:#86efac">Jungle 🌿</span>
+      </div>
+      <div class="share-bar">
+        <div class="share-o" id="share-o" style="width:50%"></div>
+        <div class="share-j" id="share-j" style="width:50%"></div>
+      </div>
+      <div class="share-tag">나는 🍎 Orchard 진영에서 싸웠다 · 오늘의 Phoney War</div>
+    </div>
+    <button class="result-btn" onclick="resetGame()">⚔️ 다시 전쟁하기</button>
+    <button class="result-btn" onclick="shareResult()">📤 결과 공유하기</button>
+  </div>
+</div>
+
+<script>
+// ─── CONSTANTS ───────────────────────────────────────
+const CELL = 44;
+const UNIT_SPEED_O = 0.4;  // slow & synced
+const UNIT_SPEED_J = 0.9;  // fast & individual
+const UNIT_MAX_PER_TILE = 4;
+const AUTO_TICK = 1600;
+const GAME_DURATION = 90; // seconds for demo
+
+// ─── STATE ───────────────────────────────────────────
+const canvas = document.getElementById('main-canvas');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0, COLS = 0, ROWS = 0;
+
+// Grid: each cell = { faction: 'o'|'j'|null, strength: 0-5 }
+let grid = [];
+// Units: { x, y, tx, ty, faction, angle, speed, size }
+let units = [];
+// Particles: { x, y, vx, vy, life, col, r }
+let particles = [];
+
+let orchardDir = 0;  // Orchard shared direction (changes every few seconds)
+let orchardDirTimer = 0;
+
+let simPlayers = { o: 0, j: 0 };
+let timeLeft = GAME_DURATION;
+let gameOver = false;
+let lastAutoTick = 0;
+
+// ─── INIT ────────────────────────────────────────────
+function init() {
+  resize();
+  buildGrid();
+  spawnInitialUnits();
+  simPlayers = {
+    o: 200 + Math.floor(Math.random() * 800),
+    j: 200 + Math.floor(Math.random() * 800)
+  };
+  updatePlayerCount();
+  setInterval(aiTick, AUTO_TICK);
+  setInterval(countdown, 1000);
+  setInterval(() => {
+    orchardDir = Math.random() * Math.PI * 2;
+  }, 3000);
+  setInterval(updatePlayerCount, 5000);
+  requestAnimationFrame(loop);
+}
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = canvas.parentElement.clientWidth || window.innerWidth;
+  H = Math.max(220, window.innerHeight - 280);
+  canvas.width = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  COLS = Math.ceil(W / CELL);
+  ROWS = Math.ceil(H / CELL);
+}
+
+function buildGrid() {
+  grid = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      let faction = null;
+      if (c < COLS * 0.38) faction = 'o';
+      else if (c > COLS * 0.62) faction = 'j';
+      grid.push({ faction, strength: faction ? 3 : 0 });
+    }
+  }
+}
+
+function cellAt(c, r) { return grid[r * COLS + c]; }
+function tileCenter(c, r) { return { x: c * CELL + CELL/2, y: r * CELL + CELL/2 }; }
+
+// ─── UNITS ───────────────────────────────────────────
+function spawnInitialUnits() {
+  units = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = cellAt(c, r);
+      if (cell.faction) {
+        const count = 1 + Math.floor(Math.random() * 2);
+        for (let i = 0; i < count; i++) spawnUnit(c, r, cell.faction);
+      }
+    }
+  }
+}
+
+function spawnUnit(tc, tr, faction) {
+  const { x, y } = tileCenter(tc, tr);
+  const jitter = CELL * 0.3;
+  units.push({
+    x: x + (Math.random() - .5) * jitter,
+    y: y + (Math.random() - .5) * jitter,
+    tc, tr,
+    faction,
+    angle: Math.random() * Math.PI * 2,
+    speed: faction === 'o' ? UNIT_SPEED_O + Math.random() * .1 : UNIT_SPEED_J + Math.random() * .5,
+    size: faction === 'o' ? 10 : 8 + Math.random() * 4,
+    wobble: Math.random() * Math.PI * 2,
+  });
+}
+
+function balanceUnits() {
+  // Ensure unit count matches tile ownership
+  const tileCounts = {};
+  for (const u of units) {
+    const key = `${u.tc},${u.tr}`;
+    tileCounts[key] = (tileCounts[key] || 0) + 1;
+  }
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = cellAt(c, r);
+      const key = `${c},${r}`;
+      const count = tileCounts[key] || 0;
+      if (cell.faction && count < 1) spawnUnit(c, r, cell.faction);
+      if (!cell.faction && count > 0) {
+        // Remove units from neutral tiles
+        for (let i = units.length - 1; i >= 0; i--) {
+          if (units[i].tc === c && units[i].tr === r) { units.splice(i, 1); break; }
+        }
+      }
+    }
+  }
+}
+
+// ─── GAME LOOP ────────────────────────────────────────
+let lastTime = 0;
+function loop(ts) {
+  const dt = Math.min((ts - lastTime) / 16.67, 3);
+  lastTime = ts;
+  orchardDirTimer += dt;
+
+  ctx.fillStyle = '#06080b';
+  ctx.fillRect(0, 0, W, H);
+
+  drawGrid();
+  updateUnits(dt);
+  drawUnits();
+  updateParticles(dt);
+  drawParticles();
+  drawFrontLine();
+
+  requestAnimationFrame(loop);
+}
+
+// ─── DRAW GRID ────────────────────────────────────────
+function drawGrid() {
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = cellAt(c, r);
+      const x = c * CELL, y = r * CELL;
+      const pad = 1.5;
+
+      if (cell.faction === 'o') {
+        const a = .1 + cell.strength * .12;
+        ctx.fillStyle = `rgba(29,78,216,${a.toFixed(2)})`;
+        ctx.strokeStyle = `rgba(96,165,250,${(.2 + cell.strength * .12).toFixed(2)})`;
+        ctx.lineWidth = 1;
+      } else if (cell.faction === 'j') {
+        const a = .1 + cell.strength * .12;
+        ctx.fillStyle = `rgba(22,163,74,${a.toFixed(2)})`;
+        ctx.strokeStyle = `rgba(74,222,128,${(.2 + cell.strength * .12).toFixed(2)})`;
+        ctx.lineWidth = 1;
+      } else {
+        ctx.fillStyle = '#0a0d12';
+        ctx.strokeStyle = '#13181f';
+        ctx.lineWidth = .5;
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(x+pad, y+pad, CELL-pad*2, CELL-pad*2, 5);
+      ctx.fill();
+      ctx.stroke();
+
+      // Strength dots
+      if (cell.faction && cell.strength >= 4) {
+        ctx.fillStyle = cell.faction === 'o' ? 'rgba(147,197,253,.5)' : 'rgba(134,239,172,.5)';
+        ctx.beginPath();
+        ctx.arc(x + CELL - 8, y + 8, 3, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+  }
+}
+
+// ─── UNITS ───────────────────────────────────────────
+function updateUnits(dt) {
+  for (const u of units) {
+    // Orchard: synchronized direction (all share orchardDir + small wobble)
+    // Jungle: each unit has independent random angle
+    if (u.faction === 'o') {
+      const targetAngle = orchardDir + Math.sin(u.wobble + orchardDirTimer * 0.5) * 0.3;
+      u.angle += (targetAngle - u.angle) * 0.05 * dt;
+    } else {
+      u.wobble += (Math.random() - .5) * 0.2 * dt;
+      u.angle += (u.wobble - u.angle) * 0.04 * dt + (Math.random() - .5) * 0.08 * dt;
+    }
+
+    const nextX = u.x + Math.cos(u.angle) * u.speed * dt;
+    const nextY = u.y + Math.sin(u.angle) * u.speed * dt;
+
+    // Constrain within tile
+    const { x: cx, y: cy } = tileCenter(u.tc, u.tr);
+    const maxDist = CELL * 0.38;
+    const dx = nextX - cx, dy = nextY - cy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist > maxDist) {
+      // Bounce: reflect angle
+      const nx = dx/dist, ny = dy/dist;
+      const dot = Math.cos(u.angle)*nx + Math.sin(u.angle)*ny;
+      u.angle = Math.atan2(
+        Math.sin(u.angle) - 2*dot*ny,
+        Math.cos(u.angle) - 2*dot*nx
+      );
+      u.x = cx + nx * (maxDist - 1);
+      u.y = cy + ny * (maxDist - 1);
+    } else {
+      u.x = nextX;
+      u.y = nextY;
+    }
+    u.wobble += 0.02 * dt;
+  }
+}
+
+function drawUnits() {
+  for (const u of units) {
+    ctx.save();
+    ctx.translate(u.x, u.y);
+
+    if (u.faction === 'o') {
+      // Orchard: clean uniform circles
+      ctx.fillStyle = 'rgba(191,219,254,.85)';
+      ctx.strokeStyle = 'rgba(59,130,246,.9)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(0, 0, u.size/2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+      // 🍎 tiny
+      ctx.font = `${Math.max(7, u.size * .6)}px system-ui`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🍎', 0, 0);
+    } else {
+      // Jungle: irregular, each slightly different
+      ctx.fillStyle = 'rgba(134,239,172,.85)';
+      ctx.strokeStyle = 'rgba(34,197,94,.9)';
+      ctx.lineWidth = 1;
+      // Pentagon shape for individuality
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const a = (Math.PI*2/5)*i - Math.PI/2;
+        const r = u.size/2 * (0.85 + 0.15 * Math.sin(u.wobble + i));
+        i===0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.font = `${Math.max(7, u.size * .55)}px system-ui`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🌿', 0, 0);
+    }
+    ctx.restore();
+  }
+}
+
+// ─── PARTICLES ───────────────────────────────────────
+function spawnBurst(x, y, faction, count) {
+  for (let i = 0; i < count; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const spd = 2 + Math.random() * 5;
+    particles.push({
+      x, y,
+      vx: Math.cos(a)*spd, vy: Math.sin(a)*spd,
+      life: 1, r: 2 + Math.random()*4,
+      col: faction === 'o' ? '#3b82f6' : '#22c55e',
+    });
+  }
+}
+
+function updateParticles(dt) {
+  for (let i = particles.length-1; i>=0; i--) {
+    const p = particles[i];
+    p.life -= 0.04*dt; p.x += p.vx*dt; p.y += p.vy*dt;
+    p.vx *= 0.94; p.vy *= 0.94;
+    if (p.life <= 0) particles.splice(i,1);
+  }
+}
+function drawParticles() {
+  for (const p of particles) {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.col;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ─── FRONT LINE ───────────────────────────────────────
+function drawFrontLine() {
+  // Find approximate front
+  let frontX = W / 2;
+  let sumO = 0, sumJ = 0, countO = 0, countJ = 0;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const f = cellAt(c,r).faction;
+      const cx = c * CELL + CELL/2;
+      if (f === 'o') { sumO += cx; countO++; }
+      else if (f === 'j') { sumJ += cx; countJ++; }
+    }
+  }
+  if (countO && countJ) {
+    const edgeO = sumO/countO + (W/COLS)*2;
+    const edgeJ = sumJ/countJ - (W/COLS)*2;
+    frontX = (edgeO + edgeJ) / 2;
+  }
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(248,113,113,.35)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5,5]);
+  ctx.beginPath();
+  ctx.moveTo(frontX, 0);
+  ctx.lineTo(frontX, H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Score update
+  const total = countO + countJ || 1;
+  const pO = Math.round(countO/total*100);
+  const pJ = 100-pO;
+  document.getElementById('pct-o').textContent = pO;
+  document.getElementById('pct-j').textContent = pJ;
+  document.getElementById('bar-o').style.width = pO+'%';
+  document.getElementById('bar-j').style.width = pJ+'%';
+}
+
+// ─── PLAYER ATTACK ────────────────────────────────────
+function playerAttack(faction) {
+  if (gameOver) return;
+
+  if (faction === 'o') {
+    // Orchard: burst — coordinated push in current shared direction
+    // Find front tiles of orchard
+    const frontTiles = [];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS-1; c++) {
+        if (cellAt(c,r).faction === 'o' && cellAt(c+1,r).faction !== 'o') {
+          frontTiles.push({ c: c+1, r });
+        }
+      }
+    }
+    const targets = frontTiles.sort(() => Math.random()-.5).slice(0, 3 + Math.floor(Math.random()*3));
+    for (const { c, r } of targets) {
+      setTimeout(() => captureFor(c, r, 'o'), Math.random()*200);
+    }
+    const msgs = ['🍎 일제히 압박! 전선 +3칸', 'Ecosystem Lock 발동 — 좌표 동기화', '🍎 부대 일제 전진!'];
+    setLog(msgs[Math.floor(Math.random()*msgs.length)], 'o');
+  } else {
+    // Jungle: scatter — individual infiltration at random border points
+    const enemyTiles = [];
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (cellAt(c,r).faction === 'j') {
+          for (const [dc,dr] of dirs) {
+            const nc=c+dc, nr=r+dr;
+            if (nc>=0&&nc<COLS&&nr>=0&&nr<ROWS&&cellAt(nc,nr).faction!=='j') {
+              enemyTiles.push({ c:nc, r:nr });
+            }
+          }
+        }
+      }
+    }
+    const targets = enemyTiles.sort(() => Math.random()-.5).slice(0, 5 + Math.floor(Math.random()*4));
+    for (const { c, r } of targets) {
+      setTimeout(() => captureFor(c, r, 'j'), Math.random()*400);
+    }
+    const msgs = ['🌿 게릴라 침투 — 전방 분산 공격', 'Sideload 경로 발견! 5곳 동시 침투', '🌿 개인 루트 개방 — 각자 침투!'];
+    setLog(msgs[Math.floor(Math.random()*msgs.length)], 'j');
+  }
+}
+
+function captureFor(c, r, faction) {
+  if (c<0||c>=COLS||r<0||r>=ROWS) return;
+  const cell = cellAt(c,r);
+  if (cell.faction === faction) {
+    cell.strength = Math.min(5, cell.strength + 1);
+    return;
+  }
+  if (cell.strength > 1) {
+    cell.strength--;
+    spawnBurst(c*CELL+CELL/2, r*CELL+CELL/2, faction, 4);
+  } else {
+    cell.faction = faction;
+    cell.strength = 1;
+    spawnBurst(c*CELL+CELL/2, r*CELL+CELL/2, faction, 10);
+    // Update units on this tile
+    for (const u of units) {
+      if (u.tc===c && u.tr===r) u.faction = faction;
+    }
+    // Spawn new unit for capturing faction
+    spawnUnit(c, r, faction);
+  }
+  balanceUnits();
+}
+
+// ─── AI TICK ─────────────────────────────────────────
+function aiTick() {
+  if (gameOver) return;
+  // Orchard: coordinated push — pick longest contiguous front segment
+  const oFront = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS-1; c++) {
+      if (cellAt(c,r).faction==='o' && cellAt(c+1,r).faction!=='o') oFront.push({c:c+1,r});
+    }
+  }
+  const oTargets = oFront.sort(()=>Math.random()-.5).slice(0,2);
+  for (const t of oTargets) setTimeout(()=>captureFor(t.c,t.r,'o'), Math.random()*600);
+
+  // Jungle: scattered probes
+  const jAll = [];
+  for (let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(cellAt(c,r).faction==='j') jAll.push({c,r});
+  const jProbes = jAll.sort(()=>Math.random()-.5).slice(0,3);
+  for (const {c,r} of jProbes) {
+    const dirs=[[-1,0],[1,0],[0,-1],[0,1]];
+    const d=dirs[Math.floor(Math.random()*4)];
+    setTimeout(()=>captureFor(c+d[0],r+d[1],'j'), Math.random()*800);
+  }
+
+  simPlayers.o += Math.floor((Math.random()-.3)*30);
+  simPlayers.j += Math.floor((Math.random()-.3)*30);
+  simPlayers.o = Math.max(50, Math.min(3000, simPlayers.o));
+  simPlayers.j = Math.max(50, Math.min(3000, simPlayers.j));
+  updatePlayerCount();
+}
+
+function updatePlayerCount() {
+  document.getElementById('players-o').textContent = `🍎 ${simPlayers.o.toLocaleString()}명 참전 중`;
+  document.getElementById('players-j').textContent = `${simPlayers.j.toLocaleString()}명 참전 중 🌿`;
+}
+
+// ─── COUNTDOWN ───────────────────────────────────────
+function countdown() {
+  if (gameOver) return;
+  timeLeft--;
+  if (timeLeft <= 0) endGame();
+}
+
+function endGame() {
+  gameOver = true;
+  let oCount=0, jCount=0;
+  for (const cell of grid) { if(cell.faction==='o') oCount++; else if(cell.faction==='j') jCount++; }
+  const total = oCount+jCount||1;
+  const pO = Math.round(oCount/total*100);
+  const winner = pO > 50 ? 'o' : 'j';
+
+  document.getElementById('res-icon').textContent = winner==='o'?'🍎':'🌿';
+  document.getElementById('res-title').textContent = winner==='o'?'Orchard 승리!':'Jungle 승리!';
+  document.getElementById('res-sub').textContent = winner==='o'
+    ? `에코시스템의 힘으로 ${pO}% 점령. 일제 행동의 승리.`
+    : `게릴라 개인전으로 ${100-pO}% 점령. 자유로운 전투의 승리.`;
+  document.getElementById('share-o').style.width = pO+'%';
+  document.getElementById('share-j').style.width = (100-pO)+'%';
+  document.getElementById('overlay').classList.remove('hidden');
+}
+
+function resetGame() {
+  gameOver = false;
+  timeLeft = GAME_DURATION;
+  document.getElementById('overlay').classList.add('hidden');
+  buildGrid();
+  spawnInitialUnits();
+  particles = [];
+  setLog('새로운 전쟁이 시작됩니다!', null);
+}
+
+function shareResult() {
+  const text = `나는 Phoney War에서 싸웠다!\n🍎 Orchard vs 🌿 Jungle\n#PhoneyWar`;
+  if (navigator.share) {
+    navigator.share({ title: 'Phoney War', text }).catch(()=>{});
+  } else {
+    navigator.clipboard?.writeText(text);
+    setLog('결과가 클립보드에 복사됐습니다!', null);
+  }
+}
+
+function setLog(msg, faction) {
+  document.getElementById('event-log').innerHTML =
+    `<span style="color:${faction==='o'?'#93c5fd':faction==='j'?'#86efac':'#94a3b8'}">${msg}</span>`;
+}
+
+// ─── BOOT ────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => { resize(); buildGrid(); spawnInitialUnits(); });
+</script>
+</body>
+</html>

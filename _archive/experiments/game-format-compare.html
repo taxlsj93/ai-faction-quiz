@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoney War — 게임 포맷 비교</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #08090c;
+  color: #e2e8f0;
+  font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  padding: 24px 16px 48px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: .3em;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.subtitle {
+  text-align: center;
+  font-size: .72rem;
+  color: #334155;
+  margin-bottom: 32px;
+  letter-spacing: .1em;
+}
+
+/* ── TAB NAV ── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.tab {
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  cursor: pointer;
+  border: 1px solid #1e2530;
+  background: #0f1318;
+  color: #64748b;
+  transition: all .2s;
+}
+.tab.active {
+  color: #fff;
+  border-color: currentColor;
+}
+.tab:nth-child(1).active { color: #f87171; border-color: #f87171; background: rgba(248,113,113,.1); }
+.tab:nth-child(2).active { color: #60a5fa; border-color: #60a5fa; background: rgba(96,165,250,.1); }
+.tab:nth-child(3).active { color: #facc15; border-color: #facc15; background: rgba(250,204,21,.1); }
+.tab:nth-child(4).active { color: #34d399; border-color: #34d399; background: rgba(52,211,153,.1); }
+.tab:nth-child(5).active { color: #a78bfa; border-color: #a78bfa; background: rgba(167,139,250,.1); }
+
+/* ── CARDS ── */
+.card { display: none; max-width: 680px; margin: 0 auto; }
+.card.active { display: block; }
+
+.card-header {
+  border-radius: 16px 16px 0 0;
+  padding: 24px 24px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.card-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.rank-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .2em;
+  margin-bottom: 10px;
+}
+.card-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.card-tagline {
+  font-size: .82rem;
+  opacity: .6;
+}
+
+/* ── DEMO AREA ── */
+.demo-area {
+  background: #0a0c10;
+  padding: 20px;
+  border-left: 1px solid #1a1f2e;
+  border-right: 1px solid #1a1f2e;
+  display: flex;
+  justify-content: center;
+  min-height: 180px;
+  align-items: center;
+}
+canvas { border-radius: 10px; }
+
+/* ── STATS GRID ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: #1a1f2e;
+  border-left: 1px solid #1a1f2e;
+  border-right: 1px solid #1a1f2e;
+}
+.stat-cell {
+  background: #0d1018;
+  padding: 12px 14px;
+  text-align: center;
+}
+.stat-label { font-size: .58rem; letter-spacing: .15em; color: #475569; margin-bottom: 4px; }
+.stat-val { font-size: .88rem; font-weight: 700; }
+
+/* ── STARS ── */
+.stars { letter-spacing: 1px; font-size: .85rem; }
+
+/* ── MECHANIC SECTION ── */
+.mechanic {
+  background: #0d1018;
+  border: 1px solid #1a1f2e;
+  border-top: none;
+  padding: 20px 24px;
+}
+.mechanic h3 {
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: #475569;
+  margin-bottom: 12px;
+}
+.mechanic-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.mechanic-icon {
+  font-size: 1.2rem;
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+}
+.mechanic-text { font-size: .78rem; color: #94a3b8; line-height: 1.5; }
+.mechanic-text strong { color: #e2e8f0; }
+
+/* ── ABILITY PILLS ── */
+.abilities {
+  background: #0d1018;
+  border: 1px solid #1a1f2e;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  padding: 16px 24px 20px;
+}
+.abilities h3 {
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: #475569;
+  margin-bottom: 10px;
+}
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.pill {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: .68rem;
+  font-weight: 700;
+  border: 1px solid;
+}
+.pill.orchard { color: #bfdbfe; border-color: rgba(191,219,254,.3); background: rgba(191,219,254,.06); }
+.pill.jungle  { color: #bbf7d0; border-color: rgba(187,247,208,.3); background: rgba(187,247,208,.06); }
+
+/* ── VIRAL PREVIEW ── */
+.viral-box {
+  margin-top: 16px;
+  background: #111620;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #1e2530;
+}
+.viral-label { font-size: .6rem; letter-spacing: .15em; color: #475569; margin-bottom: 6px; }
+.viral-text { font-size: .82rem; color: #94a3b8; }
+.viral-share { font-size: 1.1rem; margin-top: 4px; }
+
+/* ── ALL TABLE ── */
+.all-table {
+  max-width: 900px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .72rem;
+}
+th {
+  background: #0d1018;
+  color: #475569;
+  font-size: .6rem;
+  letter-spacing: .15em;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #1a1f2e;
+}
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #12161e;
+  color: #94a3b8;
+}
+tr:hover td { background: #0f1318; }
+.top5 td { color: #e2e8f0; }
+.top5 td:first-child { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>PHONEY WAR — 게임 포맷 비교</h1>
+<p class="subtitle">20개 후보 → Top 5 수렴 · 탭으로 비교</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="show(0)">🔋 배터리 소모전</div>
+  <div class="tab" onclick="show(1)">📲 OS 업데이트 푸시전</div>
+  <div class="tab" onclick="show(2)">👆 탭 전쟁</div>
+  <div class="tab" onclick="show(3)">⚡ 충전 레이스</div>
+  <div class="tab" onclick="show(4)">🏪 앱스토어 점령전</div>
+</div>
+
+<!-- ── CARD 1: Battery War ── -->
+<div class="card active" id="card-0">
+  <div class="card-header" style="background:linear-gradient(135deg,#1a0a0a,#2d1010)">
+    <div class="rank-badge" style="background:rgba(248,113,113,.2);color:#f87171">🏆 1위 · 발산 리서처 추천</div>
+    <div class="card-name">🔋 배터리 소모전</div>
+    <div class="card-tagline">"역시 아이폰 배터리..." 밈을 게임으로</div>
+  </div>
+  <div class="demo-area">
+    <canvas id="demo-0" width="300" height="140"></canvas>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">컨셉 적합성</div>
+      <div class="stat-val stars" style="color:#f87171">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">구현 난이도</div>
+      <div class="stat-val" style="color:#4ade80">쉬움</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">예상 세션</div>
+      <div class="stat-val">3~7분</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">바이럴 가능성</div>
+      <div class="stat-val stars" style="color:#f87171">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">레퍼런스</div>
+      <div class="stat-val" style="font-size:.72rem">배터리 밈<br>Cookie Clicker</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">서버 재활용</div>
+      <div class="stat-val" style="color:#4ade80">높음</div>
+    </div>
+  </div>
+  <div class="mechanic">
+    <h3>게임 메커니즘</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🍎</div>
+      <div class="mechanic-text"><strong>Orchard</strong>: 화면 하단 공유 배터리 HP바. 팀이 탭으로 집단 방어·반격. "저전력 모드" 발동 시 방어력 2배.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🌿</div>
+      <div class="mechanic-text"><strong>Jungle</strong>: 개인 배터리 + 진영 합산. "고속 충전기"로 단시간 공격력 폭발. 각자 다른 타이밍에 어택 가능.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">💥</div>
+      <div class="mechanic-text"><strong>승리 조건</strong>: 상대 진영 배터리를 먼저 0%로. 라운드제(3라운드 2선승) → 짧은 세션 반복, 공유 유도.</div>
+    </div>
+  </div>
+  <div class="abilities">
+    <h3>능력 예시</h3>
+    <div class="pill-row">
+      <span class="pill orchard">🔋 저전력 모드</span>
+      <span class="pill orchard">🌐 Air Share</span>
+      <span class="pill orchard">😌 Face Shield</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill jungle">⚡ 65W 급속충전</span>
+      <span class="pill jungle">🔧 Custom ROM</span>
+      <span class="pill jungle">🌙 야간 모드</span>
+    </div>
+    <div class="viral-box">
+      <div class="viral-label">공유 카드 예시</div>
+      <div class="viral-share">🔋🍎 12% vs 🔋🌿 0%</div>
+      <div class="viral-text">역시 갤럭시 배터리 먼저 죽었다 ㅋㅋ — Phoney War</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CARD 2: Update War ── -->
+<div class="card" id="card-1">
+  <div class="card-header" style="background:linear-gradient(135deg,#0a0e1a,#0d1530)">
+    <div class="rank-badge" style="background:rgba(96,165,250,.2);color:#60a5fa">🥈 2위</div>
+    <div class="card-name">📲 OS 업데이트 푸시전</div>
+    <div class="card-tagline">"지금 업데이트하시겠습니까?" 폭탄 전쟁</div>
+  </div>
+  <div class="demo-area">
+    <canvas id="demo-1" width="300" height="140"></canvas>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">컨셉 적합성</div>
+      <div class="stat-val stars" style="color:#60a5fa">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">구현 난이도</div>
+      <div class="stat-val" style="color:#facc15">중간</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">예상 세션</div>
+      <div class="stat-val">10~20분</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">바이럴 가능성</div>
+      <div class="stat-val stars" style="color:#60a5fa">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">레퍼런스</div>
+      <div class="stat-val" style="font-size:.72rem">업데이트 밈<br>Tower Defense</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">서버 재활용</div>
+      <div class="stat-val" style="color:#facc15">중간</div>
+    </div>
+  </div>
+  <div class="mechanic">
+    <h3>게임 메커니즘</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">📤</div>
+      <div class="mechanic-text"><strong>공격</strong>: 자원 소비 → 상대 영토 칸에 "업데이트 팝업" 발송. 팝업이 올라가면 해당 칸은 "설치 중" 상태.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🚫</div>
+      <div class="mechanic-text"><strong>방어</strong>: 상대 유저가 3초 내 탭하면 "나중에" 선택 → 팝업 무효화. 못 막으면 해당 칸 점령.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⚡</div>
+      <div class="mechanic-text"><strong>Final Rush</strong>: "강제 재시작" 공격 — 방어 불가, 3초 후 자동 설치. 게임 종료 1분 전 발동.</div>
+    </div>
+  </div>
+  <div class="abilities">
+    <h3>능력 예시</h3>
+    <div class="pill-row">
+      <span class="pill orchard">📦 일괄 업데이트</span>
+      <span class="pill orchard">🛡 방화벽</span>
+      <span class="pill orchard">☁️ 클라우드 백업</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill jungle">🔓 루팅 차단</span>
+      <span class="pill jungle">🧩 커스텀 펌웨어</span>
+      <span class="pill jungle">📡 OTA 재밍</span>
+    </div>
+    <div class="viral-box">
+      <div class="viral-label">공유 카드 예시</div>
+      <div class="viral-share">📲 업데이트 38회 발송 · 29회 침투 성공</div>
+      <div class="viral-text">갤럭시 진영이 iOS 텃밭을 점령했다 — Phoney War</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CARD 3: Tap War ── -->
+<div class="card" id="card-2">
+  <div class="card-header" style="background:linear-gradient(135deg,#141008,#251e06)">
+    <div class="rank-badge" style="background:rgba(250,204,21,.2);color:#facc15">🥉 3위 · MVP 최단경로</div>
+    <div class="card-name">👆 진영 탭 전쟁</div>
+    <div class="card-tagline">탭 하나로 진영 기여. 실시간 역전극.</div>
+  </div>
+  <div class="demo-area">
+    <canvas id="demo-2" width="300" height="140"></canvas>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">컨셉 적합성</div>
+      <div class="stat-val stars" style="color:#facc15">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">구현 난이도</div>
+      <div class="stat-val" style="color:#4ade80">최쉬움</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">예상 세션</div>
+      <div class="stat-val">5~15분</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">바이럴 가능성</div>
+      <div class="stat-val stars" style="color:#facc15">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">레퍼런스</div>
+      <div class="stat-val" style="font-size:.72rem">Cookie Clicker<br>Reddit 탭 이벤트</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">단독 깊이</div>
+      <div class="stat-val" style="color:#f87171">낮음</div>
+    </div>
+  </div>
+  <div class="mechanic">
+    <h3>게임 메커니즘</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">👆</div>
+      <div class="mechanic-text"><strong>기본 루프</strong>: 화면 탭 = 진영 포인트 +1. 실시간 막대 그래프로 양 진영 현황 표시. 1분마다 스냅샷 공유.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🎯</div>
+      <div class="mechanic-text"><strong>스킬 레이어</strong>: 일정 탭 누적 시 특수 기술 발동 가능. Orchard: 팀 전체 탭 2배. Jungle: 개인 쿨다운 초기화.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">📊</div>
+      <div class="mechanic-text"><strong>승리 조건</strong>: 세션 종료 시 총 탭 수 집계. 또는 목표 탭 수(예: 100만) 먼저 달성한 진영 승리.</div>
+    </div>
+  </div>
+  <div class="abilities">
+    <h3>강점 / 약점</h3>
+    <div class="mechanic-row" style="margin-bottom:6px">
+      <div class="mechanic-icon">✅</div>
+      <div class="mechanic-text">진입장벽 0 · URL 열면 바로 참여 · 하루 만에 MVP 완성 가능</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⚠️</div>
+      <div class="mechanic-text">단독으론 단조로움. 봇 어뷰징 취약. <strong>다른 포맷 위에 레이어로 얹는 게 최적</strong></div>
+    </div>
+    <div class="viral-box">
+      <div class="viral-label">공유 카드 예시</div>
+      <div class="viral-share">🍎 284,921 탭 vs 🌿 271,438 탭</div>
+      <div class="viral-text">아이폰 유저들이 손가락이 더 빠름 — Phoney War</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CARD 4: Charge Race ── -->
+<div class="card" id="card-3">
+  <div class="card-header" style="background:linear-gradient(135deg,#091a12,#0d2e1a)">
+    <div class="rank-badge" style="background:rgba(52,211,153,.2);color:#34d399">4위 · 협동 특화</div>
+    <div class="card-name">⚡ 충전 레이스</div>
+    <div class="card-tagline">먼저 100% 충전한 진영이 이긴다</div>
+  </div>
+  <div class="demo-area">
+    <canvas id="demo-3" width="300" height="140"></canvas>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">컨셉 적합성</div>
+      <div class="stat-val stars" style="color:#34d399">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">구현 난이도</div>
+      <div class="stat-val" style="color:#4ade80">쉬움</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">예상 세션</div>
+      <div class="stat-val">3~7분</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">바이럴 가능성</div>
+      <div class="stat-val stars" style="color:#34d399">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">레퍼런스</div>
+      <div class="stat-val" style="font-size:.72rem">배터리 밈<br>협동 레이싱</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">서버 재활용</div>
+      <div class="stat-val" style="color:#4ade80">높음</div>
+    </div>
+  </div>
+  <div class="mechanic">
+    <h3>게임 메커니즘</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🏁</div>
+      <div class="mechanic-text"><strong>시작</strong>: 양 진영 배터리 0%에서 출발. 영토 점령 = 충전 속도 증가. 탭 = 추가 충전.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🔌</div>
+      <div class="mechanic-text"><strong>Orchard 능력</strong>: "MagSafe" 패시브 자동 충전. "에어파워" 인접 팀원 동시 충전 부스트.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⚡</div>
+      <div class="mechanic-text"><strong>Jungle 능력</strong>: "PD 65W 급속충전" 단기 폭발. "보조배터리" 다른 유저에게 충전 전달.</div>
+    </div>
+  </div>
+  <div class="abilities">
+    <h3>배터리 소모전과의 차이</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">😤</div>
+      <div class="mechanic-text"><strong>배터리 소모전</strong>: 상대를 0%로 → 공격적, 파괴적 프레이밍</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🤝</div>
+      <div class="mechanic-text"><strong>충전 레이스</strong>: 먼저 100%로 → 긍정적, 협동적 프레이밍 → <strong>두 포맷 교대 사용 가능</strong></div>
+    </div>
+    <div class="viral-box">
+      <div class="viral-label">공유 카드 예시</div>
+      <div class="viral-share">⚡🌿 100% 충전 완료! 🍎 73%에서 패배</div>
+      <div class="viral-text">갤럭시 65W 급속충전 실화냐 — Phoney War</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CARD 5: App Store War ── -->
+<div class="card" id="card-4">
+  <div class="card-header" style="background:linear-gradient(135deg,#12091a,#1e0d2e)">
+    <div class="rank-badge" style="background:rgba(167,139,250,.2);color:#a78bfa">5위 · 스토리 특화</div>
+    <div class="card-name">🏪 앱스토어 점령전</div>
+    <div class="card-tagline">앱을 출시하고 다운로드로 영토를 점령</div>
+  </div>
+  <div class="demo-area">
+    <canvas id="demo-4" width="300" height="140"></canvas>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">컨셉 적합성</div>
+      <div class="stat-val stars" style="color:#a78bfa">★★★★★</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">구현 난이도</div>
+      <div class="stat-val" style="color:#facc15">중간</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">예상 세션</div>
+      <div class="stat-val">15~20분</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">바이럴 가능성</div>
+      <div class="stat-val stars" style="color:#a78bfa">★★★★☆</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">레퍼런스</div>
+      <div class="stat-val" style="font-size:.72rem">Monopoly<br>App차트 밈</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">서버 재활용</div>
+      <div class="stat-val" style="color:#facc15">중간</div>
+    </div>
+  </div>
+  <div class="mechanic">
+    <h3>게임 메커니즘</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">📱</div>
+      <div class="mechanic-text"><strong>앱 출시</strong>: 자원 소비 → 앱 카드 발행 → 유저 탭이 "다운로드 수". 다운로드 목표 달성 시 해당 카테고리 영역 점령.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🍎</div>
+      <div class="mechanic-text"><strong>Orchard 특성</strong>: 앱 심사 오래 걸리지만 고품질 → 출시 후 수익 공유. 수수료 30%(패러디)로 팀 자원 증가.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">🌿</div>
+      <div class="mechanic-text"><strong>Jungle 특성</strong>: 즉시 출시 가능 → 다양성. 개인 수익. 사이드로드(비공식 앱)로 상대 영역에 침투.</div>
+    </div>
+  </div>
+  <div class="abilities">
+    <h3>강점 / 약점</h3>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">✅</div>
+      <div class="mechanic-text">Apple vs Android 메타포가 가장 직접적. 스토리가 있어서 몰입감 높음.</div>
+    </div>
+    <div class="mechanic-row">
+      <div class="mechanic-icon">⚠️</div>
+      <div class="mechanic-text">설명이 필요한 복잡도 → 바이럴 초기 진입 장벽. 15~20분 세션 → 단타 공유 불리.</div>
+    </div>
+    <div class="viral-box">
+      <div class="viral-label">공유 카드 예시</div>
+      <div class="viral-share">📱 Orchard 앱 17개 vs 🌿 Jungle 앱 31개</div>
+      <div class="viral-text">심사 3일 걸리는 동안 갤럭시가 다 먹었다 — Phoney War</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 전체 비교표 ── -->
+<div style="margin: 40px auto 0; max-width: 900px;">
+  <div style="text-align:center;font-size:.72rem;letter-spacing:.2em;color:#334155;margin-bottom:16px">전체 20개 후보 요약</div>
+  <div class="all-table">
+    <table>
+      <tr>
+        <th>#</th><th>이름</th><th>컨셉 ★</th><th>구현</th><th>세션</th><th>바이럴 ★</th>
+      </tr>
+      <tr class="top5"><td>🏆1</td><td>🔋 배터리 소모전</td><td style="color:#f87171">★★★★★</td><td style="color:#4ade80">쉬움</td><td>3~7분</td><td style="color:#f87171">★★★★★</td></tr>
+      <tr class="top5"><td>🥈2</td><td>📲 OS 업데이트 푸시전</td><td style="color:#60a5fa">★★★★★</td><td style="color:#facc15">중간</td><td>10~20분</td><td style="color:#60a5fa">★★★★★</td></tr>
+      <tr class="top5"><td>🥉3</td><td>👆 진영 탭 전쟁</td><td style="color:#facc15">★★★★★</td><td style="color:#4ade80">최쉬움</td><td>5~15분</td><td style="color:#facc15">★★★★★</td></tr>
+      <tr class="top5"><td>4</td><td>⚡ 충전 레이스</td><td style="color:#34d399">★★★★★</td><td style="color:#4ade80">쉬움</td><td>3~7분</td><td style="color:#34d399">★★★★★</td></tr>
+      <tr class="top5"><td>5</td><td>🏪 앱스토어 점령전</td><td style="color:#a78bfa">★★★★★</td><td style="color:#facc15">중간</td><td>15~20분</td><td style="color:#a78bfa">★★★★☆</td></tr>
+      <tr><td>6</td><td>📡 소셜 팔로워 전쟁</td><td>★★★★☆</td><td>중간</td><td>10~15분</td><td>★★★★☆</td></tr>
+      <tr><td>7</td><td>🦠 바이러스 전파전</td><td>★★★★☆</td><td>중간</td><td>10~20분</td><td>★★★★☆</td></tr>
+      <tr><td>8</td><td>🧪 벤치마크 미니게임</td><td>★★★★☆</td><td>중간</td><td>10~15분</td><td>★★★★☆</td></tr>
+      <tr><td>9</td><td>📶 신호 강도 전쟁</td><td>★★★★☆</td><td>중간</td><td>15~20분</td><td>★★★☆☆</td></tr>
+      <tr><td>10</td><td>😂 밈 생성 대결</td><td>★★★★★</td><td>어려움</td><td>20~30분</td><td>★★★★★</td></tr>
+      <tr><td>11</td><td>🚀 앱 런칭 속도 레이스</td><td>★★★★☆</td><td>쉬움</td><td>2~5분</td><td>★★★★☆</td></tr>
+      <tr><td>12</td><td>📋 집단 퀴즈 배틀</td><td>★★★☆☆</td><td>쉬움</td><td>10~15분</td><td>★★★☆☆</td></tr>
+      <tr><td>13</td><td>🃏 카드 러시 (Clash형)</td><td>★★★☆☆</td><td>어려움</td><td>5~10분</td><td>★★★☆☆</td></tr>
+      <tr><td>14</td><td>🎱 집단 핀볼</td><td>★★☆☆☆</td><td>중간</td><td>3~5분</td><td>★★★☆☆</td></tr>
+      <tr><td>15</td><td>🤝 협동 퍼즐 방해전</td><td>★★★☆☆</td><td>어려움</td><td>5~10분</td><td>★★★★☆</td></tr>
+      <tr><td>16</td><td>🫧 Agar.io 진영전</td><td>★★★☆☆</td><td>어려움</td><td>5~10분</td><td>★★★☆☆</td></tr>
+      <tr><td>17</td><td>🐍 Snake 집단전</td><td>★★★☆☆</td><td>중간</td><td>5~10분</td><td>★★★☆☆</td></tr>
+      <tr><td>18</td><td>🏷️ 자원 경매전</td><td>★★★☆☆</td><td>중간</td><td>15~20분</td><td>★★★☆☆</td></tr>
+      <tr><td>19</td><td>🎪 픽셀 점령전 (r/place)</td><td>★★★★☆</td><td>중간</td><td>상시</td><td>★★★★★</td></tr>
+      <tr><td>20</td><td>🔮 집단 투표 전쟁</td><td>★★★★☆</td><td>쉬움</td><td>10~20분</td><td>★★★★☆</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+function show(n) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.card').forEach((c,i) => c.classList.toggle('active', i===n));
+}
+
+// ── DEMO CANVASES ──────────────────────────────────────────────
+function drawBatteryDemo() {
+  const c = document.getElementById('demo-0');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#0a0c10'; ctx.fillRect(0,0,300,140);
+
+  // Orchard battery
+  const draw = (x, y, w, h, pct, col, label, sub) => {
+    ctx.fillStyle = '#12161e'; ctx.roundRect(x,y,w,h,6); ctx.fill();
+    ctx.fillStyle = col;
+    ctx.roundRect(x+2, y+2, (w-4)*pct, h-4, 4); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x+w/2, y+h/2);
+    ctx.fillStyle = '#64748b'; ctx.font = '9px system-ui';
+    ctx.fillText(sub, x+w/2, y+h+10);
+  };
+
+  ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 12px system-ui';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('🍎 Orchard', 20, 15);
+  draw(20, 35, 120, 32, 0.72, 'rgba(210,228,252,0.8)', '72% 🔋', 'sharedHP');
+
+  ctx.fillStyle = '#4ade80'; ctx.font = 'bold 12px system-ui';
+  ctx.textAlign = 'right';
+  ctx.fillText('🌿 Jungle', 280, 15);
+  draw(158, 35, 122, 32, 0.38, 'rgba(34,197,94,0.7)', '38% 🔋', 'combinedHP');
+
+  // VS
+  ctx.fillStyle = '#f87171'; ctx.font = 'bold 16px system-ui';
+  ctx.textAlign = 'center'; ctx.fillText('VS', 150, 51);
+
+  // Tap buttons
+  const btn = (x, label, col) => {
+    ctx.fillStyle = col; ctx.roundRect(x, 85, 80, 36, 20); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x+40, 103);
+  };
+  btn(30, '🍎 TAP!', 'rgba(210,228,252,0.18)');
+  btn(190, '🌿 TAP!', 'rgba(34,197,94,0.18)');
+  ctx.strokeStyle='rgba(210,228,252,0.3)'; ctx.lineWidth=1;
+  ctx.roundRect(30,85,80,36,20); ctx.stroke();
+  ctx.strokeStyle='rgba(34,197,94,0.3)';
+  ctx.roundRect(190,85,80,36,20); ctx.stroke();
+}
+
+function drawUpdateDemo() {
+  const c = document.getElementById('demo-1');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#08090c'; ctx.fillRect(0,0,300,140);
+
+  // Grid of cells
+  const cells = [
+    [1,1,1,0,2,2,2],[1,1,3,1,2,2,2],[0,1,1,2,4,2,2],
+  ];
+  const colors = ['#12161e','rgba(210,228,252,0.35)','rgba(96,165,250,0.35)','rgba(210,228,252,0.6)','rgba(96,165,250,0.6)'];
+  const borders = ['#1a1f2e','rgba(190,218,255,0.5)','rgba(96,165,250,0.6)','rgba(190,218,255,0.9)','rgba(96,165,250,0.9)'];
+
+  for (let r=0; r<3; r++) {
+    for (let q=0; q<7; q++) {
+      const cell = cells[r][q];
+      const x = 14 + q*40, y = 14 + r*36;
+      ctx.fillStyle = colors[cell]; ctx.strokeStyle = borders[cell]; ctx.lineWidth=1.5;
+      ctx.roundRect(x,y,36,30,4); ctx.fill(); ctx.stroke();
+      if (cell===3) { ctx.fillStyle='#fff';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('📲',x+18,y+15); }
+      if (cell===4) { ctx.fillStyle='#fff';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🚫',x+18,y+15); }
+    }
+  }
+
+  // Update popup
+  ctx.fillStyle = 'rgba(15,20,30,0.95)';
+  ctx.roundRect(80,95,140,36,8); ctx.fill();
+  ctx.strokeStyle='rgba(96,165,250,0.6)';ctx.lineWidth=1;
+  ctx.roundRect(80,95,140,36,8); ctx.stroke();
+  ctx.fillStyle='#93c5fd';ctx.font='bold 9px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('업데이트 사용 가능 📲', 150, 108);
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='8px system-ui';
+  ctx.fillText('나중에   /   지금 설치', 150, 121);
+}
+
+function drawTapDemo() {
+  const c = document.getElementById('demo-2');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#0a0c10'; ctx.fillRect(0,0,300,140);
+
+  // Bar graph
+  const drawBar = (x, w, pct, col, label, val) => {
+    ctx.fillStyle = '#12161e'; ctx.roundRect(x, 20, w, 80, 4); ctx.fill();
+    const bh = 80*pct;
+    ctx.fillStyle = col; ctx.roundRect(x, 20+(80-bh), w, bh, 4); ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText(label, x+w/2, 106);
+    ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='bold 11px monospace';
+    ctx.fillText(val, x+w/2, 118);
+  };
+
+  drawBar(30, 105, 0.58, 'rgba(210,228,252,0.55)', '🍎 Orchard', '284,921');
+  drawBar(165, 105, 0.44, 'rgba(34,197,94,0.55)', '🌿 Jungle', '217,438');
+
+  ctx.fillStyle='#f87171';ctx.font='bold 10px monospace';ctx.textAlign='center';
+  ctx.fillText('ORCHARD LEADING  +67,483', 150, 8);
+}
+
+function drawChargeDemo() {
+  const c = document.getElementById('demo-3');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#09120a'; ctx.fillRect(0,0,300,140);
+
+  const drawCharge = (x,y,w,h,pct,col,label) => {
+    ctx.fillStyle='#0d1810';ctx.roundRect(x,y,w,h,6);ctx.fill();
+    const grad = ctx.createLinearGradient(x,0,x+w,0);
+    grad.addColorStop(0,col+'88'); grad.addColorStop(1,col);
+    ctx.fillStyle=grad;ctx.roundRect(x+2,y+2,(w-4)*pct,h-4,4);ctx.fill();
+    ctx.strokeStyle=col+'66';ctx.lineWidth=1;ctx.roundRect(x,y,w,h,6);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(label, x+w/2, y+h/2);
+  };
+
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.fillText('⚡ 충전 레이스', 150, 10);
+
+  drawCharge(20,30,260,30,0.73,'#bfdbfe','🍎 Orchard  73%');
+  drawCharge(20,72,260,30,0.61,'#4ade80','🌿 Jungle  61%');
+
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='9px system-ui';ctx.textAlign='center';
+  ctx.fillText('탭할수록 충전! · 영토 점령 시 자동 충전 ↑', 150, 115);
+
+  ctx.fillStyle='#facc15';ctx.font='bold 10px system-ui';
+  ctx.fillText('목표: 먼저 100% 달성!', 150, 128);
+}
+
+function drawAppDemo() {
+  const c = document.getElementById('demo-4');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#0a0810'; ctx.fillRect(0,0,300,140);
+
+  // App grid
+  const apps = [
+    {e:'🎵',n:'Music',t:'orchard'},{e:'💳',n:'Pay',t:'orchard'},{e:'☁️',n:'Cloud',t:'orchard'},
+    {e:'🔓',n:'Root',t:'jungle'},{e:'📺',n:'Stream',t:'jungle'},{e:'🎮',n:'Game',t:'jungle'},
+  ];
+  apps.forEach((a,i) => {
+    const x = 20 + (i%3)*90, y = 15 + Math.floor(i/3)*58;
+    const col = a.t==='orchard' ? 'rgba(210,228,252,0.12)' : 'rgba(34,197,94,0.12)';
+    const border = a.t==='orchard' ? 'rgba(190,218,255,0.3)' : 'rgba(74,222,128,0.3)';
+    ctx.fillStyle=col;ctx.strokeStyle=border;ctx.lineWidth=1;
+    ctx.roundRect(x,y,78,48,8);ctx.fill();ctx.stroke();
+    ctx.font='18px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(a.e,x+39,y+22);
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='8px system-ui';
+    ctx.fillText(a.n,x+39,y+38);
+  });
+
+  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='8px system-ui';ctx.textAlign='center';
+  ctx.fillText('자원 소비 → 앱 출시 → 다운로드 수 = 영토', 150, 132);
+}
+
+drawBatteryDemo();
+drawUpdateDemo();
+drawTapDemo();
+drawChargeDemo();
+drawAppDemo();
+</script>
+</body>
+</html>
