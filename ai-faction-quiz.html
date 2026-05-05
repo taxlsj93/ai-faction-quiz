@@ -44,6 +44,18 @@
   gtag('js', new Date());
   gtag('config', 'G-HPT1Y41HD8');
 </script>
+<!-- Plausible Analytics (선택, 활성화 시 data-domain에 도메인 입력 후 주석 해제)
+<script defer data-domain="ai-faction-quiz.vercel.app" src="https://plausible.io/js/script.js"></script>
+-->
+<script>
+  /* Universal event tracker — GA4 + Plausible (when enabled) */
+  window.trackEvent = function(name, params) {
+    try {
+      if (typeof gtag === 'function') gtag('event', name, params || {});
+      if (typeof window.plausible === 'function') window.plausible(name, { props: params || {} });
+    } catch (e) { /* analytics best-effort */ }
+  };
+</script>
 <style>
   :root {
     --claude:   #C17CE4;
@@ -729,6 +741,13 @@
       </div>
     </div>
     <div class="affiliate-notice">* 연합군 툴 링크는 제휴 마케팅 링크를 포함합니다 · 이 퀴즈는 오락 목적이며 Anthropic, OpenAI, Google, xAI와 무관합니다. 통계는 공개 데이터 기반.</div>
+    <div class="affiliate-notice" style="margin-top:8px; font-size:12px;">
+      <a href="/privacy" style="color:inherit; text-decoration:underline;">개인정보처리방침</a>
+      &nbsp;·&nbsp;
+      <a href="/disclosure" style="color:inherit; text-decoration:underline;">제휴 고지</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/taxlsj93/ai-faction-quiz" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">GitHub</a>
+    </div>
     <button class="btn-retry" onclick="retryQuiz()">다시 테스트하기</button>
   </div>
 
@@ -1362,6 +1381,7 @@ function show(id) {
 function startQuiz() {
   scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
   currentQ = 0;
+  if (window.trackEvent) trackEvent('quiz_start', { lang: document.documentElement.lang || 'ko' });
   show('screen-quiz');
   renderQuestion();
 }
@@ -1547,11 +1567,16 @@ function showResult() {
   }
 
   // CTA
-  document.getElementById('btn-cta-main').href = faction.ctaUrl;
+  const _ctaMain = document.getElementById('btn-cta-main');
+  const _ctaSec = document.getElementById('btn-cta-secondary');
+  _ctaMain.href = faction.ctaUrl;
   document.getElementById('cta-text').textContent = faction.ctaText;
-  document.getElementById('btn-cta-secondary').href = faction.ctaSecondaryUrl;
+  _ctaSec.href = faction.ctaSecondaryUrl;
   document.getElementById('cta-secondary-text').textContent = faction.ctaSecondaryText;
+  _ctaMain.onclick = () => window.trackEvent && trackEvent('cta_main_click', { faction: resultFaction, url: faction.ctaUrl });
+  _ctaSec.onclick = () => window.trackEvent && trackEvent('cta_secondary_click', { faction: resultFaction, url: faction.ctaSecondaryUrl });
 
+  if (window.trackEvent) trackEvent('quiz_complete', { faction: resultFaction, lang: document.documentElement.lang || 'ko' });
   show('screen-result');
 }
 

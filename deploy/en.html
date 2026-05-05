@@ -39,6 +39,18 @@
   gtag('js', new Date());
   gtag('config', 'G-HPT1Y41HD8');
 </script>
+<!-- Plausible Analytics (optional, uncomment after entering data-domain)
+<script defer data-domain="ai-faction-quiz.vercel.app" src="https://plausible.io/js/script.js"></script>
+-->
+<script>
+  /* Universal event tracker — GA4 + Plausible (when enabled) */
+  window.trackEvent = function(name, params) {
+    try {
+      if (typeof gtag === 'function') gtag('event', name, params || {});
+      if (typeof window.plausible === 'function') window.plausible(name, { props: params || {} });
+    } catch (e) { /* analytics best-effort */ }
+  };
+</script>
 <style>
   :root {
     --claude:   #C17CE4;
@@ -593,6 +605,13 @@
       </div>
     </div>
     <div class="affiliate-notice">* Ally tool links may include affiliate links · This quiz is for entertainment. Not affiliated with Anthropic, OpenAI, Google, or xAI. Stats based on publicly available data.</div>
+    <div class="affiliate-notice" style="margin-top:8px; font-size:12px;">
+      <a href="/privacy-en" style="color:inherit; text-decoration:underline;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="/disclosure" style="color:inherit; text-decoration:underline;">Affiliate Disclosure</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/taxlsj93/ai-faction-quiz" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">GitHub</a>
+    </div>
     <button class="btn-retry" onclick="retryQuiz()">Retake Quiz</button>
   </div>
 
@@ -905,6 +924,7 @@ function show(id) {
 function startQuiz() {
   scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
   currentQ = 0;
+  if (window.trackEvent) trackEvent('quiz_start', { lang: 'en' });
   show('screen-quiz');
   renderQuestion();
 }
@@ -1060,11 +1080,16 @@ function showResult() {
   `;
 
   // CTA
-  document.getElementById('btn-cta-main').href = faction.ctaUrl;
+  const _ctaMain = document.getElementById('btn-cta-main');
+  const _ctaSec = document.getElementById('btn-cta-secondary');
+  _ctaMain.href = faction.ctaUrl;
   document.getElementById('cta-text').textContent = faction.ctaText;
-  document.getElementById('btn-cta-secondary').href = faction.ctaSecondaryUrl;
+  _ctaSec.href = faction.ctaSecondaryUrl;
   document.getElementById('cta-secondary-text').textContent = faction.ctaSecondaryText;
+  _ctaMain.onclick = () => window.trackEvent && trackEvent('cta_main_click', { faction: resultFaction, url: faction.ctaUrl });
+  _ctaSec.onclick = () => window.trackEvent && trackEvent('cta_secondary_click', { faction: resultFaction, url: faction.ctaSecondaryUrl });
 
+  if (window.trackEvent) trackEvent('quiz_complete', { faction: resultFaction, lang: 'en' });
   show('screen-result');
 }
 
