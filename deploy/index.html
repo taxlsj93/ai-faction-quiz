@@ -33,7 +33,77 @@
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<!-- Removed: profitablecpmratenetwork (popunder/floating ads, UX-breaking, low CPM, AdSense policy risk) -->
+<!-- profitablecpmratenetwork — restored with UX guards: delayed inject, popunder block, CSS overrides, dismiss button -->
+<script>
+(function () {
+  var AD_SRC = "https://pl29346307.profitablecpmratenetwork.com/2d/e3/c6/2de3c6d4d86edf3bc9f0b02537b4ec1a.js";
+  var loaded = false;
+  var lastUserAction = 0;
+
+  ['click','touchstart','keydown'].forEach(function (ev) {
+    document.addEventListener(ev, function () { lastUserAction = Date.now(); }, true);
+  });
+
+  /* (b) CSS overrides — force popunder/floating into a dismissible 60px bottom strip */
+  var style = document.createElement('style');
+  style.id = 'ad-ux-guards';
+  style.textContent =
+    'iframe[src*="profitable"],iframe[src*="popunder"],iframe[src*="popcash"],iframe[src*="adcash"],' +
+    'div[id*="popunder"i],div[class*="popunder"i],div[id^="ad-overlay"i],div[class^="ad-overlay"i],' +
+    'div[id*="adv-overlay"i],div[class*="floating-ad"i]{' +
+      'position:fixed!important;bottom:0!important;left:0!important;right:0!important;top:auto!important;' +
+      'width:100%!important;max-width:100vw!important;max-height:60px!important;height:60px!important;' +
+      'z-index:9999!important;transform:none!important;margin:0!important;border-radius:0!important;' +
+    '}';
+  document.head.appendChild(style);
+
+  /* (c) Block non-user-initiated popunders + page-exit hijacks */
+  var realOpen = window.open;
+  window.open = function (url) {
+    if (Date.now() - lastUserAction < 1500) return realOpen.apply(window, arguments);
+    console.warn('[ad-guard] blocked non-user-initiated window.open:', url);
+    return null;
+  };
+  var realAdd = EventTarget.prototype.addEventListener;
+  EventTarget.prototype.addEventListener = function (type) {
+    if ((type === 'beforeunload' || type === 'unload') && (this === window || this === document)) {
+      console.warn('[ad-guard] blocked', type, 'listener');
+      return;
+    }
+    return realAdd.apply(this, arguments);
+  };
+
+  /* (d) Attach a dismiss button to any ad container that appears */
+  function ensureDismiss() {
+    var sel = 'iframe[src*="profitable"],iframe[src*="popunder"],div[id*="popunder" i],div[class*="popunder" i],div[id^="ad-overlay" i],div[class^="ad-overlay" i]';
+    try {
+      document.querySelectorAll(sel).forEach(function (el) {
+        if (el.dataset.guarded) return;
+        el.dataset.guarded = '1';
+        var btn = document.createElement('button');
+        btn.setAttribute('aria-label', '광고 닫기');
+        btn.textContent = '✕ 닫기';
+        btn.style.cssText = 'position:fixed;bottom:64px;right:8px;z-index:10001;padding:4px 10px;border:none;border-radius:14px;background:rgba(0,0,0,0.85);color:#fff;font-size:11px;cursor:pointer;font-family:inherit;opacity:0.9';
+        btn.onclick = function () { el.style.display = 'none'; btn.style.display = 'none'; };
+        document.body.appendChild(btn);
+      });
+    } catch (e) {}
+  }
+  setInterval(ensureDismiss, 1500);
+
+  /* (a) Delayed injection — quiz_complete OR 30s timeout, whichever fires first */
+  function injectAd() {
+    if (loaded) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.src = AD_SRC; s.async = true;
+    document.head.appendChild(s);
+    if (window.trackEvent) window.trackEvent('ad_network_loaded', { trigger: 'delayed' });
+  }
+  window.addEventListener('quiz_complete_signal', injectAd);
+  setTimeout(injectAd, 30000);
+})();
+</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036702261797984"
      crossorigin="anonymous"></script>
 <!-- Google tag (gtag.js) -->
@@ -55,6 +125,21 @@
       if (typeof window.plausible === 'function') window.plausible(name, { props: params || {} });
     } catch (e) { /* analytics best-effort */ }
   };
+  /* Affiliate-card click delegation — covers loading-ad slot + ally tools (skips already-tracked CTAs) */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a');
+    if (!a) return;
+    if (a.id === 'btn-cta-main' || a.id === 'btn-cta-secondary') return;
+    var href = a.href || '';
+    var rel = a.getAttribute('rel') || '';
+    if (rel.indexOf('sponsored') >= 0 || /writesonic|jasper|copy\.ai|perplexity/i.test(href)) {
+      if (window.trackEvent) trackEvent('affiliate_card_click', {
+        url: href,
+        label: (a.textContent || '').trim().slice(0, 64),
+        faction: window.resultFaction || ''
+      });
+    }
+  }, true);
 </script>
 <style>
   :root {
@@ -1576,7 +1661,9 @@ function showResult() {
   _ctaMain.onclick = () => window.trackEvent && trackEvent('cta_main_click', { faction: resultFaction, url: faction.ctaUrl });
   _ctaSec.onclick = () => window.trackEvent && trackEvent('cta_secondary_click', { faction: resultFaction, url: faction.ctaSecondaryUrl });
 
+  window.resultFaction = resultFaction;
   if (window.trackEvent) trackEvent('quiz_complete', { faction: resultFaction, lang: document.documentElement.lang || 'ko' });
+  window.dispatchEvent(new Event('quiz_complete_signal'));
   show('screen-result');
 }
 
