@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoney War</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: #06080b; color: #e2e8f0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* ── SCREENS ── */
+.screen {
+  display: none; width: 100%; max-width: 430px;
+  height: 100%; flex-direction: column;
+  padding: 0; position: relative; overflow: hidden;
+}
+.screen.active { display: flex; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes scaleIn  { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
+@keyframes pulse    { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+@keyframes shimmer  { from{background-position:200% center} to{background-position:-200% center} }
+@keyframes countUp  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.anim-fadeup  { animation: fadeUp .5s ease both; }
+.anim-scalein { animation: scaleIn .4s cubic-bezier(.34,1.56,.64,1) both; }
+.anim-fadein  { animation: fadeIn .4s ease both; }
+
+/* ═══════════════════════════════════════
+   SCREEN 1: INTRO / FACTION REVEAL
+═══════════════════════════════════════ */
+#s-intro {
+  background: #06080b;
+  align-items: center; justify-content: center;
+  gap: 0;
+}
+
+.intro-logo {
+  font-size: .68rem; font-weight: 900; letter-spacing: .3em;
+  color: #334155; margin-bottom: 40px;
+  animation: fadeIn .8s ease both;
+}
+
+.faction-reveal {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; margin-bottom: 48px;
+}
+.faction-emoji {
+  font-size: 5rem; line-height: 1;
+  animation: scaleIn .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+}
+.faction-vs {
+  font-size: .65rem; font-weight: 800; letter-spacing: .2em;
+  color: #f87171; animation: fadeIn .4s .6s both;
+}
+.faction-emoji-small {
+  font-size: 2.4rem; opacity: .4;
+  animation: fadeIn .4s .7s both;
+}
+
+.detected-box {
+  background: #0d1018; border: 1px solid #1e2535;
+  border-radius: 18px; padding: 20px 28px;
+  text-align: center; margin-bottom: 36px;
+  animation: fadeUp .5s .4s both;
+}
+.detected-label { font-size: .6rem; color: #475569; font-weight: 700; letter-spacing: .12em; margin-bottom: 8px; }
+.detected-faction { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+.detected-desc { font-size: .7rem; color: #64748b; line-height: 1.5; }
+
+.start-btn {
+  width: calc(100% - 40px); max-width: 340px; padding: 18px;
+  border-radius: 16px; font-size: 1rem; font-weight: 900;
+  cursor: pointer; border: none; transition: transform .1s, box-shadow .15s;
+  animation: fadeUp .4s .7s both;
+}
+.start-btn:active { transform: scale(.96); }
+
+.demo-toggle {
+  margin-top: 20px; font-size: .62rem; color: #334155;
+  cursor: pointer; animation: fadeIn .4s 1s both;
+  padding: 8px 16px; border-radius: 20px; border: 1px solid #1a2030;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 2: QUESTION
+═══════════════════════════════════════ */
+#s-question { background: #06080b; }
+
+.q-header {
+  padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: center;
+}
+.q-day-badge {
+  font-size: .6rem; font-weight: 800; letter-spacing: .12em;
+  padding: 5px 12px; border-radius: 20px;
+}
+.q-streak { font-size: .65rem; color: #475569; }
+
+.q-faction-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px; margin-top: 10px;
+}
+.q-faction-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.q-faction-name { font-size: .68rem; font-weight: 800; }
+.q-live { font-size: .55rem; font-weight: 800; letter-spacing: .1em; color: #f87171; margin-left: auto; animation: pulse 1.5s infinite; }
+
+.q-card {
+  margin: 0 16px; padding: 28px 24px;
+  background: #0d1018; border: 1px solid #1e2535;
+  border-radius: 24px; flex: 1; display: flex;
+  flex-direction: column; justify-content: center;
+}
+
+.q-category {
+  font-size: .58rem; font-weight: 800; letter-spacing: .14em;
+  margin-bottom: 16px;
+}
+.q-text {
+  font-size: 1.35rem; font-weight: 900; line-height: 1.45;
+  margin-bottom: 8px;
+}
+.q-sub {
+  font-size: .72rem; color: #475569; line-height: 1.5; margin-bottom: 28px;
+}
+
+.q-choices { display: flex; flex-direction: column; gap: 10px; }
+.choice-btn {
+  width: 100%; padding: 18px 20px; border-radius: 14px;
+  font-size: .9rem; font-weight: 800; cursor: pointer;
+  border: 1.5px solid; transition: transform .08s, box-shadow .12s;
+  text-align: left; display: flex; align-items: center; gap: 12px;
+}
+.choice-btn:active { transform: scale(.97); }
+.choice-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+.q-participants {
+  padding: 14px 20px; text-align: center;
+  font-size: .62rem; color: #334155;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 3: RESULT
+═══════════════════════════════════════ */
+#s-result { background: #06080b; overflow-y: auto; }
+
+.r-header {
+  padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: center;
+}
+.r-my-answer {
+  display: flex; align-items: center; gap: 8px; padding: 6px 14px;
+  border-radius: 20px; font-size: .65rem; font-weight: 800;
+}
+.r-match-badge {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: .6rem; font-weight: 800; letter-spacing: .08em;
+}
+
+.r-question-recap {
+  margin: 16px 16px 0; padding: 18px 20px;
+  background: #0d1018; border: 1px solid #1e2535; border-radius: 18px;
+}
+.r-question-text { font-size: 1rem; font-weight: 800; line-height: 1.4; margin-bottom: 4px; }
+.r-question-sub { font-size: .65rem; color: #475569; }
+
+/* Battle result bars */
+.r-battle {
+  margin: 14px 16px 0; padding: 20px;
+  background: #0d1018; border: 1px solid #1e2535; border-radius: 18px;
+}
+.r-battle-title { font-size: .6rem; font-weight: 800; letter-spacing: .12em; color: #475569; margin-bottom: 16px; }
+
+.r-faction-row { margin-bottom: 14px; }
+.r-faction-label {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 7px;
+}
+.r-faction-name { font-size: .72rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.r-faction-pct { font-size: 1.2rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.r-bar-track {
+  height: 12px; background: #141820; border-radius: 6px; overflow: hidden;
+}
+.r-bar-fill {
+  height: 100%; border-radius: 6px; width: 0%;
+  transition: width 1.2s cubic-bezier(.25,.46,.45,.94);
+}
+.r-voters { font-size: .58rem; color: #334155; margin-top: 4px; }
+
+.r-insight {
+  margin: 12px 16px 0; padding: 14px 18px;
+  border-radius: 14px; font-size: .7rem; line-height: 1.55;
+}
+
+/* Share card */
+.r-share-card {
+  margin: 14px 16px 0; padding: 18px;
+  background: #0d1118; border: 1px solid #1e2535; border-radius: 18px;
+}
+.share-card-inner {
+  background: linear-gradient(135deg, #0a0d18, #0d1420);
+  border: 1px solid #1e2535; border-radius: 14px;
+  padding: 18px 16px; margin-bottom: 14px;
+}
+.share-top {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.share-game-name { font-size: .58rem; font-weight: 900; letter-spacing: .15em; color: #334155; }
+.share-date { font-size: .58rem; color: #334155; }
+.share-q-text { font-size: .8rem; font-weight: 800; color: #94a3b8; margin-bottom: 14px; line-height: 1.4; }
+.share-result-bar { height: 8px; background: #141820; border-radius: 4px; overflow: hidden; display: flex; margin-bottom: 8px; }
+.share-bar-o { background: linear-gradient(90deg,#1d4ed8,#3b82f6); }
+.share-bar-j { background: linear-gradient(90deg,#16a34a,#4ade80); }
+.share-pcts {
+  display: flex; justify-content: space-between; font-size: .65rem; font-weight: 800; margin-bottom: 12px;
+}
+.share-my-line {
+  font-size: .65rem; color: #64748b; padding-top: 10px;
+  border-top: 1px solid #1e2535;
+}
+.share-my-line strong { color: #94a3b8; }
+
+.share-btn {
+  width: 100%; padding: 15px; border-radius: 12px;
+  font-size: .82rem; font-weight: 900; cursor: pointer;
+  border: none; transition: transform .08s;
+}
+.share-btn:active { transform: scale(.97); }
+
+.r-next-hint {
+  text-align: center; font-size: .62rem; color: #334155;
+  padding: 16px 16px 24px;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 4: ALREADY DONE
+═══════════════════════════════════════ */
+#s-done {
+  align-items: center; justify-content: center;
+  background: #06080b; padding: 40px 24px;
+  text-align: center; gap: 16px;
+}
+.done-icon { font-size: 3.5rem; animation: scaleIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.done-title { font-size: 1.2rem; font-weight: 900; }
+.done-sub { font-size: .75rem; color: #64748b; line-height: 1.6; }
+.done-streak {
+  background: #0d1018; border: 1px solid #1e2535;
+  border-radius: 14px; padding: 16px 28px; margin-top: 8px;
+}
+.done-streak-val { font-size: 2rem; font-weight: 900; display: block; }
+.done-streak-label { font-size: .65rem; color: #475569; }
+
+/* ─── ORCHARD THEME ─── */
+.theme-o .start-btn       { background: linear-gradient(135deg,#1d4ed8,#3b82f6); color: #fff; box-shadow: 0 8px 24px rgba(59,130,246,.3); }
+.theme-o .detected-faction { color: #93c5fd; }
+.theme-o .q-day-badge     { background: rgba(59,130,246,.12); color: #93c5fd; border: 1px solid rgba(59,130,246,.2); }
+.theme-o .q-category      { color: #3b82f6; }
+.theme-o .choice-btn:nth-child(1) { background: rgba(59,130,246,.1); border-color: rgba(59,130,246,.4); color: #bfdbfe; }
+.theme-o .choice-btn:nth-child(1):active { box-shadow: 0 0 20px rgba(59,130,246,.3); }
+.theme-o .choice-btn:nth-child(2) { background: rgba(30,41,59,.4); border-color: #1e2535; color: #64748b; }
+.theme-o .r-my-answer      { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); color: #93c5fd; }
+.theme-o .r-bar-fill.mine  { background: linear-gradient(90deg,#1d4ed8,#3b82f6); }
+.theme-o .share-btn        { background: linear-gradient(135deg,#1d4ed8,#3b82f6); color: #fff; box-shadow: 0 4px 16px rgba(59,130,246,.25); }
+
+/* ─── JUNGLE THEME ─── */
+.theme-j .start-btn       { background: linear-gradient(135deg,#16a34a,#4ade80); color: #052e16; box-shadow: 0 8px 24px rgba(34,197,94,.3); }
+.theme-j .detected-faction { color: #86efac; }
+.theme-j .q-day-badge     { background: rgba(34,197,94,.1); color: #86efac; border: 1px solid rgba(34,197,94,.2); }
+.theme-j .q-category      { color: #22c55e; }
+.theme-j .choice-btn:nth-child(1) { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.35); color: #bbf7d0; }
+.theme-j .choice-btn:nth-child(1):active { box-shadow: 0 0 20px rgba(34,197,94,.3); }
+.theme-j .choice-btn:nth-child(2) { background: rgba(30,41,59,.4); border-color: #1e2535; color: #64748b; }
+.theme-j .r-my-answer      { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); color: #86efac; }
+.theme-j .r-bar-fill.mine  { background: linear-gradient(90deg,#16a34a,#4ade80); }
+.theme-j .share-btn        { background: linear-gradient(135deg,#16a34a,#4ade80); color: #052e16; box-shadow: 0 4px 16px rgba(34,197,94,.25); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     S1: INTRO
+══════════════════════════════════ -->
+<div class="screen active" id="s-intro">
+  <div class="intro-logo">PHONEY WAR</div>
+
+  <div class="faction-reveal">
+    <div class="faction-emoji" id="intro-my-emoji">🍎</div>
+    <div class="faction-vs">VS</div>
+    <div class="faction-emoji-small" id="intro-enemy-emoji">🌿</div>
+  </div>
+
+  <div class="detected-box">
+    <div class="detected-label">YOUR FACTION</div>
+    <div class="detected-faction" id="intro-faction-name">🍎 The Orchard</div>
+    <div class="detected-desc" id="intro-faction-desc">아이폰 유저로 감지됨<br>오늘 갤럭시 진영과 맞붙습니다</div>
+  </div>
+
+  <button class="start-btn" onclick="goQuestion()">오늘의 배틀 시작하기 →</button>
+  <div class="demo-toggle" onclick="toggleFaction()">데모용: 진영 바꾸기</div>
+</div>
+
+<!-- ══════════════════════════════════
+     S2: QUESTION
+══════════════════════════════════ -->
+<div class="screen" id="s-question">
+  <div class="q-header">
+    <span class="q-day-badge" id="q-day-badge">DAY 1</span>
+    <span class="q-streak" id="q-streak">🔥 1일 연속</span>
+  </div>
+
+  <div class="q-faction-bar">
+    <div class="q-faction-dot" id="q-dot"></div>
+    <div class="q-faction-name" id="q-faction-name">🍎 Orchard</div>
+    <div class="q-live">● LIVE</div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-category" id="q-category">🔋 배터리 습관</div>
+    <div class="q-text" id="q-text">배터리가 20%대로 떨어지면 불안해진다</div>
+    <div class="q-sub" id="q-sub">충전기를 찾거나 절전 모드를 켜는 등 즉각 반응하게 된다</div>
+
+    <div class="q-choices">
+      <button class="choice-btn" onclick="vote(true)" id="btn-yes">
+        <span class="choice-icon">✅</span>
+        <span>그렇다, 불안해진다</span>
+      </button>
+      <button class="choice-btn" onclick="vote(false)" id="btn-no">
+        <span class="choice-icon">😐</span>
+        <span>별로 신경 안 쓴다</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="q-participants" id="q-participants">오늘 <strong id="q-count">0</strong>명이 이미 답했습니다</div>
+</div>
+
+<!-- ══════════════════════════════════
+     S3: RESULT
+══════════════════════════════════ -->
+<div class="screen" id="s-result">
+  <div class="r-header">
+    <div class="r-my-answer" id="r-my-answer">✅ 그렇다</div>
+    <div class="r-match-badge" id="r-match-badge">진영 일치 🎯</div>
+  </div>
+
+  <div class="r-question-recap">
+    <div class="r-question-text" id="r-q-recap-text"></div>
+    <div class="r-question-sub" id="r-q-recap-sub"></div>
+  </div>
+
+  <div class="r-battle">
+    <div class="r-battle-title">FACTION SPLIT — 오늘의 결과</div>
+
+    <div class="r-faction-row" id="r-row-mine">
+      <div class="r-faction-label">
+        <div class="r-faction-name" id="r-mine-name">🍎 Orchard</div>
+        <div class="r-faction-pct" id="r-mine-pct">0%</div>
+      </div>
+      <div class="r-bar-track"><div class="r-bar-fill mine" id="r-bar-mine"></div></div>
+      <div class="r-voters" id="r-voters-mine"></div>
+    </div>
+
+    <div class="r-faction-row" id="r-row-enemy">
+      <div class="r-faction-label">
+        <div class="r-faction-name" id="r-enemy-name">🌿 Jungle</div>
+        <div class="r-faction-pct" id="r-enemy-pct">0%</div>
+      </div>
+      <div class="r-bar-track"><div class="r-bar-fill enemy" id="r-bar-enemy"></div></div>
+      <div class="r-voters" id="r-voters-enemy"></div>
+    </div>
+  </div>
+
+  <div class="r-insight" id="r-insight"></div>
+
+  <div class="r-share-card">
+    <div class="share-card-inner">
+      <div class="share-top">
+        <span class="share-game-name">PHONEY WAR</span>
+        <span class="share-date" id="share-date"></span>
+      </div>
+      <div class="share-q-text" id="share-q-text"></div>
+      <div class="share-result-bar">
+        <div class="share-bar-o" id="share-bar-o" style="width:50%"></div>
+        <div class="share-bar-j" id="share-bar-j" style="width:50%"></div>
+      </div>
+      <div class="share-pcts">
+        <span style="color:#93c5fd">🍎 <span id="share-pct-o">50</span>%</span>
+        <span style="color:#86efac"><span id="share-pct-j">50</span>% 🌿</span>
+      </div>
+      <div class="share-my-line" id="share-my-line"></div>
+    </div>
+    <button class="share-btn" onclick="doShare()">📤 결과 공유하기</button>
+  </div>
+
+  <div class="r-next-hint">내일 새로운 배틀이 시작됩니다 · 연속 참여 시 🔥 보너스</div>
+</div>
+
+<!-- ══════════════════════════════════
+     S4: ALREADY DONE
+══════════════════════════════════ -->
+<div class="screen" id="s-done">
+  <div class="done-icon">✅</div>
+  <div class="done-title">오늘 배틀 완료!</div>
+  <div class="done-sub">내일 새로운 질문이 올라옵니다.<br>결과는 자정까지 계속 업데이트됩니다.</div>
+  <div class="done-streak">
+    <span class="done-streak-val" id="done-streak-val">🔥 3</span>
+    <span class="done-streak-label">일 연속 참여</span>
+  </div>
+  <div class="demo-toggle" style="margin-top:24px" onclick="resetDemo()">데모 재시작</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════
+const QUESTIONS = [
+  {
+    category: '🔋 배터리 습관',
+    text: '배터리가 20%대로 떨어지면 불안해진다',
+    sub: '충전기를 찾거나 절전 모드를 켜는 등 즉각 반응하게 된다',
+    yesLabel: '그렇다, 불안해진다',
+    noLabel: '별로 신경 안 쓴다',
+    yesIcon: '😰', noIcon: '😌',
+    // Orchard YES%, Jungle YES%
+    result: { o: 81, j: 52 },
+    votersO: 2847, votersJ: 1923,
+    insight: {
+      o: '아이폰 유저 10명 중 8명이 배터리 불안을 느낍니다. 배터리 수명이 짧다는 불만이 실제 행동 패턴으로 이어지고 있어요.',
+      j: '갤럭시 유저는 상대적으로 여유롭습니다. 대용량 배터리 + 고속충전 조합이 만들어낸 심리적 안정감일까요?'
+    }
+  },
+  {
+    category: '📲 업데이트 습관',
+    text: 'OS 업데이트가 뜨면 바로 설치하는 편이다',
+    sub: '중요한 일정이 없으면 알림 뜨는 즉시 업데이트한다',
+    yesLabel: '바로 설치한다',
+    noLabel: '나중에 미룬다',
+    yesIcon: '⬆️', noIcon: '⏰',
+    result: { o: 74, j: 31 },
+    votersO: 3102, votersJ: 2241,
+    insight: {
+      o: '아이폰 유저는 업데이트를 적극 설치합니다. 6년간 꾸준한 업데이트 지원 덕분에 신뢰가 쌓인 결과입니다.',
+      j: '갤럭시 유저는 업데이트를 신중하게 대합니다. 업데이트 후 성능 저하 경험이 신중함을 만들었을 수 있어요.'
+    }
+  },
+  {
+    category: '📦 앱 구매',
+    text: '유료 앱을 구매해본 적이 있다',
+    sub: '광고 없는 앱을 위해 기꺼이 결제한 경험',
+    yesLabel: '산 적 있다',
+    noLabel: '무료만 쓴다',
+    yesIcon: '💳', noIcon: '🆓',
+    result: { o: 67, j: 29 },
+    votersO: 2654, votersJ: 1876,
+    insight: {
+      o: '아이폰 유저는 앱에 돈을 씁니다. iOS 앱 생태계의 유료 문화가 반영된 결과예요.',
+      j: '갤럭시 유저는 무료 앱을 선호합니다. 구글 플레이의 광고 기반 무료 앱 문화가 익숙한 탓일 수 있어요.'
+    }
+  },
+  {
+    category: '📱 케이스',
+    text: '스마트폰 케이스 없이 쓴 적이 있다',
+    sub: '의도적으로 케이스를 끼지 않고 몇 주 이상 사용한 경험',
+    yesLabel: '있다, 맨폰 선호',
+    noLabel: '케이스는 필수다',
+    yesIcon: '🪨', noIcon: '🛡️',
+    result: { o: 19, j: 44 },
+    votersO: 1987, votersJ: 2341,
+    insight: {
+      o: '아이폰 유저는 케이스를 더 많이 씁니다. 유리 소재 뒷면과 높은 수리비가 케이스 착용을 강제하는 요인입니다.',
+      j: '갤럭시 유저는 맨폰을 즐기는 비율이 더 높습니다. 다양한 소재와 내구성이 자신감을 줄 수 있어요.'
+    }
+  },
+  {
+    category: '🔌 보조배터리',
+    text: '외출할 때 보조배터리를 챙기는 편이다',
+    sub: '반나절 이상 외출 시 보조배터리를 가방에 넣는다',
+    yesLabel: '항상 챙긴다',
+    noLabel: '잘 안 챙긴다',
+    yesIcon: '🔋', noIcon: '🎒',
+    result: { o: 63, j: 41 },
+    votersO: 2198, votersJ: 1654,
+    insight: {
+      o: '아이폰 유저가 보조배터리를 더 많이 들고 다닙니다. 배터리 불안이 행동으로 이어진 결과예요.',
+      j: '갤럭시의 빠른 충전과 넉넉한 배터리 덕분에 보조배터리 의존도가 낮습니다.'
+    }
+  },
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let faction = 'o';  // 'o' | 'j'
+let myVote  = null; // true | false
+let streak  = parseInt(localStorage.getItem('pw_streak') || '0');
+let today   = new Date().toDateString();
+let todayDone = localStorage.getItem('pw_done') === today;
+let questionIdx = (new Date().getDay()) % QUESTIONS.length;
+let q = QUESTIONS[questionIdx];
+
+// ═══════════════════════════════════════════════════
+//  DEVICE DETECT
+// ═══════════════════════════════════════════════════
+function detectFaction() {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /android/i.test(ua);
+  faction = isIOS ? 'o' : isAndroid ? 'j' : 'o';
+}
+
+function toggleFaction() {
+  faction = faction === 'o' ? 'j' : 'o';
+  applyFaction();
+}
+
+function applyFaction() {
+  const isO = faction === 'o';
+  const bodies = document.querySelectorAll('.screen');
+  bodies.forEach(el => { el.classList.remove('theme-o','theme-j'); el.classList.add(isO?'theme-o':'theme-j'); });
+
+  document.getElementById('intro-my-emoji').textContent    = isO ? '🍎' : '🌿';
+  document.getElementById('intro-enemy-emoji').textContent = isO ? '🌿' : '🍎';
+  document.getElementById('intro-faction-name').textContent = isO ? '🍎 The Orchard' : '🌿 The Jungle';
+  document.getElementById('intro-faction-desc').textContent = isO
+    ? '아이폰 유저로 감지됨\n오늘 갤럭시 진영과 맞붙습니다'
+    : '갤럭시 유저로 감지됨\n오늘 아이폰 진영과 맞붙습니다';
+}
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goQuestion() {
+  if (todayDone) { show('s-done'); return; }
+  // Set up question UI
+  const isO = faction === 'o';
+  const day = questionIdx + 1;
+  document.getElementById('q-day-badge').textContent = `DAY ${day}`;
+  document.getElementById('q-streak').textContent = streak > 0 ? `🔥 ${streak}일 연속` : '첫 참여';
+  document.getElementById('q-dot').style.background = isO ? '#3b82f6' : '#22c55e';
+  document.getElementById('q-faction-name').textContent = isO ? '🍎 Orchard' : '🌿 Jungle';
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-sub').textContent = q.sub;
+
+  // Simulated participant count (live-feeling)
+  const base = q.votersO + q.votersJ;
+  let count = Math.floor(base * 0.3 + Math.random() * base * 0.1);
+  document.getElementById('q-count').textContent = count.toLocaleString();
+  setInterval(() => {
+    count += Math.floor(Math.random() * 3);
+    const el = document.getElementById('q-count');
+    if (el) el.textContent = count.toLocaleString();
+  }, 2800);
+
+  document.getElementById('btn-yes').querySelector('span:last-child').textContent = q.yesLabel;
+  document.getElementById('btn-no').querySelector('span:last-child').textContent  = q.noLabel;
+  document.getElementById('btn-yes').querySelector('.choice-icon').textContent = q.yesIcon;
+  document.getElementById('btn-no').querySelector('.choice-icon').textContent  = q.noIcon;
+
+  show('s-question');
+}
+
+// ═══════════════════════════════════════════════════
+//  VOTE
+// ═══════════════════════════════════════════════════
+function vote(yes) {
+  myVote = yes;
+
+  // Disable buttons
+  document.getElementById('btn-yes').style.pointerEvents = 'none';
+  document.getElementById('btn-no').style.pointerEvents  = 'none';
+
+  // Brief animation then show result
+  const btn = yes ? document.getElementById('btn-yes') : document.getElementById('btn-no');
+  btn.style.opacity = '1';
+  btn.style.transform = 'scale(0.97)';
+  setTimeout(showResult, 320);
+}
+
+// ═══════════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════════
+function showResult() {
+  const isO = faction === 'o';
+
+  // My faction result
+  const myPct    = isO ? q.result.o : q.result.j;
+  const enemyPct = isO ? q.result.j : q.result.o;
+  const myVoters    = isO ? q.votersO : q.votersJ;
+  const enemyVoters = isO ? q.votersJ : q.votersO;
+  const myName    = isO ? '🍎 Orchard' : '🌿 Jungle';
+  const enemyName = isO ? '🌿 Jungle'  : '🍎 Orchard';
+
+  // Header
+  const answerLabel = myVote ? q.yesLabel : q.noLabel;
+  document.getElementById('r-my-answer').innerHTML = `${myVote ? q.yesIcon : q.noIcon} ${answerLabel}`;
+
+  // Match check
+  const myChoice = myVote ? myPct : 100 - myPct;
+  const isMatch  = myChoice >= 50;
+  const matchBadge = document.getElementById('r-match-badge');
+  matchBadge.textContent = isMatch ? '진영 일치 🎯' : '진영 이탈 🤔';
+  matchBadge.style.background = isMatch ? 'rgba(34,197,94,.12)' : 'rgba(245,158,11,.12)';
+  matchBadge.style.color      = isMatch ? '#86efac' : '#fcd34d';
+  matchBadge.style.border     = isMatch ? '1px solid rgba(34,197,94,.25)' : '1px solid rgba(245,158,11,.25)';
+
+  // Recap
+  document.getElementById('r-q-recap-text').textContent = q.text;
+  document.getElementById('r-q-recap-sub').textContent  = `${q.category} · ${today}`;
+
+  // Bar labels
+  document.getElementById('r-mine-name').textContent  = myName;
+  document.getElementById('r-enemy-name').textContent = enemyName;
+
+  // Color enemy bar
+  const enemyBar = document.getElementById('r-bar-enemy');
+  enemyBar.style.background = isO
+    ? 'linear-gradient(90deg,#16a34a,#4ade80)'
+    : 'linear-gradient(90deg,#1d4ed8,#3b82f6)';
+
+  // Voters
+  const answerVoters = Math.round(myVoters * (myVote ? myPct : 100-myPct) / 100);
+  const answerVotersE = Math.round(enemyVoters * (myVote ? enemyPct : 100-enemyPct) / 100);
+  document.getElementById('r-voters-mine').textContent  = `${myVoters.toLocaleString()}명 중 ${answerVoters.toLocaleString()}명 동일 선택`;
+  document.getElementById('r-voters-enemy').textContent = `${enemyVoters.toLocaleString()}명 중 ${answerVotersE.toLocaleString()}명 동일 선택`;
+
+  // Insight
+  const insightBox = document.getElementById('r-insight');
+  insightBox.textContent = q.insight[faction];
+  insightBox.style.background = isO ? 'rgba(59,130,246,.07)' : 'rgba(34,197,94,.07)';
+  insightBox.style.border     = isO ? '1px solid rgba(59,130,246,.18)' : '1px solid rgba(34,197,94,.18)';
+  insightBox.style.color      = isO ? '#93c5fd' : '#86efac';
+
+  // Share card
+  const dateStr = new Date().toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
+  document.getElementById('share-date').textContent = dateStr;
+  document.getElementById('share-q-text').textContent = `"${q.text}"`;
+  const oP = isO ? myPct    : enemyPct;
+  const jP = isO ? enemyPct : myPct;
+  document.getElementById('share-bar-o').style.width  = oP + '%';
+  document.getElementById('share-bar-j').style.width  = jP + '%';
+  document.getElementById('share-pct-o').textContent  = oP;
+  document.getElementById('share-pct-j').textContent  = jP;
+  document.getElementById('share-my-line').innerHTML =
+    `나는 <strong>${myName}</strong> · <strong>"${answerLabel}"</strong> 선택`;
+
+  // Persist
+  localStorage.setItem('pw_done', today);
+  streak++;
+  localStorage.setItem('pw_streak', streak);
+  document.getElementById('done-streak-val').textContent = `🔥 ${streak}`;
+
+  show('s-result');
+
+  // Animate bars after render
+  setTimeout(() => {
+    animatePct('r-mine-pct',  'r-bar-mine',  myVote ? myPct    : 100-myPct);
+    animatePct('r-enemy-pct', 'r-bar-enemy', myVote ? enemyPct : 100-enemyPct);
+  }, 100);
+}
+
+function animatePct(pctId, barId, target) {
+  const pctEl = document.getElementById(pctId);
+  const barEl = document.getElementById(barId);
+  let cur = 0;
+  const step = target / 40;
+  const iv = setInterval(() => {
+    cur = Math.min(cur + step, target);
+    pctEl.textContent = Math.round(cur) + '%';
+    barEl.style.width = Math.round(cur) + '%';
+    if (cur >= target) clearInterval(iv);
+  }, 30);
+}
+
+// ═══════════════════════════════════════════════════
+//  SHARE
+// ═══════════════════════════════════════════════════
+function doShare() {
+  const isO = faction === 'o';
+  const myPct = isO ? q.result.o : q.result.j;
+  const enemyPct = isO ? q.result.j : q.result.o;
+  const text = [
+    `📱 Phoney War · ${new Date().toLocaleDateString('ko-KR',{month:'short',day:'numeric'})}`,
+    ``,
+    `"${q.text}"`,
+    ``,
+    `🍎 Orchard: ${isO?myPct:enemyPct}%   🌿 Jungle: ${isO?enemyPct:myPct}%`,
+    ``,
+    `나는 ${isO?'🍎 Orchard':'🌿 Jungle'} 진영 · "${myVote ? q.yesLabel : q.noLabel}"`,
+    ``,
+    `#PhoneyWar #아이폰 #갤럭시`
+  ].join('\n');
+
+  if (navigator.share) {
+    navigator.share({ title: 'Phoney War', text }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+    const btn = document.querySelector('.share-btn');
+    btn.textContent = '✅ 복사됨!';
+    setTimeout(() => btn.textContent = '📤 결과 공유하기', 2000);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  DEMO RESET
+// ═══════════════════════════════════════════════════
+function resetDemo() {
+  localStorage.removeItem('pw_done');
+  todayDone = false; myVote = null;
+  document.getElementById('btn-yes').style.pointerEvents = '';
+  document.getElementById('btn-no').style.pointerEvents  = '';
+  show('s-intro');
+}
+
+// ═══════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════
+detectFaction();
+applyFaction();
+if (todayDone) {
+  document.getElementById('done-streak-val').textContent = `🔥 ${streak}`;
+}
+</script>
+</body>
+</html>

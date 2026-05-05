@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:title" content="Phoney War">
+<meta property="og:description" content="Your phone already chose a side. 🍎 vs 🌿 Real-time hex territory war.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Phoney War">
+<meta name="twitter:description" content="Your phone already chose a side. 🍎 vs 🌿 Real-time hex territory war.">
+<title>Phoney War</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="overlay-connecting" style="display:none">
+  <div class="spinner"></div>
+  <p>CONNECTING...</p>
+</div>
+
+<div id="toast"></div>
+
+<!-- ── INTRO ── -->
+<div id="screen-intro" class="screen active">
+  <h1 class="intro-title">Phoney War</h1>
+  <p class="intro-sub">Your phone already chose a side</p>
+  <div class="intro-factions">
+    <div class="faction-pill orchard">🍎 The Orchard</div>
+    <div class="vs-divider">VS</div>
+    <div class="faction-pill jungle">🌿 The Jungle</div>
+  </div>
+  <p class="intro-hint">Tap hexes to expand your territory.<br>No menus. No setup. Just war.</p>
+  <button class="btn-enter" onclick="Game.startPressed()">ENTER THE WAR</button>
+</div>
+
+<!-- ── ABILITY SELECT ── -->
+<div id="screen-ability" class="screen">
+  <div class="ability-header">
+    <span class="ability-header-icon">🌿</span>
+    <h2>Choose Your Ability</h2>
+    <p>One ability. Fixed for the session.</p>
+  </div>
+  <div class="ability-grid" id="ability-grid"></div>
+  <button class="btn-enter" id="btn-confirm-ability" data-ability="starPay" onclick="Game.confirmAbility()">
+    JOIN THE JUNGLE
+  </button>
+</div>
+
+<!-- ── SPECTATOR ── -->
+<div id="screen-spectator" class="screen">
+  <p class="spectator-icon">👁</p>
+  <h2>Spectator Mode</h2>
+  <p>This war is for mobile warriors only.<br>Open on your phone to fight.</p>
+</div>
+
+<!-- ── GAME ── -->
+<div id="screen-game" class="screen">
+
+  <!-- Top strip: territory bar + timer -->
+  <div class="top-strip">
+    <div class="terr-bar-wrap">
+      <div class="terr-bar-bg">
+        <div class="terr-bar-orchard" id="territory-bar-fill"></div>
+      </div>
+      <div class="terr-labels">
+        <span class="terr-label orchard" id="my-pct">0%</span>
+        <span class="terr-label jungle" id="opp-pct">0%</span>
+      </div>
+    </div>
+    <div class="timer-wrap">
+      <span class="timer" id="timer">07:00</span>
+      <div class="rush-label" id="rush-label">⚡ FINAL RUSH</div>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div id="game-board">
+    <canvas id="hex-canvas"></canvas>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="Game.zoomIn()">+</button>
+      <button class="zoom-btn" onclick="Game.zoomOut()">−</button>
+    </div>
+  </div>
+
+  <!-- Bottom HUD: left faction | center resource | right enemy -->
+  <div class="bottom-hud">
+
+    <!-- My faction -->
+    <div class="hud-faction">
+      <div class="faction-name" id="my-faction-label">—</div>
+      <div style="font-size:0.62rem;color:#4ade80;margin-bottom:3px;font-family:'JetBrains Mono',monospace" id="my-ability-label"></div>
+      <button class="ability-btn passive" id="ability-btn" onclick="Game.activateAbility()">PASSIVE</button>
+      <div class="hud-stat">
+        <span class="stat-label">TERRITORY</span>
+        <span class="stat-val" id="my-territory-count">0</span>
+      </div>
+    </div>
+
+    <!-- Center: resource -->
+    <div class="resource-block">
+      <span class="resource-label">RESOURCE</span>
+      <span class="resource-count" id="resource-count">10</span>
+      <div class="cost-row">
+        <span class="cost-chip expand">◇ 3</span>
+        <span class="cost-chip attack">⚔ 8</span>
+      </div>
+      <button class="skill-toggle-btn" onclick="Game.toggleSkillPanel()">SKILLS</button>
+    </div>
+
+    <!-- Enemy info -->
+    <div class="hud-faction right">
+      <div class="faction-name jungle" id="enemy-faction-label">Enemy</div>
+      <div class="hud-stat right">
+        <span class="stat-label">TERRITORY</span>
+        <span class="stat-val" id="enemy-territory-count">0</span>
+      </div>
+    </div>
+
+  <div id="skill-panel" class="skill-panel"></div>
+
+</div>
+
+<!-- ── END ── -->
+<div id="screen-end" class="screen">
+  <div class="end-verdict" id="end-result-label">—</div>
+  <div class="end-winner" id="end-winner">—</div>
+  <div class="end-stats" id="end-stats"></div>
+  <button class="btn-enter" onclick="location.reload()">PLAY AGAIN</button>
+  <button class="btn-share" onclick="Game.shareResult()">SHARE RESULT</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="network.js"></script>
+<script src="render.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

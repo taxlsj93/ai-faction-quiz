@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Which AI Faction Are You? — AI Faction Quiz</title>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ai-faction-quiz.vercel.app/en">
+<meta property="og:title" content="Which AI Faction Are You? — AI Faction Quiz">
+<meta property="og:description" content="Your AI choice reveals your personality. 8 sharp questions to find your faction: Claude / ChatGPT / Gemini / Grok">
+<meta property="og:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Which AI Faction Are You? — AI Faction Quiz">
+<meta name="twitter:description" content="Your AI choice reveals your personality. 8 sharp questions to find your faction: Claude / ChatGPT / Gemini / Grok">
+<meta name="twitter:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
+<meta name="keywords" content="AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test, ChatGPT Gemini Grok quiz">
+<link rel="canonical" href="https://ai-faction-quiz.vercel.app/en">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Quiz",
+  "name": "Which AI Faction Are You? — AI Faction Quiz",
+  "description": "Your AI choice reveals your personality. 8 sharp questions to find your faction: Claude / ChatGPT / Gemini / Grok",
+  "url": "https://ai-faction-quiz.vercel.app/en",
+  "image": "https://ai-faction-quiz.vercel.app/og-image.svg",
+  "inLanguage": "en"
+}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036702261797984"
+     crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HPT1Y41HD8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HPT1Y41HD8');
+</script>
+<style>
+  :root {
+    --claude:   #C17CE4;
+    --gpt:      #10A37F;
+    --gemini:   #4285F4;
+    --grok:     #E7425D;
+    --bg: #0A0A0F;
+    --card: #13131A;
+    --border: #222230;
+    --text: #F0F0F8;
+    --muted: #8888AA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-x: hidden;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── INTRO ── */
+  .intro-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    margin-bottom: 24px;
+  }
+
+  .intro-title {
+    font-size: clamp(28px, 8vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 40%, #8888CC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .intro-sub {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .factions-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .faction-chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .faction-chip .f-icon { font-size: 28px; margin-bottom: 6px; }
+  .faction-chip .f-name { font-size: 13px; font-weight: 700; }
+  .faction-chip .f-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .faction-chip[data-f="claude"] { border-color: #3A2448; }
+  .faction-chip[data-f="gpt"]    { border-color: #0D3D2E; }
+  .faction-chip[data-f="gemini"] { border-color: #1A2F5A; }
+  .faction-chip[data-f="grok"]   { border-color: #4A1820; }
+
+  .btn-start {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #6C3FA8, #3B5FD4);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-start:active { transform: scale(0.98); opacity: 0.9; }
+
+  .quiz-count { font-size: 13px; color: var(--muted); text-align: center; margin-top: 14px; }
+
+  /* ── QUIZ ── */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6C3FA8, #3B5FD4);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .q-num { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+  .q-text { font-size: clamp(18px, 5vw, 22px); font-weight: 700; line-height: 1.4; margin-bottom: 24px; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+    padding: 16px 18px;
+    text-align: left;
+    color: var(--text);
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    line-height: 1.4;
+  }
+  .option-btn:active { transform: scale(0.99); }
+  .option-btn:hover { border-color: #444466; background: #1A1A2A; }
+  .option-btn.selected {
+    border-color: #6C3FA8;
+    background: #1E1230;
+  }
+  .option-btn .opt-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── REVEAL LOADING ── */
+  #screen-loading { text-align: center; padding: 60px 0; }
+  .loading-ring {
+    width: 72px; height: 72px;
+    border: 4px solid var(--border);
+    border-top-color: #6C3FA8;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .loading-sub { font-size: 14px; color: var(--muted); }
+
+  /* ── RESULT ── */
+  .result-header { text-align: center; padding: 32px 0 24px; }
+  .result-verdict {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .result-icon-wrap {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+    border: 3px solid;
+    position: relative;
+  }
+  .result-icon-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid;
+    opacity: 0.3;
+  }
+
+  .result-faction-name {
+    font-size: clamp(30px, 9vw, 44px);
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .result-tagline {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    padding: 0 8px;
+  }
+
+  /* Trait bars */
+  .traits { margin-bottom: 24px; }
+  .trait-row { margin-bottom: 14px; }
+  .trait-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .trait-label span:first-child { color: var(--muted); }
+  .trait-label span:last-child { font-weight: 700; }
+  .trait-bar { height: 6px; background: var(--border); border-radius: 6px; overflow: hidden; }
+  .trait-fill { height: 100%; border-radius: 6px; animation: growBar 0.8s ease forwards; transform-origin: left; }
+  @keyframes growBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* Stats card */
+  .stats-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .stats-title { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 800; }
+  .stat-desc { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+
+  /* Matchup */
+  .matchup {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .matchup-title { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .matchup-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; }
+  .matchup-row span:first-child { color: var(--muted); }
+  .matchup-vs {
+    display: flex; gap: 10px; align-items: center;
+    font-weight: 700; font-size: 13px;
+  }
+
+  /* CTA */
+  .cta-block { margin-bottom: 20px; }
+  .cta-label { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn-cta {
+    display: block; width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 13px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-cta:active { opacity: 0.8; }
+
+  /* Score distribution */
+  .score-dist { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 16px; margin-bottom: 20px; }
+  .score-dist-title { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+  .score-row:last-child { margin-bottom: 0; }
+  .score-emoji { width: 20px; text-align: center; flex-shrink: 0; }
+  .score-label { width: 60px; flex-shrink: 0; color: var(--muted); }
+  .score-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+  .score-pts { width: 30px; text-align: right; font-weight: 700; flex-shrink: 0; }
+
+  /* Allies */
+  .allies-section { margin-bottom: 20px; }
+  .allies-title {
+    font-size: 13px; color: var(--muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;
+  }
+  .ally-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .ally-card:hover { background: #1A1A2A; }
+  .ally-icon { font-size: 28px; flex-shrink: 0; }
+  .ally-info { flex: 1; min-width: 0; }
+  .ally-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+  }
+  .ally-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .ally-desc { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .ally-arrow { font-size: 16px; color: var(--muted); flex-shrink: 0; }
+
+  .btn-share {
+    width: 100%;
+    padding: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+    background: transparent;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .btn-share:hover { border-color: #555575; }
+
+  .btn-retry {
+    width: 100%;
+    padding: 14px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* Faction theme overrides on result */
+  .faction-claude .result-icon-wrap { border-color: var(--claude); color: var(--claude); }
+  .faction-claude .result-icon-wrap::before { border-color: var(--claude); }
+  .faction-claude .result-faction-name { color: var(--claude); }
+  .faction-claude .trait-fill { background: var(--claude); }
+  .faction-claude .btn-cta-main { background: linear-gradient(135deg, #8B4FC7, #6C3FA8); }
+
+  .faction-gpt .result-icon-wrap { border-color: var(--gpt); color: var(--gpt); }
+  .faction-gpt .result-icon-wrap::before { border-color: var(--gpt); }
+  .faction-gpt .result-faction-name { color: var(--gpt); }
+  .faction-gpt .trait-fill { background: var(--gpt); }
+  .faction-gpt .btn-cta-main { background: linear-gradient(135deg, #1DBE8F, #10A37F); }
+
+  .faction-gemini .result-icon-wrap { border-color: var(--gemini); color: var(--gemini); }
+  .faction-gemini .result-icon-wrap::before { border-color: var(--gemini); }
+  .faction-gemini .result-faction-name { color: var(--gemini); }
+  .faction-gemini .trait-fill { background: var(--gemini); }
+  .faction-gemini .btn-cta-main { background: linear-gradient(135deg, #5B9CF6, #4285F4); }
+
+  .faction-grok .result-icon-wrap { border-color: var(--grok); color: var(--grok); }
+  .faction-grok .result-icon-wrap::before { border-color: var(--grok); }
+  .faction-grok .result-faction-name { color: var(--grok); }
+  .faction-grok .trait-fill { background: var(--grok); }
+  .faction-grok .btn-cta-main { background: linear-gradient(135deg, #F05470, #E7425D); }
+
+  /* Share section */
+  .share-section { margin-bottom: 12px; }
+  .share-label {
+    font-size: 12px; color: var(--muted); text-align: center;
+    margin-bottom: 12px; font-weight: 600; letter-spacing: 0.3px;
+  }
+  .share-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .share-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 7px; padding: 13px 10px;
+    border-radius: 12px; border: 1.5px solid var(--border);
+    background: var(--card); color: var(--text);
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s, border-color 0.15s;
+  }
+  .share-btn:active { opacity: 0.75; }
+  .share-icon { font-size: 16px; }
+  .share-twitter { border-color: #333; }
+  .share-twitter:hover { border-color: #555; }
+  .share-kakao { background: #FEE500; border-color: #FEE500; color: #191919; }
+  .share-insta { background: linear-gradient(135deg, #833AB4, #E1306C, #F77737); border-color: transparent; color: #fff; }
+  .share-copy { border-color: var(--border); }
+  .share-copy:hover { border-color: #555575; }
+  .affiliate-notice {
+    font-size: 10px; color: #555570; text-align: center;
+    margin-bottom: 16px;
+  }
+
+  /* Share toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #fff; color: #111;
+    padding: 12px 24px; border-radius: 30px;
+    font-size: 14px; font-weight: 600;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Preview screen (deep-link ?f=faction) */
+  #screen-preview { text-align: center; padding: 48px 0 32px; }
+  .preview-badge {
+    display: inline-block; background: #1E1E2E;
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 6px 16px; font-size: 12px; color: var(--muted);
+    margin-bottom: 24px; letter-spacing: 0.5px;
+  }
+  .preview-emoji { font-size: 72px; line-height: 1; margin-bottom: 16px; }
+  .preview-faction { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .preview-tagline { font-size: 14px; color: var(--muted); line-height: 1.6; white-space: pre-line; margin-bottom: 32px; }
+  .btn-preview-quiz {
+    display: block; width: 100%; padding: 18px; border-radius: 14px;
+    border: none; cursor: pointer; font-size: 16px; font-weight: 800; color: #fff;
+    background: linear-gradient(135deg, #6C3FA8, #3B5FD4); margin-bottom: 14px;
+    transition: opacity 0.2s;
+  }
+  .btn-preview-quiz:hover { opacity: 0.9; }
+  .btn-preview-see {
+    display: block; width: 100%; padding: 14px; border-radius: 14px;
+    border: 1.5px solid var(--border); background: transparent;
+    cursor: pointer; font-size: 13px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── INTRO ── -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-badge">AI Faction Quiz</div>
+    <h1 class="intro-title">Your AI Reflects<br>Who You Are</h1>
+    <p class="intro-sub">
+      The AI you use says more about you than you think.<br>
+      8 questions to reveal which faction you truly belong to.
+    </p>
+
+    <div class="factions-preview">
+      <div class="faction-chip" data-f="claude">
+        <div class="f-icon">🟣</div>
+        <div class="f-name" style="color:var(--claude)">Claude Faction</div>
+        <div class="f-label">The Deep Thinker</div>
+      </div>
+      <div class="faction-chip" data-f="gpt">
+        <div class="f-icon">🟢</div>
+        <div class="f-name" style="color:var(--gpt)">GPT Faction</div>
+        <div class="f-label">The Action Taker</div>
+      </div>
+      <div class="faction-chip" data-f="gemini">
+        <div class="f-icon">🔵</div>
+        <div class="f-name" style="color:var(--gemini)">Gemini Faction</div>
+        <div class="f-label">The Methodical Strategist</div>
+      </div>
+      <div class="faction-chip" data-f="grok">
+        <div class="f-icon">🔴</div>
+        <div class="f-name" style="color:var(--grok)">Grok Faction</div>
+        <div class="f-label">The Contrarian Innovator</div>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">Find My AI Faction →</button>
+    <div class="quiz-count">8 Questions · 2 min · Free</div>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+  </div>
+
+  <!-- ── PREVIEW (deep-link: ?f=faction) ── -->
+  <div id="screen-preview" class="screen">
+    <div class="preview-badge">👤 Your friend's faction result</div>
+    <div class="preview-emoji" id="preview-emoji"></div>
+    <div class="preview-faction" id="preview-faction"></div>
+    <div class="preview-tagline" id="preview-tagline"></div>
+    <button class="btn-preview-quiz" onclick="startQuiz()">Find My Faction →</button>
+    <button class="btn-preview-see" onclick="showPreviewFull()">See full result</button>
+  </div>
+
+  <!-- ── LOADING ── -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-ring"></div>
+    <div class="loading-text" id="loading-text">Analyzing your faction...</div>
+    <div class="loading-sub" id="loading-sub">Reading the patterns in your answers</div>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div id="screen-result" class="screen">
+    <div class="result-header" id="result-header">
+      <div class="result-verdict">Faction Determined</div>
+      <div class="result-icon-wrap" id="result-icon"><span id="result-emoji"></span></div>
+      <div class="result-faction-name" id="result-name"></div>
+      <div class="result-tagline" id="result-tagline"></div>
+      <div id="result-match" style="font-size:13px;font-weight:700;margin-top:10px;opacity:0.8;letter-spacing:0.5px;"></div>
+      <div id="result-mbti" style="font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.3px;"></div>
+    </div>
+
+    <div class="traits" id="traits-section"></div>
+
+    <div class="stats-card" id="stats-card"></div>
+
+    <div class="matchup" id="matchup-card"></div>
+
+    <div class="score-dist" id="score-dist-card" style="display:none"></div>
+
+    <div class="allies-section" id="allies-section"></div>
+
+    <div class="cta-block">
+      <div class="cta-label">Start using your faction's AI now</div>
+      <a id="btn-cta-main" class="btn-cta btn-cta-main" href="#" target="_blank" rel="noopener">
+        <span id="cta-text"></span>
+      </a>
+      <a id="btn-cta-secondary" class="btn-cta" href="#" target="_blank" rel="noopener"
+         style="background:#1E1E2E; border:1.5px solid #333355; font-size:14px; font-weight:600;">
+        <span id="cta-secondary-text"></span>
+      </a>
+    </div>
+
+    <div class="share-section">
+      <div class="share-label">Declare Your Faction — Recruit Your Friends</div>
+      <div class="share-grid">
+        <button class="share-btn share-twitter" onclick="shareTwitter()">
+          <span class="share-icon">𝕏</span>
+          <span>X (Twitter)</span>
+        </button>
+        <button class="share-btn share-kakao" onclick="shareKakao()">
+          <span class="share-icon">💬</span>
+          <span>Share</span>
+        </button>
+        <button class="share-btn share-insta" onclick="shareInsta()">
+          <span class="share-icon">📸</span>
+          <span>Instagram</span>
+        </button>
+        <button class="share-btn share-copy" onclick="copyLink()">
+          <span class="share-icon">🔗</span>
+          <span>Copy Link</span>
+        </button>
+      </div>
+    </div>
+    <div class="affiliate-notice">* Ally tool links may include affiliate links · This quiz is for entertainment. Not affiliated with Anthropic, OpenAI, Google, or xAI. Stats based on publicly available data.</div>
+    <button class="btn-retry" onclick="retryQuiz()">Retake Quiz</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Link copied!</div>
+
+<script>
+const QUESTIONS = [
+  {
+    text: "A friend says 'AI is going to take my job.' What's your reaction?",
+    options: [
+      { text: "\"Let's think through which parts worry you most\"", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+      { text: "\"Then learn AI first — what are you waiting for?\"", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+      { text: "Share a statistic about net job creation across industries", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+      { text: "\"It already has. Nobody wants to admit it.\"", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "A major new AI model just dropped. What do you do?",
+    options: [
+      { text: "Wait a few days, read the deep-dive reviews, then try it", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+      { text: "Open it on launch day and start stress-testing its limits", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+      { text: "Pull up the official benchmarks and comparison charts first", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+      { text: "\"Another hype cycle\" — hunt for the critical takes first", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "Everyone in the meeting can see a problem — but nobody's saying it. You:",
+    options: [
+      { text: "Read the room and bring it up privately afterward", scores: { claude: 3, gpt: 0, gemini: 2, grok: 0 } },
+      { text: "Pivot the energy — propose an alternative on the spot", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+      { text: "Carefully raise it with data to back you up", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
+      { text: "Say it directly. Discomfort is fine if the truth matters", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "What do you actually use AI for most?",
+    options: [
+      { text: "Writing, planning, and creative work — making the quality better", scores: { claude: 3, gpt: 1, gemini: 0, grok: 0 } },
+      { text: "Coding, automation, and killing repetitive tasks", scores: { claude: 0, gpt: 3, gemini: 1, grok: 1 } },
+      { text: "Research, summaries, and getting up to speed fast", scores: { claude: 1, gpt: 1, gemini: 3, grok: 0 } },
+      { text: "Fact-checking, argument stress-testing, catching what's wrong", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "A plan falls apart mid-execution. You:",
+    options: [
+      { text: "Step back and quietly work through what went wrong", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+      { text: "Switch to Plan B immediately — thinking comes after moving", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+      { text: "Systematically trace the root cause before doing anything", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+      { text: "Conclude the plan itself was always the problem", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "A controversial topic blows up on social media. Your move:",
+    options: [
+      { text: "Think it through carefully, then write a considered comment", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+      { text: "Jump in fast — share your take from personal experience", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+      { text: "Compile the key sources and post them with context", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
+      { text: "If the consensus is wrong, post the opposing view", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "When you meet someone new, you tend to:",
+    options: [
+      { text: "Listen more than talk — let them set the direction", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+      { text: "Find common ground fast and take the lead in conversation", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
+      { text: "Ask questions — understand their background and context", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+      { text: "Say exactly what you think, unfiltered, from the start", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+    ]
+  },
+  {
+    text: "What matters most to you?",
+    options: [
+      { text: "Authenticity — meaning what you say and saying what you mean", scores: { claude: 3, gpt: 0, gemini: 1, grok: 1 } },
+      { text: "Efficiency — getting more done in less time", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
+      { text: "Accuracy — never claiming more than you can back up", scores: { claude: 1, gpt: 0, gemini: 3, grok: 1 } },
+      { text: "Freedom — saying and doing what you think without apology", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+    ]
+  },
+];
+
+// Stats sourced: DemandSage, First Page Sage, fatjoe, Views4You (2025-2026)
+const FACTIONS = {
+  claude: {
+    name: "Claude Faction",
+    emoji: "🟣",
+    color: "#C17CE4",
+    tagline: "You think deeply and choose words carefully.\nYou'd rather be right than fast — a true creative thinker.",
+    mbti: ["INFJ", "INFP", "INTJ"],
+    traits: [
+      { label: "Creative thinking",    value: 92 },
+      { label: "Language sensitivity", value: 88 },
+      { label: "Ethical reasoning",    value: 85 },
+      { label: "Execution speed",      value: 52 },
+    ],
+    stats: [
+      // Claude: 18.9M MAU, 34.7min/day avg session (highest of any chatbot), Fortune 100 70% use
+      { num: "34.7 min", desc: "Average daily session\n#1 among all AI apps" },
+      { num: "+190%", desc: "Annual growth rate\nFastest-growing AI" },
+      { num: "Devs & Writers", desc: "Overlaps with GitHub,\nFigma & Notion users" },
+      { num: "Fortune 100\n70%", desc: "Enterprise adoption\nLeads all AI tools" },
+    ],
+    vs: [
+      { label: "vs. GPT Faction",    you: "Depth & context",   them: "Speed & versatility" },
+      { label: "vs. Gemini Faction", you: "Creative reasoning", them: "Info & search" },
+      { label: "vs. Grok Faction",   you: "Empathy & nuance",  them: "Bluntness & edge" },
+    ],
+    ctaText: "Try Claude for Free →",
+    ctaUrl: "https://claude.ai",
+    ctaSecondaryText: "Best AI writing tools for Claude faction members",
+    ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+    alliesTitle: "🟣 Claude Faction's Allied Forces — Tools for Deep Thinkers",
+    allies: [
+      {
+        icon: "📝",
+        badge: "Planning & Notes Division",
+        name: "Notion AI",
+        desc: "Turn thoughts into plans, plans into docs. AI auto-organizes your meetings, tasks, and ideas",
+        url: "https://notion.so",
+      },
+      {
+        icon: "🎙️",
+        badge: "Transcription & Summary Corps",
+        name: "Otter.ai",
+        desc: "Auto-transcribes meetings, lectures, and interviews. Never listen back to a recording again",
+        url: "https://otter.ai",
+      },
+      {
+        icon: "✍️",
+        badge: "Long-Form Writing Unit",
+        name: "Writesonic",
+        desc: "Blog posts, social copy, and campaigns — written by AI with built-in SEO optimization",
+        url: "https://writesonic.com/?via=aifaction",
+      },
+    ],
+  },
+  gpt: {
+    name: "GPT Faction",
+    emoji: "🟢",
+    color: "#10A37F",
+    tagline: "You act first, reflect later.\nA versatile, unstoppable executor who gets things done.",
+    mbti: ["ENTJ", "ENTP", "ESTP"],
+    traits: [
+      { label: "Drive & execution",    value: 94 },
+      { label: "Versatile adaptability", value: 90 },
+      { label: "Problem-solving speed", value: 88 },
+      { label: "Philosophical depth",  value: 48 },
+    ],
+    stats: [
+      // ChatGPT: ~1B MAU, 45% mobile share, 25-34 age dominant (29.66%), 64.3% male
+      { num: "100M+", desc: "Monthly active users\n45% of the AI market" },
+      { num: "Ages 25–34", desc: "Largest user segment\n(30% of all users)" },
+      { num: "Devs & Marketers", desc: "79% of software devs\nhave used it" },
+      { num: "1,000+\nPlugins", desc: "Ecosystem scale\nlarger than any rival" },
+    ],
+    vs: [
+      { label: "vs. Claude Faction",  you: "Speed & versatility",  them: "Depth & context" },
+      { label: "vs. Gemini Faction",  you: "Universal ecosystem",  them: "Google integration" },
+      { label: "vs. Grok Faction",    you: "Practical & stable",   them: "Provocative & raw" },
+    ],
+    ctaText: "Start with ChatGPT →",
+    ctaUrl: "https://chatgpt.com",
+    ctaSecondaryText: "Top AI automation tools for GPT faction members",
+    ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+    alliesTitle: "🟢 GPT Faction's Allied Forces — Tools for Action Takers",
+    allies: [
+      {
+        icon: "🎨",
+        badge: "Rapid Design Strike Team",
+        name: "Canva AI",
+        desc: "No design skills needed. Build social posts, decks, and logos in a few clicks",
+        url: "https://canva.com",
+      },
+      {
+        icon: "📧",
+        badge: "Copywriting Assault Unit",
+        name: "Copy.ai",
+        desc: "Emails, ads, and product descriptions done in under a minute. Works in English and more",
+        url: "https://copy.ai",
+      },
+      {
+        icon: "⚡",
+        badge: "Automation Engineering Corps",
+        name: "Zapier",
+        desc: "Connect your apps without code. 'Form submitted → email sent → sheet updated' on autopilot",
+        url: "https://zapier.com",
+      },
+    ],
+  },
+  gemini: {
+    name: "Gemini Faction",
+    emoji: "🔵",
+    color: "#4285F4",
+    tagline: "You love structure. You collect data, build systems,\nand turn information into strategy.",
+    mbti: ["ISTJ", "INTJ", "ESTJ"],
+    traits: [
+      { label: "Research & organization", value: 95 },
+      { label: "Strategic thinking",      value: 88 },
+      { label: "Ecosystem integration",   value: 91 },
+      { label: "Creative rule-breaking",  value: 40 },
+    ],
+    stats: [
+      // Gemini: ~750M MAU, +70.7% mobile share growth (14.7%→25.2%), top use: product research 46%
+      { num: "750M", desc: "Monthly active users\n25% mobile market share" },
+      { num: "+70.7%", desc: "Share growth in one year\nBiggest jump of any AI" },
+      { num: "Researchers\n& Planners", desc: "Product research (46%)\nprice comparison (37%)" },
+      { num: "Google\nIntegrated", desc: "Gmail, Docs & Drive\nfully connected" },
+    ],
+    vs: [
+      { label: "vs. Claude Faction", you: "Info & search",      them: "Creative reasoning" },
+      { label: "vs. GPT Faction",    you: "Google integration", them: "Universal ecosystem" },
+      { label: "vs. Grok Faction",   you: "Structure & order",  them: "Bluntness & chaos" },
+    ],
+    ctaText: "Start with Gemini →",
+    ctaUrl: "https://gemini.google.com",
+    ctaSecondaryText: "Best AI content tools for Gemini faction members",
+    ctaSecondaryUrl: "https://writesonic.com",
+    alliesTitle: "🔵 Gemini Faction's Allied Forces — Tools for Methodical Strategists",
+    allies: [
+      {
+        icon: "🔍",
+        badge: "Intelligence Recon Unit",
+        name: "Perplexity",
+        desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data",
+        url: "https://perplexity.ai",
+      },
+      {
+        icon: "📊",
+        badge: "Content Strategy Division",
+        name: "Writesonic",
+        desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings",
+        url: "https://writesonic.com",
+      },
+      {
+        icon: "🗂️",
+        badge: "Knowledge Management HQ",
+        name: "Notion AI",
+        desc: "One place for projects, info, and schedules. AI auto-sorts, summarizes, and categorizes",
+        url: "https://notion.so",
+      },
+    ],
+  },
+  grok: {
+    name: "Grok Faction",
+    emoji: "🔴",
+    color: "#E7425D",
+    tagline: "You challenge the consensus. You stare down\nuncomfortable truths and call them out anyway.",
+    mbti: ["ENTP", "ISTP", "INTP"],
+    traits: [
+      { label: "Critical thinking",         value: 95 },
+      { label: "Original perspective",       value: 91 },
+      { label: "Direct communication",       value: 88 },
+      { label: "Social diplomacy",           value: 35 },
+    ],
+    stats: [
+      // Grok: 50-64M MAU, 15% mobile share, +1,343,408% visit growth YoY (51K→687M)
+      { num: "60M+", desc: "Monthly active users\n15% mobile market share" },
+      { num: "+1,343,408%", desc: "Visitor growth in one year\n51K → 687M visits" },
+      { num: "X Power Users", desc: "Concentrated in news,\npolitics & trading" },
+      { num: "Fastest\nGrowing", desc: "Highest growth velocity\nof any AI tool" },
+    ],
+    vs: [
+      { label: "vs. Claude Faction", you: "Bluntness & edge",    them: "Empathy & nuance" },
+      { label: "vs. GPT Faction",    you: "Provocative & raw",   them: "Practical & stable" },
+      { label: "vs. Gemini Faction", you: "Bluntness & chaos",   them: "Structure & order" },
+    ],
+    ctaText: "Start Grok (X Premium) →",
+    ctaUrl: "https://x.com/i/grok",
+    ctaSecondaryText: "AI research tools for the Grok faction",
+    ctaSecondaryUrl: "https://perplexity.ai",
+    alliesTitle: "🔴 Grok Faction's Allied Forces — Tools for Contrarian Innovators",
+    allies: [
+      {
+        icon: "🔍",
+        badge: "Real-Time Intel Strike Force",
+        name: "Perplexity",
+        desc: "What's happening right now, from primary sources — not filtered through mainstream media",
+        url: "https://perplexity.ai",
+      },
+      {
+        icon: "🎨",
+        badge: "Visual Concept Assault Unit",
+        name: "Midjourney",
+        desc: "Generate exactly what's in your head. One line of text becomes a finished visual",
+        url: "https://midjourney.com",
+      },
+      {
+        icon: "🎙️",
+        badge: "Voice & Audio Special Ops",
+        name: "ElevenLabs",
+        desc: "Clone your voice for narration, podcasts, and content. Auto-translates across languages",
+        url: "https://elevenlabs.io",
+      },
+    ],
+  },
+};
+
+let scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
+let currentQ = 0;
+let resultFaction = null;
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startQuiz() {
+  scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
+  currentQ = 0;
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const pct = ((currentQ) / QUESTIONS.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-num').textContent = `Q${currentQ + 1} / ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + i)}</div>${opt.text}`;
+    btn.onclick = () => selectOption(opt.scores, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function selectOption(optScores, btn) {
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.style.pointerEvents = 'none';
+  });
+  btn.classList.add('selected');
+
+  for (const k in optScores) scores[k] += optScores[k];
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < QUESTIONS.length) {
+      renderQuestion();
+    } else {
+      showLoading();
+    }
+  }, 360);
+}
+
+function showLoading() {
+  show('screen-loading');
+  const msgs = [
+    ["Analyzing your faction...", "Reading the patterns in your answers"],
+    ["Cross-referencing data...", "Comparing against 12,000 AI user profiles"],
+    ["Locking in your faction...", "Determining your AI destiny"],
+  ];
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i >= msgs.length) { clearInterval(iv); showResult(); return; }
+    document.getElementById('loading-text').textContent = msgs[i][0];
+    document.getElementById('loading-sub').textContent = msgs[i][1];
+    i++;
+  }, 700);
+}
+
+function showResult() {
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  if (sorted.length > 1 && sorted[0][1] === sorted[1][1]) {
+    resultFaction = Math.random() < 0.5 ? sorted[0][0] : sorted[1][0];
+  } else {
+    resultFaction = sorted[0][0];
+  }
+  const faction = FACTIONS[resultFaction];
+
+  const header = document.getElementById('result-header');
+  header.className = `result-header faction-${resultFaction}`;
+  document.getElementById('screen-result').className = `screen faction-${resultFaction}`;
+
+  document.getElementById('result-emoji').textContent = faction.emoji;
+  document.getElementById('result-name').textContent = faction.name;
+  document.getElementById('result-tagline').textContent = faction.tagline;
+  document.getElementById('result-mbti').textContent = `Related MBTI: ${faction.mbti.join(' · ')}`;
+  const topScore = sorted[0][1];
+  const matchEl = document.getElementById('result-match');
+  if (topScore > 0) {
+    matchEl.textContent = `Faction Match ${Math.min(99, Math.round((topScore / 24) * 100))}%`;
+    document.getElementById('preview-banner')?.remove();
+
+    const distCard = document.getElementById('score-dist-card');
+    distCard.style.display = 'block';
+    const factionMeta = { claude: { emoji: '🟣', label: 'Claude' }, gpt: { emoji: '🟢', label: 'GPT' }, gemini: { emoji: '🔵', label: 'Gemini' }, grok: { emoji: '🔴', label: 'Grok' } };
+    distCard.innerHTML = `<div class="score-dist-title">📊 Faction Score Breakdown</div>${sorted.map(([k, v]) => `
+      <div class="score-row">
+        <span class="score-emoji">${factionMeta[k].emoji}</span>
+        <span class="score-label">${factionMeta[k].label}</span>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${Math.round((v/topScore)*100)}%;background:var(--${k})"></div></div>
+        <span class="score-pts" style="color:var(--${k})">${v}</span>
+      </div>`).join('')}`;
+  } else {
+    matchEl.textContent = '';
+    document.getElementById('score-dist-card').style.display = 'none';
+  }
+
+  // Traits
+  document.getElementById('traits-section').innerHTML = `
+    ${faction.traits.map(t => `
+      <div class="trait-row">
+        <div class="trait-label">
+          <span>${t.label}</span>
+          <span style="color:${faction.color}">${t.value}</span>
+        </div>
+        <div class="trait-bar">
+          <div class="trait-fill" style="width:${t.value}%; background:${faction.color}; animation-delay:${Math.random()*0.3}s"></div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+
+  // Stats
+  document.getElementById('stats-card').innerHTML = `
+    <div class="stats-title">Faction Stats</div>
+    <div class="stats-grid">
+      ${faction.stats.map(s => `
+        <div class="stat-item">
+          <div class="stat-num" style="color:${faction.color}">${s.num}</div>
+          <div class="stat-desc">${s.desc.replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Matchup
+  document.getElementById('matchup-card').innerHTML = `
+    <div class="matchup-title">vs. Other Factions</div>
+    ${faction.vs.map(v => `
+      <div class="matchup-row">
+        <span>${v.label}</span>
+        <div class="matchup-vs">
+          <span style="color:${faction.color}">${v.you}</span>
+          <span style="color:var(--muted)">vs</span>
+          <span>${v.them}</span>
+        </div>
+      </div>
+    `).join('')}
+  `;
+
+  // Allies
+  document.getElementById('allies-section').innerHTML = `
+    <div class="allies-title">${faction.alliesTitle}</div>
+    ${faction.allies.map(a => `
+      <a class="ally-card" href="${a.url}" target="_blank" rel="noopener">
+        <div class="ally-icon">${a.icon}</div>
+        <div class="ally-info">
+          <div class="ally-badge">${a.badge}</div>
+          <div class="ally-name">${a.name}</div>
+          <div class="ally-desc">${a.desc}</div>
+        </div>
+        <div class="ally-arrow">›</div>
+      </a>
+    `).join('')}
+  `;
+
+  // CTA
+  document.getElementById('btn-cta-main').href = faction.ctaUrl;
+  document.getElementById('cta-text').textContent = faction.ctaText;
+  document.getElementById('btn-cta-secondary').href = faction.ctaSecondaryUrl;
+  document.getElementById('cta-secondary-text').textContent = faction.ctaSecondaryText;
+
+  show('screen-result');
+}
+
+const SITE_URL = 'https://ai-faction-quiz.vercel.app/en';
+
+let previewFactionKey = null;
+
+function initFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const f = params.get('f');
+  if (f && FACTIONS[f]) {
+    previewFactionKey = f;
+    const faction = FACTIONS[f];
+    document.getElementById('preview-emoji').textContent = faction.emoji;
+    document.getElementById('preview-faction').textContent = faction.name;
+    document.getElementById('preview-tagline').textContent = faction.tagline;
+    document.getElementById('screen-preview').style.borderTop = `3px solid ${faction.color}`;
+    show('screen-preview');
+  }
+}
+
+function showPreviewFull() {
+  resultFaction = previewFactionKey;
+  scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
+  showResult();
+  const banner = document.createElement('div');
+  banner.id = 'preview-banner';
+  banner.style.cssText = 'background:#1E1E2E;border:1.5px solid #333355;border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:center;font-size:13px;color:#8888AA;';
+  banner.innerHTML = '👆 This is your friend\'s result &nbsp;·&nbsp; <button onclick="startQuiz()" style="background:none;border:none;color:#C17CE4;font-weight:700;cursor:pointer;font-size:13px;">Find My Faction →</button>';
+  const resultHeader = document.getElementById('result-header');
+  if (!document.getElementById('preview-banner')) {
+    resultHeader.parentNode.insertBefore(banner, resultHeader);
+  }
+}
+
+function getShareUrl() {
+  return `${SITE_URL}?f=${resultFaction}`;
+}
+
+function getShareText() {
+  const faction = FACTIONS[resultFaction];
+  return `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI faction are you? 👇`;
+}
+
+function shareTwitter() {
+  const faction = FACTIONS[resultFaction];
+  const shareUrl = getShareUrl();
+  const text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI faction are you? 👇\n${shareUrl}\n\n#AIFactionQuiz #Claude #ChatGPT #Gemini #Grok`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function shareKakao() {
+  const faction = FACTIONS[resultFaction];
+  const shareUrl = getShareUrl();
+  const text = `${getShareText()}\n${shareUrl}`;
+  if (navigator.share) {
+    navigator.share({ title: `I'm in the ${faction.name}!`, text, url: shareUrl }).catch(() => copyLink());
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Link copied! Paste it anywhere to share 💬');
+    });
+  }
+}
+
+function shareInsta() {
+  const faction = FACTIONS[resultFaction];
+  const shareUrl = getShareUrl();
+  const text = `${getShareText()}\n${shareUrl}`;
+  if (navigator.share) {
+    navigator.share({ title: `I'm in the ${faction.name}!`, text, url: shareUrl }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Text copied! Paste it into your Instagram story 📸');
+    });
+  }
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(getShareUrl()).then(() => showToast('Link copied!'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg || 'Link copied!';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function retryQuiz() {
+  startQuiz();
+}
+
+initFromURL();
+</script>
+</body>
+</html>

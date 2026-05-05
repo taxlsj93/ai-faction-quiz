@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoney War</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #06080b; }
+
+body {
+  display: flex; flex-direction: column;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #e2e8f0;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  flex-shrink: 0;
+  background: #0a0c11;
+  border-bottom: 1px solid #1a2030;
+  padding: 8px 14px;
+  display: flex; flex-direction: column; gap: 5px;
+  z-index: 10;
+}
+.top-row1 { display: flex; align-items: center; justify-content: space-between; }
+.faction-pct {
+  font-size: .78rem; font-weight: 900;
+  display: flex; align-items: center; gap: 6px;
+}
+.live-tag {
+  font-size: .55rem; font-weight: 800; letter-spacing: .1em;
+  color: #ef4444; animation: blink 1.4s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.timer { font-size: .7rem; font-weight: 700; color: #475569; font-variant-numeric: tabular-nums; }
+
+.terr-bar { height: 7px; background: #141820; border-radius: 4px; overflow: hidden; display: flex; }
+.terr-o { background: linear-gradient(90deg,#1d4ed8,#3b82f6); transition: width .6s ease; }
+.terr-j { background: linear-gradient(90deg,#16a34a,#4ade80); transition: width .6s ease; }
+
+.top-row2 { display: flex; justify-content: space-between; font-size: .6rem; color: #334155; }
+
+/* ── MAP CANVAS ── */
+#map-canvas { display: block; flex: 1; touch-action: none; cursor: crosshair; }
+
+/* ── BOTTOM HUD ── */
+.bottomhud {
+  flex-shrink: 0;
+  background: #0a0c11;
+  border-top: 1px solid #1a2030;
+  padding: 10px 14px;
+  display: flex; gap: 10px; align-items: stretch;
+}
+
+.my-info {
+  flex: 1;
+  background: #0d1018; border-radius: 12px; border: 1px solid #1e2535;
+  padding: 8px 12px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.my-label { font-size: .55rem; font-weight: 800; letter-spacing: .1em; color: #475569; }
+.my-score { font-size: 1.1rem; font-weight: 900; }
+.my-rank  { font-size: .6rem; color: #64748b; }
+
+.attack-area { display: flex; flex-direction: column; gap: 8px; }
+
+.atk-btn {
+  padding: 10px 16px; border-radius: 12px;
+  font-size: .75rem; font-weight: 900; cursor: pointer;
+  border: 1.5px solid; transition: transform .08s, box-shadow .12s;
+  text-align: center; line-height: 1.3; white-space: nowrap;
+}
+.atk-btn:active { transform: scale(.93); }
+.btn-o {
+  background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.4); color: #bfdbfe;
+}
+.btn-o:active { box-shadow: 0 0 18px rgba(59,130,246,.35); }
+.btn-j {
+  background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.4); color: #bbf7d0;
+}
+.btn-j:active { box-shadow: 0 0 18px rgba(34,197,94,.35); }
+
+/* ── MINI LEADERBOARD ── */
+.lb-panel {
+  position: fixed; right: 10px; top: 70px;
+  background: rgba(10,12,17,.9); border: 1px solid #1e2535;
+  border-radius: 12px; padding: 8px 10px;
+  width: 130px; font-size: .6rem;
+  backdrop-filter: blur(6px);
+  z-index: 20;
+}
+.lb-title { font-weight: 800; color: #475569; letter-spacing: .08em; margin-bottom: 5px; font-size: .55rem; }
+.lb-row {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 0; border-bottom: 1px solid #0f1520;
+}
+.lb-row:last-child { border: none; }
+.lb-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.lb-name { flex: 1; color: #64748b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-val { font-weight: 800; color: #94a3b8; }
+
+/* ── WAVE / CAPTURE OVERLAY ── */
+#overlay-canvas {
+  position: fixed; inset: 0; pointer-events: none; z-index: 5;
+}
+
+/* ── RESULT ── */
+.result-overlay {
+  position: fixed; inset: 0; background: rgba(6,8,11,.88);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; display: none;
+}
+.result-card {
+  background: #0d1018; border: 1px solid #1e2535;
+  border-radius: 20px; padding: 28px 24px; text-align: center;
+  width: min(340px, 90vw);
+}
+.res-emoji { font-size: 3rem; margin-bottom: 6px; }
+.res-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 4px; }
+.res-sub { font-size: .72rem; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
+.share-strip {
+  background: #141820; border-radius: 12px; padding: 12px 14px;
+  margin-bottom: 14px; text-align: left;
+}
+.share-strip-bar { height: 8px; background: #0a0d12; border-radius: 4px; overflow: hidden; display: flex; margin: 8px 0; }
+.share-strip-o { background: #3b82f6; }
+.share-strip-j { background: #4ade80; }
+.share-strip-tag { font-size: .58rem; color: #475569; }
+.res-btn {
+  display: block; width: 100%; padding: 13px;
+  border-radius: 12px; border: 1px solid #1e2535;
+  background: rgba(255,255,255,.06); color: #e2e8f0;
+  font-size: .8rem; font-weight: 800; cursor: pointer; margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="top-row1">
+    <div class="faction-pct">
+      <span style="color:#93c5fd">🍎 <span id="pct-o">50</span>%</span>
+      <span class="live-tag">● LIVE</span>
+      <span style="color:#86efac"><span id="pct-j">50</span>% 🌿</span>
+    </div>
+    <div class="timer" id="timer">15:00</div>
+  </div>
+  <div class="terr-bar">
+    <div class="terr-o" id="bar-o" style="width:50%"></div>
+    <div class="terr-j" id="bar-j" style="width:50%"></div>
+  </div>
+  <div class="top-row2">
+    <span id="players-o">🍎 -- 명 참전</span>
+    <span id="players-j">-- 명 참전 🌿</span>
+  </div>
+</div>
+
+<!-- MAP -->
+<canvas id="map-canvas"></canvas>
+
+<!-- OVERLAY for waves -->
+<canvas id="overlay-canvas"></canvas>
+
+<!-- MINI LEADERBOARD -->
+<div class="lb-panel">
+  <div class="lb-title">🍎 ORCHARD 순위</div>
+  <div id="leaderboard"></div>
+</div>
+
+<!-- BOTTOM HUD -->
+<div class="bottomhud">
+  <div class="my-info">
+    <div class="my-label">내 기여</div>
+    <div class="my-score" id="my-score" style="color:#a855f7">0 <span style="font-size:.6rem;color:#64748b">타일</span></div>
+    <div class="my-rank" id="my-rank">진영 내 순위 집계 중...</div>
+  </div>
+  <div class="attack-area">
+    <button class="atk-btn btn-o" onclick="playerAttack('o')">🍎 일제 공격<br><span style="font-size:.6rem;opacity:.65">전선 burst</span></button>
+    <button class="atk-btn btn-j" onclick="playerAttack('j')">🌿 침투 공격<br><span style="font-size:.6rem;opacity:.65">개인 scatter</span></button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="res-emoji" id="res-emoji">🏆</div>
+    <div class="res-title" id="res-title">Orchard 승리!</div>
+    <div class="res-sub" id="res-sub">에코시스템 파워로 전장을 장악했습니다.</div>
+    <div class="share-strip">
+      <div style="display:flex;justify-content:space-between;font-size:.65rem;font-weight:800;margin-bottom:6px">
+        <span style="color:#93c5fd">🍎 Orchard</span>
+        <span style="color:#475569">PHONEY WAR</span>
+        <span style="color:#86efac">Jungle 🌿</span>
+      </div>
+      <div class="share-strip-bar">
+        <div class="share-strip-o" id="res-bar-o" style="width:50%"></div>
+        <div class="share-strip-j" id="res-bar-j" style="width:50%"></div>
+      </div>
+      <div class="share-strip-tag">나는 🍎 Orchard 진영에서 <span id="res-my-score">0</span>타일을 점령했다 · Phoney War</div>
+    </div>
+    <button class="res-btn" onclick="resetGame()">⚔️ 다시 전쟁하기</button>
+    <button class="res-btn" onclick="doShare()">📤 결과 공유</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════
+const TILE = 9;           // px per tile
+const GAME_SEC = 900;     // 15분
+
+// My personal color (purple)
+const MY_HUE = 270;
+const MY_COLOR = [168, 85, 247];  // rgb
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let mapCanvas, mapCtx, ovCanvas, ovCtx;
+let COLS = 0, ROWS = 0;
+let W = 0, H = 0;
+
+// Grid stores per-tile: faction(0=neutral,1=orchard,2=jungle), playerIdx
+// Using typed arrays for performance
+let gridFaction;   // Uint8Array
+let gridPlayer;    // Int16Array  (-1 = neutral/ai, 0 = me, 1..N = ai)
+let imgData;       // ImageData for fast pixel rendering
+
+// AI players
+const AI_O = Array.from({length:20},(_,i)=>({
+  idx: i+1,
+  name: ['AppleT','Seoul_i','Minjun','iOS99','KimJ','Tiger','BlueFan','Orchard3','AirPod','MacBook','iPhone15','iPadPro','WatchU','AirMax','iCloud7','PureBlue','EcoSys','UnifiedX','SafariK','HQ_Blue'][i],
+  r: 40+i*8, g: 90+i*3, b: 180+i*4,
+  score: Math.floor(Math.random()*30),
+}));
+const AI_J = Array.from({length:20},(_,i)=>({
+  idx: i+21,
+  name: ['GalaxyS','SamsJ','Rooted1','DevMode','Android9','OpenSrc','Custom7','FlashMe','NexusK','PixelPro','Sideload','RootKit','GrnFlag','Jungle22','FreeBird','OpenROM','DexMode','GreenAI','LeafX','WildCard'][i],
+  r: 20+i*5, g: 130+i*6, b: 50+i*3,
+  score: Math.floor(Math.random()*30),
+}));
+
+const ME = { idx:0, name:'나 (YOU)', r:168, g:85, b:247, score:0, isMe:true };
+
+// Waves: {cx,cy,r,maxR,rgb,life,thick}
+let waves = [];
+
+// Capture flash: {x,y,life,rgb}
+let flashes = [];
+
+let simPlayers = { o: 847 + Math.floor(Math.random()*400), j: 612 + Math.floor(Math.random()*400) };
+let timeLeft = GAME_SEC;
+let gameOver = false;
+let myFaction = 'o';  // default show orchard side
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function init() {
+  mapCanvas = document.getElementById('map-canvas');
+  mapCtx    = mapCanvas.getContext('2d');
+  ovCanvas  = document.getElementById('overlay-canvas');
+  ovCtx     = ovCanvas.getContext('2d');
+
+  resize();
+  buildGrid();
+  renderMap();
+
+  mapCanvas.addEventListener('pointerdown', onTap);
+
+  setInterval(aiTick, 700);
+  setInterval(countdown, 1000);
+  setInterval(updateSim, 4000);
+  requestAnimationFrame(overlayLoop);
+  updateLeaderboard();
+}
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = mapCanvas.parentElement.getBoundingClientRect();
+  W = rect.width  || window.innerWidth;
+  H = mapCanvas.clientHeight || (window.innerHeight - 120);
+
+  mapCanvas.style.width  = W + 'px';
+  mapCanvas.style.height = H + 'px';
+  mapCanvas.width  = Math.round(W * dpr);
+  mapCanvas.height = Math.round(H * dpr);
+  mapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  ovCanvas.style.width  = window.innerWidth  + 'px';
+  ovCanvas.style.height = window.innerHeight + 'px';
+  ovCanvas.width  = Math.round(window.innerWidth  * dpr);
+  ovCanvas.height = Math.round(window.innerHeight * dpr);
+  ovCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  COLS = Math.ceil(W / TILE);
+  ROWS = Math.ceil(H / TILE);
+}
+
+function buildGrid() {
+  const N = COLS * ROWS;
+  gridFaction = new Uint8Array(N);
+  gridPlayer  = new Int16Array(N).fill(-1);
+
+  // Initialize: left 40% = orchard, right 40% = jungle, middle neutral
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const k = r * COLS + c;
+      if (c < COLS * 0.40) {
+        gridFaction[k] = 1;
+        gridPlayer[k]  = AI_O[Math.floor(Math.random() * AI_O.length)].idx;
+      } else if (c > COLS * 0.60) {
+        gridFaction[k] = 2;
+        gridPlayer[k]  = AI_J[Math.floor(Math.random() * AI_J.length)].idx;
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  MAP RENDER (ImageData for speed)
+// ═══════════════════════════════════════════════════
+function renderMap() {
+  const dpr = window.devicePixelRatio || 1;
+  const pw = Math.round(W * dpr), ph = Math.round(H * dpr);
+  const data = new Uint8ClampedArray(pw * ph * 4);
+
+  const tileW = Math.round(TILE * dpr);
+  const tileH = Math.round(TILE * dpr);
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const k = r * COLS + c;
+      const f = gridFaction[k];
+      const p = gridPlayer[k];
+
+      let rr, gg, bb;
+      if (f === 0) {
+        rr = 12; gg = 16; bb = 24;
+      } else if (f === 1) {
+        // Orchard — my tiles get purple tint, others blue
+        if (p === 0) { rr = ME.r*0.6|0; gg = ME.g*0.4|0; bb = ME.b*0.8|0; }
+        else {
+          const ai = AI_O.find(a=>a.idx===p) || AI_O[0];
+          rr = ai.r*0.55|0; gg = ai.g*0.45|0; bb = ai.b*0.7|0;
+        }
+      } else {
+        const ai = AI_J.find(a=>a.idx===p) || AI_J[0];
+        rr = ai.r*0.5|0; gg = ai.g*0.55|0; bb = ai.b*0.5|0;
+      }
+
+      // Fill tile pixels (with 1px gap for grid effect at larger tiles)
+      const gap = TILE > 6 ? 1 : 0;
+      const x0 = c * tileW, y0 = r * tileH;
+      for (let py = 0; py < tileH - gap; py++) {
+        for (let px2 = 0; px2 < tileW - gap; px2++) {
+          const idx = ((y0 + py) * pw + (x0 + px2)) * 4;
+          data[idx]   = rr;
+          data[idx+1] = gg;
+          data[idx+2] = bb;
+          data[idx+3] = 255;
+        }
+      }
+    }
+  }
+
+  const id = new ImageData(data, pw, ph);
+  mapCtx.putImageData(id, 0, 0);
+}
+
+// Partial re-render for changed tiles only
+const dirtyTiles = new Set();
+function flushDirty() {
+  if (!dirtyTiles.size) return;
+  const dpr = window.devicePixelRatio || 1;
+  const tileW = Math.round(TILE * dpr);
+  const tileH = Math.round(TILE * dpr);
+  const gap = TILE > 6 ? 1 : 0;
+
+  for (const k of dirtyTiles) {
+    const r = Math.floor(k / COLS), c = k % COLS;
+    const f = gridFaction[k], p = gridPlayer[k];
+    let rr, gg, bb;
+    if (f === 0) { rr=12; gg=16; bb=24; }
+    else if (f === 1) {
+      if (p === 0) { rr=ME.r*0.7|0; gg=ME.g*0.5|0; bb=ME.b*0.9|0; }
+      else { const ai=AI_O.find(a=>a.idx===p)||AI_O[0]; rr=ai.r*0.55|0; gg=ai.g*0.45|0; bb=ai.b*0.7|0; }
+    } else {
+      const ai=AI_J.find(a=>a.idx===p)||AI_J[0]; rr=ai.r*0.5|0; gg=ai.g*0.55|0; bb=ai.b*0.5|0;
+    }
+    const x0=c*tileW, y0=r*tileH;
+    const px=tileW-gap, py=tileH-gap;
+    const buf=new Uint8ClampedArray(px*py*4);
+    for(let i=0;i<px*py;i++){buf[i*4]=rr;buf[i*4+1]=gg;buf[i*4+2]=bb;buf[i*4+3]=255;}
+    mapCtx.putImageData(new ImageData(buf,px,py), x0, y0);
+  }
+  dirtyTiles.clear();
+}
+
+// ═══════════════════════════════════════════════════
+//  TILE CAPTURE
+// ═══════════════════════════════════════════════════
+function setTile(c, r, faction, playerIdx) {
+  if (c<0||c>=COLS||r<0||r>=ROWS) return false;
+  const k = r*COLS+c;
+  if (gridFaction[k]===faction) return false;
+  gridFaction[k] = faction;
+  gridPlayer[k]  = playerIdx;
+  dirtyTiles.add(k);
+  return true;
+}
+
+// ═══════════════════════════════════════════════════
+//  PLAYER ATTACK
+// ═══════════════════════════════════════════════════
+function playerAttack(side) {
+  if (gameOver) return;
+  myFaction = side;
+
+  const faction = side === 'o' ? 1 : 2;
+  const mapRect = mapCanvas.getBoundingClientRect();
+
+  if (side === 'o') {
+    // Orchard: find rightmost orchard col, burst forward
+    let frontC = 0;
+    for (let c=COLS-1;c>=0;c--) {
+      for (let r=0;r<ROWS;r++) { if(gridFaction[r*COLS+c]===1){frontC=c;break;} }
+      if(frontC) break;
+    }
+    const targets=[];
+    for(let r=0;r<ROWS;r+=2) {
+      for(let dc=1;dc<=4;dc++) {
+        if(gridFaction[r*COLS+(frontC+dc)]!==1) targets.push({c:frontC+dc,r});
+      }
+    }
+    const chosen=targets.sort(()=>Math.random()-.5).slice(0,20);
+    let delay=0;
+    for(const t of chosen) {
+      setTimeout(()=>{
+        if(setTile(t.c,t.r,1,ME.idx)) { ME.score++; flushDirty(); }
+      }, delay+=15);
+    }
+    // My wave — from center of current front
+    const wx = mapRect.left + frontC*TILE + TILE/2;
+    const wy = mapRect.top  + ROWS*TILE/2;
+    spawnWave(wx, wy, [ME.r,ME.g,ME.b], 200, 3.5, true);
+
+  } else {
+    // Jungle: scattered from multiple border points
+    const jBorder=[];
+    const dirs=[[-1,0],[1,0],[0,-1],[0,1]];
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
+      if(gridFaction[r*COLS+c]===2) {
+        for(const[dc,dr]of dirs) {
+          const nc=c+dc,nr=r+dr;
+          if(nc>=0&&nc<COLS&&nr>=0&&nr<ROWS&&gridFaction[nr*COLS+nc]!==2)
+            jBorder.push({c:nc,r:nr});
+        }
+      }
+    }
+    const probes=jBorder.sort(()=>Math.random()-.5).slice(0,25);
+    let delay=0;
+    for(const t of probes) {
+      setTimeout(()=>{
+        if(setTile(t.c,t.r,2,ME.idx)) { ME.score++; flushDirty(); }
+      }, delay += Math.random()*200);
+    }
+    // My wave — scattered small waves
+    for(let i=0;i<4;i++) {
+      const probe=probes[Math.floor(Math.random()*probes.length)];
+      if(!probe) continue;
+      const wx=mapRect.left+probe.c*TILE;
+      const wy=mapRect.top+probe.r*TILE;
+      setTimeout(()=>spawnWave(wx,wy,[ME.r,ME.g,ME.b],120,2.5,true),i*60);
+    }
+  }
+
+  updateScoreUI();
+}
+
+// ═══════════════════════════════════════════════════
+//  TAP ON MAP
+// ═══════════════════════════════════════════════════
+function onTap(e) {
+  if (gameOver) return;
+  const rect = mapCanvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const c = Math.floor(mx / TILE), r = Math.floor(my / TILE);
+  if(c<0||c>=COLS||r<0||r>=ROWS) return;
+
+  const f = gridFaction[r*COLS+c];
+  const side = f===2 ? 1 : f===0 ? (Math.random()>.5?1:2) : 2;
+  const faction = side;
+  const absX = e.clientX, absY = e.clientY;
+
+  // Capture nearby tiles
+  for(let dr=-2;dr<=2;dr++) for(let dc=-2;dc<=2;dc++) {
+    if(Math.abs(dc)+Math.abs(dr)>3) continue;
+    if(setTile(c+dc,r+dr,faction,ME.idx)) { ME.score++; }
+  }
+  flushDirty();
+
+  spawnWave(absX, absY, [ME.r,ME.g,ME.b], 160, 3, true);
+  updateScoreUI();
+}
+
+// ═══════════════════════════════════════════════════
+//  AI TICK
+// ═══════════════════════════════════════════════════
+function aiTick() {
+  if(gameOver) return;
+
+  // Orchard AI: coordinated push from right edge of orchard territory
+  let oFrontC=0;
+  for(let c=COLS-1;c>=0;c--) {
+    let found=false;
+    for(let r=0;r<ROWS;r++) if(gridFaction[r*COLS+c]===1){found=true;break;}
+    if(found){oFrontC=c;break;}
+  }
+  const oTargets=[];
+  for(let r=0;r<ROWS;r+=3) {
+    if(oFrontC+1<COLS&&gridFaction[r*COLS+(oFrontC+1)]!==1)
+      oTargets.push({c:oFrontC+1,r,ai:AI_O[r%AI_O.length]});
+  }
+  for(const t of oTargets.slice(0,8)) setTile(t.c,t.r,1,t.ai.idx);
+
+  // Jungle AI: random scatter along their territory
+  const jCells=[];
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++)
+    if(gridFaction[r*COLS+c]===2) jCells.push({c,r});
+  const jProbes=jCells.sort(()=>Math.random()-.5).slice(0,15);
+  const dirs=[[-1,0],[1,0],[0,-1],[0,1]];
+  for(const{c,r}of jProbes) {
+    const d=dirs[Math.floor(Math.random()*4)];
+    const ai=AI_J[Math.floor(Math.random()*AI_J.length)];
+    setTile(c+d[0],r+d[1],2,ai.idx);
+  }
+
+  // AI score updates
+  for(const ai of AI_O) ai.score+=Math.floor(Math.random()*2);
+  for(const ai of AI_J) ai.score+=Math.floor(Math.random()*2);
+
+  flushDirty();
+  updateStats();
+  updateLeaderboard();
+}
+
+// ═══════════════════════════════════════════════════
+//  WAVES (on overlay canvas)
+// ═══════════════════════════════════════════════════
+function spawnWave(cx, cy, rgb, maxR, thick, isMe) {
+  waves.push({cx, cy, r:0, maxR, rgb, life:1, thick, isMe});
+}
+
+function overlayLoop() {
+  const OW = window.innerWidth, OH = window.innerHeight;
+  ovCtx.clearRect(0, 0, OW, OH);
+
+  for(let i=waves.length-1;i>=0;i--) {
+    const w=waves[i];
+    w.r  += (w.maxR - w.r) * 0.14;
+    w.life -= w.isMe ? 0.025 : 0.035;
+    if(w.life<=0){waves.splice(i,1);continue;}
+
+    ovCtx.globalAlpha = w.life * (w.isMe ? 0.8 : 0.25);
+    ovCtx.strokeStyle = `rgb(${w.rgb[0]},${w.rgb[1]},${w.rgb[2]})`;
+    ovCtx.lineWidth   = w.thick * w.life;
+    ovCtx.beginPath();
+    ovCtx.arc(w.cx, w.cy, w.r, 0, Math.PI*2);
+    ovCtx.stroke();
+
+    if(w.isMe&&w.r>20) {
+      ovCtx.globalAlpha = w.life * 0.15;
+      ovCtx.fillStyle   = `rgb(${w.rgb[0]},${w.rgb[1]},${w.rgb[2]})`;
+      ovCtx.beginPath();
+      ovCtx.arc(w.cx, w.cy, w.r*0.5, 0, Math.PI*2);
+      ovCtx.fill();
+    }
+  }
+  ovCtx.globalAlpha = 1;
+  requestAnimationFrame(overlayLoop);
+}
+
+// ═══════════════════════════════════════════════════
+//  STATS & UI
+// ═══════════════════════════════════════════════════
+function updateStats() {
+  let o=0,j=0;
+  for(let k=0;k<COLS*ROWS;k++) {
+    if(gridFaction[k]===1) o++;
+    else if(gridFaction[k]===2) j++;
+  }
+  const total=o+j||1;
+  const pO=Math.round(o/total*100), pJ=100-pO;
+  document.getElementById('pct-o').textContent=pO;
+  document.getElementById('pct-j').textContent=pJ;
+  document.getElementById('bar-o').style.width=pO+'%';
+  document.getElementById('bar-j').style.width=pJ+'%';
+}
+
+function updateScoreUI() {
+  document.getElementById('my-score').innerHTML=
+    `${ME.score} <span style="font-size:.6rem;color:#64748b">타일</span>`;
+
+  const allScores=[...AI_O.map(a=>a.score),ME.score].sort((a,b)=>b-a);
+  const rank=allScores.indexOf(ME.score)+1;
+  document.getElementById('my-rank').textContent=`진영 내 ${rank}위 / ${AI_O.length+1}명`;
+}
+
+function updateLeaderboard() {
+  const all=[ME,...AI_O].sort((a,b)=>b.score-a.score).slice(0,6);
+  document.getElementById('leaderboard').innerHTML=all.map((p,i)=>`
+    <div class="lb-row${p.isMe?' style="background:rgba(168,85,247,.08)"':''}">
+      <div class="lb-dot" style="background:rgb(${p.r},${p.g},${p.b})"></div>
+      <div class="lb-name" style="color:${p.isMe?'#c4b5fd':'#64748b'};font-weight:${p.isMe?800:400}">${p.isMe?'나 ★':p.name}</div>
+      <div class="lb-val">${p.score}</div>
+    </div>`).join('');
+}
+
+function updateSim() {
+  simPlayers.o += Math.floor((Math.random()-.4)*60);
+  simPlayers.j += Math.floor((Math.random()-.4)*60);
+  simPlayers.o = Math.max(100, Math.min(5000, simPlayers.o));
+  simPlayers.j = Math.max(100, Math.min(5000, simPlayers.j));
+  document.getElementById('players-o').textContent=`🍎 ${simPlayers.o.toLocaleString()}명 참전`;
+  document.getElementById('players-j').textContent=`${simPlayers.j.toLocaleString()}명 참전 🌿`;
+}
+
+// ═══════════════════════════════════════════════════
+//  COUNTDOWN
+// ═══════════════════════════════════════════════════
+function countdown() {
+  if(gameOver) return;
+  timeLeft--;
+  const m=Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s=(timeLeft%60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent=m+':'+s;
+  if(timeLeft<=180) document.getElementById('timer').style.color='#ef4444';
+  if(timeLeft<=0) endGame();
+}
+
+function endGame() {
+  gameOver=true;
+  let o=0,j=0;
+  for(const f of gridFaction){if(f===1)o++;else if(f===2)j++;}
+  const total=o+j||1;
+  const pO=Math.round(o/total*100);
+  const winner=pO>50?'o':'j';
+  document.getElementById('res-emoji').textContent=winner==='o'?'🍎':'🌿';
+  document.getElementById('res-title').textContent=winner==='o'?'Orchard 승리!':'Jungle 승리!';
+  document.getElementById('res-sub').textContent=winner==='o'
+    ?`에코시스템 파워로 ${pO}% 장악. 일제 행동의 승리.`
+    :`게릴라 전술로 ${100-pO}% 장악. 자유 전투의 승리.`;
+  document.getElementById('res-bar-o').style.width=pO+'%';
+  document.getElementById('res-bar-j').style.width=(100-pO)+'%';
+  document.getElementById('res-my-score').textContent=ME.score;
+  document.getElementById('result-overlay').style.display='flex';
+}
+
+function resetGame() {
+  document.getElementById('result-overlay').style.display='none';
+  gameOver=false; timeLeft=GAME_SEC; ME.score=0;
+  for(const ai of [...AI_O,...AI_J]) ai.score=Math.floor(Math.random()*15);
+  document.getElementById('timer').style.color='#475569';
+  buildGrid(); renderMap(); waves=[];
+  updateStats(); updateScoreUI(); updateLeaderboard();
+}
+
+function doShare() {
+  const text=`나는 Phoney War에서 싸웠다!\n🍎 Orchard vs 🌿 Jungle\n내 기여: ${ME.score}타일\n#PhoneyWar`;
+  if(navigator.share) navigator.share({title:'Phoney War',text}).catch(()=>{});
+  else navigator.clipboard?.writeText(text);
+}
+
+// ═══════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  init();
+  updateStats();
+  updateScoreUI();
+  updateLeaderboard();
+  updateSim();
+});
+window.addEventListener('resize',()=>{
+  resize(); buildGrid(); renderMap(); waves=[];
+});
+</script>
+</body>
+</html>
