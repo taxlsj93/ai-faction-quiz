@@ -1,6 +1,6 @@
 # 📊 STATUS — AI 진영 퀴즈 미디어
 
-> **마지막 업데이트**: 2026-05-06 21:15 UTC
+> **마지막 업데이트**: 2026-05-06 21:32 UTC
 > **사업 단계**: Phase 1 — 런치 직후
 > **메인 제품**: ai-faction-quiz (배포 완료)
 
@@ -17,6 +17,7 @@
 | 📊 분석 도구 (Plausible)| ⚠️ 스캐폴딩만 | 도메인 입력 후 주석 해제 시 활성화 |
 | 📊 트래킹 이벤트       | ✅ 구현 | quiz_start / quiz_complete / cta_main_click / cta_secondary_click |
 | 💸 광고 (AdSense)      | ✅ 작동 중 | `ca-pub-3036702261797984` |
+| 💸 광고 네트워크 (3rd) | ✅ UX 가드 적용 | profitablecpmratenetwork — KO만, 30초 또는 quiz_complete 후 지연 로드, popunder/리다이렉트 차단, 닫기 버튼 |
 | 📨 뉴스레터            | ❌ 미설치 | ConvertKit 무료 플랜 권장 |
 | 💰 어필리에이트        | ⚠️ 링크 삽입됨 | Jasper / Copy.ai / Writesonic / Perplexity — 실 가입·트래킹 ID 교체 필요 |
 | ⚖️ 개인정보처리방침   | ✅ 게재됨 | /privacy (KO), /privacy-en (EN) |
@@ -158,6 +159,8 @@
 | `quiz_complete`        | 결과 화면 진입 직전 | `{faction, lang}` |
 | `cta_main_click`       | 1차 CTA(AI 툴 직접 링크) 클릭 | `{faction, url}` |
 | `cta_secondary_click`  | 2차 CTA(어필리에이트 링크) 클릭 | `{faction, url}` |
+| `affiliate_card_click` | 결과 페이지 인라인 어필리에이트 카드 클릭 (loading-ad / ally tools) | `{url, label, faction}` |
+| `ad_network_loaded`    | 3rd-party 광고 스크립트 지연 로드 발화 | `{trigger}` |
 
 GA4(`G-HPT1Y41HD8`)와 Plausible(활성화 시) 양쪽 모두로 자동 전송. 헬퍼: `window.trackEvent(name, params)`.
 
