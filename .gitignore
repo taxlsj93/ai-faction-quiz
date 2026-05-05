@@ -1,3 +1,13 @@
 node_modules/
 .env
 *.log
+
+# Claude Code internals
+.claude/worktrees/
+.omc/
+.venv/
+
+# Build / OS
+*.tmp
+.DS_Store
+Thumbs.db
