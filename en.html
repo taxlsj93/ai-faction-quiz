@@ -1144,7 +1144,8 @@ function showPreviewFull() {
 }
 
 function getShareUrl() {
-  return `${SITE_URL}?f=${resultFaction}`;
+  if (!resultFaction) return SITE_URL;
+  return `${SITE_URL}/r/${resultFaction}?lang=en`;
 }
 
 function getShareText() {
