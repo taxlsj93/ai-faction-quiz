@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>당신의 AI 진영은? — AI Faction Quiz</title>
-<meta name="description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 진영을 찾아보세요.">
+<title>당신의 AI 하우스는? — AI 성향 테스트</title>
+<meta name="description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 AI 하우스를 찾아보세요.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ai-faction-quiz.vercel.app">
-<meta property="og:title" content="당신의 AI 진영은? — AI Faction Quiz">
-<meta property="og:description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 내 AI 진영을 찾아보세요. Claude / ChatGPT / Gemini / Grok">
+<meta property="og:title" content="당신의 AI 하우스는? — AI 성향 테스트">
+<meta property="og:description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 내 AI 하우스를 찾아보세요. Claude / ChatGPT / Gemini / Grok">
 <meta property="og:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="당신의 AI 진영은? — AI Faction Quiz">
-<meta name="twitter:description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 내 AI 진영을 찾아보세요.">
+<meta name="twitter:title" content="당신의 AI 하우스는? — AI 성향 테스트">
+<meta name="twitter:description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 내 AI 하우스를 찾아보세요.">
 <meta name="twitter:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
-<meta name="keywords" content="AI 진영 테스트, AI 성격 퀴즈, Claude 진영, ChatGPT 진영, Gemini 진영, Grok 진영, 어떤 AI가 나한테 맞아, AI 성격 테스트, AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test">
+<meta name="keywords" content="AI 성향 테스트, AI 하우스 테스트, AI 진영 테스트, AI 성격 퀴즈, Claude 하우스, ChatGPT 하우스, Gemini 하우스, Grok 하우스, 어떤 AI가 나한테 맞아, AI 성격 테스트, AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test">
 <link rel="canonical" href="https://ai-faction-quiz.vercel.app">
 <link rel="alternate" hreflang="ko" href="https://ai-faction-quiz.vercel.app">
 <link rel="alternate" hreflang="en" href="https://ai-faction-quiz.vercel.app/?lang=en">
@@ -25,8 +25,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Quiz",
-  "name": "당신의 AI 진영은? — AI Faction Quiz",
-  "description": "사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 진영을 찾아보세요.",
+  "name": "당신의 AI 하우스는? — AI 성향 테스트",
+  "description": "사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 AI 하우스를 찾아보세요.",
   "url": "https://ai-faction-quiz.vercel.app",
   "image": "https://ai-faction-quiz.vercel.app/og-image.svg",
   "inLanguage": "ko"
@@ -689,32 +689,32 @@
 
   <!-- ── INTRO ── -->
   <div id="screen-intro" class="screen active">
-    <div class="intro-badge">AI Faction Quiz</div>
+    <div class="intro-badge">AI 성향 테스트</div>
     <h1 class="intro-title">당신의 AI는<br>당신을 닮았다</h1>
     <p class="intro-sub">
       사용하는 AI가 당신의 성격을 드러냅니다.<br>
-      8문항으로 당신의 진영을 진단해드립니다.
+      8문항으로 당신의 AI 하우스를 진단해드립니다.
     </p>
 
     <div class="factions-preview">
       <div class="faction-chip" data-f="claude">
         <div class="f-icon">🟣</div>
-        <div class="f-name" style="color:var(--claude)">Claude 진영</div>
+        <div class="f-name" style="color:var(--claude)">Claude 하우스</div>
         <div class="f-label">사색형 창작자</div>
       </div>
       <div class="faction-chip" data-f="gpt">
         <div class="f-icon">🟢</div>
-        <div class="f-name" style="color:var(--gpt)">GPT 진영</div>
+        <div class="f-name" style="color:var(--gpt)">GPT 하우스</div>
         <div class="f-label">실행형 만능인</div>
       </div>
       <div class="faction-chip" data-f="gemini">
         <div class="f-icon">🔵</div>
-        <div class="f-name" style="color:var(--gemini)">Gemini 진영</div>
+        <div class="f-name" style="color:var(--gemini)">Gemini 하우스</div>
         <div class="f-label">체계형 전략가</div>
       </div>
       <div class="faction-chip" data-f="grok">
         <div class="f-icon">🔴</div>
-        <div class="f-name" style="color:var(--grok)">Grok 진영</div>
+        <div class="f-name" style="color:var(--grok)">Grok 하우스</div>
         <div class="f-label">반골형 혁신가</div>
       </div>
     </div>
@@ -729,7 +729,7 @@
       </div>
     </div>
 
-    <button class="btn-start" onclick="startQuiz()">내 AI 진영 알아보기 →</button>
+    <button class="btn-start" onclick="startQuiz()">내 AI 하우스 알아보기 →</button>
     <div class="quiz-count">8문항 · 2분 소요 · 무료</div>
   </div>
 
@@ -745,18 +745,18 @@
 
   <!-- ── PREVIEW (deep-link: ?f=faction) ── -->
   <div id="screen-preview" class="screen">
-    <div class="preview-badge">👤 친구의 진영 결과</div>
+    <div class="preview-badge">👤 친구의 AI 하우스 결과</div>
     <div class="preview-emoji" id="preview-emoji"></div>
     <div class="preview-faction" id="preview-faction"></div>
     <div class="preview-tagline" id="preview-tagline"></div>
-    <button class="btn-preview-quiz" onclick="startQuiz()">나도 내 진영 알아보기 →</button>
+    <button class="btn-preview-quiz" onclick="startQuiz()">나도 내 AI 하우스 알아보기 →</button>
     <button class="btn-preview-see" onclick="showPreviewFull()">친구 결과 자세히 보기</button>
   </div>
 
   <!-- ── LOADING ── -->
   <div id="screen-loading" class="screen">
     <div class="loading-ring"></div>
-    <div class="loading-text" id="loading-text">진영 분석 중...</div>
+    <div class="loading-text" id="loading-text">성향 분석 중...</div>
     <div class="loading-sub" id="loading-sub">당신의 답변 패턴을 해석하고 있습니다</div>
     <div class="loading-ad ad-slot">
       <span class="ad-slot-label">후원</span>
@@ -774,7 +774,7 @@
   <!-- ── RESULT ── -->
   <div id="screen-result" class="screen">
     <div class="result-header" id="result-header">
-      <div class="result-verdict" id="result-verdict-text">진영 판정 완료</div>
+      <div class="result-verdict" id="result-verdict-text">하우스 판정 완료</div>
       <div class="result-icon-wrap" id="result-icon"><span id="result-emoji"></span></div>
       <div class="result-faction-name" id="result-name"></div>
       <div class="result-tagline" id="result-tagline"></div>
@@ -794,7 +794,7 @@
     <div class="cross-allies-section" id="cross-allies-section" style="display:none"></div>
 
     <div class="cta-block">
-      <div class="cta-label" id="cta-label-text">당신의 진영 AI 지금 시작하기</div>
+      <div class="cta-label" id="cta-label-text">당신의 AI 하우스 지금 시작하기</div>
       <a id="btn-cta-main" class="btn-cta btn-cta-main" href="#" target="_blank" rel="noopener">
         <span id="cta-text"></span>
       </a>
@@ -805,7 +805,7 @@
     </div>
 
     <div class="share-section">
-      <div class="share-label" id="share-label-text">진영을 알려라 — 친구를 끌어들여라</div>
+      <div class="share-label" id="share-label-text">내 하우스를 알려라 — 친구를 끌어들여라</div>
       <div class="share-grid">
         <button class="share-btn share-twitter" onclick="shareTwitter()">
           <span class="share-icon">𝕏</span>
@@ -849,78 +849,78 @@ document.documentElement.lang = LANG;
 // ── STRINGS ──
 const STRINGS = {
   ko: {
-    metaTitle: '당신의 AI 진영은? — AI Faction Quiz',
-    metaDesc: '사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 진영을 찾아보세요.',
+    metaTitle: '당신의 AI 하우스는? — AI 성향 테스트',
+    metaDesc: '사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 AI 하우스를 찾아보세요.',
     introTitle: '당신의 AI는<br>당신을 닮았다',
-    introSub: '사용하는 AI가 당신의 성격을 드러냅니다.<br>8문항으로 당신의 진영을 진단해드립니다.',
+    introSub: '사용하는 AI가 당신의 성격을 드러냅니다.<br>8문항으로 당신의 AI 하우스를 진단해드립니다.',
     chipLabels: { claude: '사색형 창작자', gpt: '실행형 만능인', gemini: '체계형 전략가', grok: '반골형 혁신가' },
-    chipNames: { claude: 'Claude 진영', gpt: 'GPT 진영', gemini: 'Gemini 진영', grok: 'Grok 진영' },
+    chipNames: { claude: 'Claude 하우스', gpt: 'GPT 하우스', gemini: 'Gemini 하우스', grok: 'Grok 하우스' },
     currentAiLabel: '지금 쓰고 있는 AI가 있나요? (선택)',
-    btnStart: '내 AI 진영 알아보기 →',
+    btnStart: '내 AI 하우스 알아보기 →',
     quizCount: '8문항 · 2분 소요 · 무료',
-    previewBadge: '👤 친구의 진영 결과',
-    btnPreviewQuiz: '나도 내 진영 알아보기 →',
+    previewBadge: '👤 친구의 AI 하우스 결과',
+    btnPreviewQuiz: '나도 내 AI 하우스 알아보기 →',
     btnPreviewSee: '친구 결과 자세히 보기',
-    resultVerdict: '진영 판정 완료',
+    resultVerdict: '하우스 판정 완료',
     loadingMsgs: [
-      ['진영 분석 중...', '당신의 답변 패턴을 해석하고 있습니다'],
+      ['성향 분석 중...', '당신의 답변 패턴을 해석하고 있습니다'],
       ['데이터 대조 중...', '1만 2천명의 AI 유저 데이터와 비교하는 중'],
-      ['진영 확정 중...', '당신의 AI 운명을 결정합니다'],
+      ['하우스 확정 중...', '당신의 AI 운명을 결정합니다'],
     ],
-    matchFormat: (pct) => `진영 적합도 ${pct}%`,
+    matchFormat: (pct) => `하우스 적합도 ${pct}%`,
     mbtiFormat: (mbti) => `관련 MBTI: ${mbti}`,
-    scoreDistTitle: '📊 진영별 점수',
-    ctaLabel: '당신의 진영 AI 지금 시작하기',
-    shareLabel: '진영을 알려라 — 친구를 끌어들여라',
-    shareTwitterText: (name) => `나는 ${name}! AI 진영 테스트 해봤는데 진짜 맞는 것 같음 ㄷㄷ\n\nhttps://ai-faction-quiz.vercel.app`,
+    scoreDistTitle: '📊 하우스별 점수',
+    ctaLabel: '당신의 AI 하우스 지금 시작하기',
+    shareLabel: '내 하우스를 알려라 — 친구를 끌어들여라',
+    shareTwitterText: (name) => `나는 ${name}! AI 성향 테스트 해봤는데 진짜 맞는 것 같음 ㄷㄷ\n\nhttps://ai-faction-quiz.vercel.app`,
     disclaimer: '* 연합군 툴 링크는 제휴 마케팅 링크를 포함합니다 · 이 퀴즈는 오락 목적이며 Anthropic, OpenAI, Google, xAI와 무관합니다. 통계는 공개 데이터 기반.',
     btnRetry: '다시 테스트하기',
     toast: '링크가 복사되었습니다!',
     langToggle: 'EN',
-    statsTitle: '진영 통계',
-    matchupTitle: '다른 진영과의 차이',
+    statsTitle: '하우스 통계',
+    matchupTitle: '다른 하우스와의 차이',
     kakaoBtnLabel: '카카오톡',
     instaBtnLabel: '인스타그램',
     copyBtnLabel: '링크 복사',
     previewBannerText: '👆 친구의 결과입니다',
-    previewBannerBtn: '내 진영 알아보기 →',
+    previewBannerBtn: '내 AI 하우스 알아보기 →',
   },
   en: {
-    metaTitle: 'Which AI Are You? — AI Faction Quiz',
-    metaDesc: 'The AI you use reveals your personality. 8 questions to find your faction: Claude, ChatGPT, Gemini, or Grok.',
+    metaTitle: 'Which AI House Are You? — AI Personality Quiz',
+    metaDesc: 'The AI you use reveals your personality. 8 questions to find your house: Claude, ChatGPT, Gemini, or Grok.',
     introTitle: 'Your AI Reflects<br>Who You Are',
-    introSub: 'The AI you use says more about you than you think.<br>8 questions to reveal which faction you truly belong to.',
+    introSub: 'The AI you use says more about you than you think.<br>8 questions to reveal which house you truly belong to.',
     chipLabels: { claude: 'The Deep Thinker', gpt: 'The Action Taker', gemini: 'The Methodical Strategist', grok: 'The Contrarian Innovator' },
-    chipNames: { claude: 'Claude Faction', gpt: 'GPT Faction', gemini: 'Gemini Faction', grok: 'Grok Faction' },
+    chipNames: { claude: 'Claude House', gpt: 'GPT House', gemini: 'Gemini House', grok: 'Grok House' },
     currentAiLabel: null,
-    btnStart: 'Find My AI Faction →',
+    btnStart: 'Find My AI House →',
     quizCount: '8 Questions · 2 min · Free',
-    previewBadge: '👤 Your friend\'s faction result',
-    btnPreviewQuiz: 'Find My Faction →',
+    previewBadge: '👤 Your friend\'s house result',
+    btnPreviewQuiz: 'Find My House →',
     btnPreviewSee: 'See full result',
-    resultVerdict: 'Faction Determined',
+    resultVerdict: 'House Determined',
     loadingMsgs: [
-      ['Analyzing your faction...', 'Reading the patterns in your answers'],
+      ['Analyzing your personality...', 'Reading the patterns in your answers'],
       ['Cross-referencing data...', 'Comparing against 12,000 AI user profiles'],
-      ['Locking in your faction...', 'Determining your AI destiny'],
+      ['Locking in your house...', 'Determining your AI destiny'],
     ],
     matchFormat: (pct) => `${pct}% match`,
     mbtiFormat: (mbti) => `Related MBTI: ${mbti}`,
-    scoreDistTitle: '📊 Score Breakdown',
-    ctaLabel: 'Start using your faction\'s AI now',
-    shareLabel: 'Declare Your Faction — Recruit Your Friends',
-    shareTwitterText: (name) => `I got ${name} on the AI Faction Quiz. Which one are you?\n\nhttps://ai-faction-quiz.vercel.app/?lang=en`,
+    scoreDistTitle: '📊 House Score Breakdown',
+    ctaLabel: 'Start using your house\'s AI now',
+    shareLabel: 'Declare Your House — Recruit Your Friends',
+    shareTwitterText: (name) => `I got ${name} on the Which AI House quiz. Which one are you?\n\nhttps://ai-faction-quiz.vercel.app/?lang=en`,
     disclaimer: '* Ally tool links may include affiliate links · This quiz is for entertainment. Not affiliated with Anthropic, OpenAI, Google, or xAI. Stats based on publicly available data.',
     btnRetry: 'Retake Quiz',
     toast: 'Link copied!',
     langToggle: '한국어',
-    statsTitle: 'Faction Stats',
-    matchupTitle: 'vs. Other Factions',
+    statsTitle: 'House Stats',
+    matchupTitle: 'vs. Other Houses',
     kakaoBtnLabel: 'WhatsApp',
     instaBtnLabel: 'Instagram',
     copyBtnLabel: 'Copy Link',
     previewBannerText: '👆 This is your friend\'s result',
-    previewBannerBtn: 'Find My Faction →',
+    previewBannerBtn: 'Find My House →',
   },
 };
 
@@ -1083,7 +1083,7 @@ const ALL_QUESTIONS = {
 const ALL_FACTIONS = {
   ko: {
     claude: {
-      name: "Claude 진영",
+      name: "Claude 하우스",
       emoji: "🟣",
       color: "#C17CE4",
       tagline: "당신은 깊이 생각하고 신중하게 말합니다.\n빠른 답보다 옳은 답을 추구하는 사색형 창작자.",
@@ -1101,15 +1101,15 @@ const ALL_FACTIONS = {
         { num: "Fortune 100\n70%", desc: "기업 고객\n압도적 1위" },
       ],
       vs: [
-        { label: "GPT 진영과의 차이", you: "깊이·맥락", them: "속도·범용" },
-        { label: "Gemini 진영과의 차이", you: "창작·추론", them: "정보·검색" },
-        { label: "Grok 진영과의 차이", you: "공감·섬세함", them: "직설·반골" },
+        { label: "GPT 하우스와의 차이", you: "깊이·맥락", them: "속도·범용" },
+        { label: "Gemini 하우스와의 차이", you: "창작·추론", them: "정보·검색" },
+        { label: "Grok 하우스와의 차이", you: "공감·섬세함", them: "직설·반골" },
       ],
       ctaText: "Claude 무료로 시작하기 →",
       ctaUrl: "https://claude.ai",
-      ctaSecondaryText: "Claude 진영에 맞는 AI 글쓰기 툴 추천받기",
+      ctaSecondaryText: "Claude 하우스에 맞는 AI 글쓰기 툴 추천받기",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🟣 Claude 진영 연합군 — 사색가의 도구들",
+      alliesTitle: "🟣 Claude 하우스 연합군 — 사색가의 도구들",
       allies: [
         { icon: "📝", badge: "기획·메모 지원대", name: "Notion AI", desc: "생각을 글로, 글을 기획서로. 회의록·할일·아이디어를 AI가 자동 정리해줌", url: "https://notion.so" },
         { icon: "🎙️", badge: "녹취·요약 지원대", name: "Otter.ai", desc: "회의, 강의, 인터뷰를 자동 녹취·요약. 나중에 다시 들을 필요 없음", url: "https://otter.ai" },
@@ -1117,7 +1117,7 @@ const ALL_FACTIONS = {
       ],
     },
     gpt: {
-      name: "GPT 진영",
+      name: "GPT 하우스",
       emoji: "🟢",
       color: "#10A37F",
       tagline: "당신은 일단 해봅니다. 생각보다 행동이 앞서는\n실행력의 만능 플레이어.",
@@ -1135,15 +1135,15 @@ const ALL_FACTIONS = {
         { num: "플러그인\n1,000+", desc: "생태계 규모\n압도적 1위" },
       ],
       vs: [
-        { label: "Claude 진영과의 차이", you: "속도·범용", them: "깊이·맥락" },
-        { label: "Gemini 진영과의 차이", you: "범용 생태계", them: "구글 통합" },
-        { label: "Grok 진영과의 차이", you: "실용·안정", them: "도발·반항" },
+        { label: "Claude 하우스와의 차이", you: "속도·범용", them: "깊이·맥락" },
+        { label: "Gemini 하우스와의 차이", you: "범용 생태계", them: "구글 통합" },
+        { label: "Grok 하우스와의 차이", you: "실용·안정", them: "도발·반항" },
       ],
       ctaText: "ChatGPT 시작하기 →",
       ctaUrl: "https://chatgpt.com",
-      ctaSecondaryText: "GPT 진영 유저를 위한 AI 자동화 툴",
+      ctaSecondaryText: "GPT 하우스 유저를 위한 AI 자동화 툴",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🟢 GPT 진영 연합군 — 실행가의 도구들",
+      alliesTitle: "🟢 GPT 하우스 연합군 — 실행가의 도구들",
       allies: [
         { icon: "🎨", badge: "디자인 즉결부대", name: "Canva AI", desc: "디자인 몰라도 OK. 클릭 몇 번으로 SNS 카드·발표자료·로고 완성", url: "https://canva.com" },
         { icon: "📧", badge: "카피라이팅 돌격대", name: "Copy.ai", desc: "이메일·광고 문구·상품 설명을 1분 안에 완성. 영어·한국어 모두 가능", url: "https://copy.ai" },
@@ -1151,7 +1151,7 @@ const ALL_FACTIONS = {
       ],
     },
     gemini: {
-      name: "Gemini 진영",
+      name: "Gemini 하우스",
       emoji: "🔵",
       color: "#4285F4",
       tagline: "당신은 체계를 사랑합니다. 데이터를 정리하고\n전략을 세우는 조직화의 달인.",
@@ -1169,15 +1169,15 @@ const ALL_FACTIONS = {
         { num: "구글 통합", desc: "Gmail·Docs·Drive\n완벽 연동" },
       ],
       vs: [
-        { label: "Claude 진영과의 차이", you: "정보·검색", them: "창작·추론" },
-        { label: "GPT 진영과의 차이",   you: "구글 통합", them: "범용 생태계" },
-        { label: "Grok 진영과의 차이",  you: "체계·질서", them: "직설·혼돈" },
+        { label: "Claude 하우스와의 차이", you: "정보·검색", them: "창작·추론" },
+        { label: "GPT 하우스와의 차이",   you: "구글 통합", them: "범용 생태계" },
+        { label: "Grok 하우스와의 차이",  you: "체계·질서", them: "직설·혼돈" },
       ],
       ctaText: "Gemini 시작하기 →",
       ctaUrl: "https://gemini.google.com",
-      ctaSecondaryText: "Gemini 진영을 위한 AI 콘텐츠 툴",
+      ctaSecondaryText: "Gemini 하우스를 위한 AI 콘텐츠 툴",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🔵 Gemini 진영 연합군 — 전략가의 도구들",
+      alliesTitle: "🔵 Gemini 하우스 연합군 — 전략가의 도구들",
       allies: [
         { icon: "🔍", badge: "정보 수집 정찰대", name: "Perplexity", desc: "구글처럼 검색하면 AI가 답을 바로 정리해줌. 뉴스·논문·최신 정보에 강함", url: "https://perplexity.ai" },
         { icon: "📊", badge: "콘텐츠 전략부대", name: "Writesonic", desc: "블로그·뉴스레터·마케팅 글을 SEO에 맞게 자동 작성. 구글 상위노출 목표", url: "https://writesonic.com/?via=aifaction" },
@@ -1185,7 +1185,7 @@ const ALL_FACTIONS = {
       ],
     },
     grok: {
-      name: "Grok 진영",
+      name: "Grok 하우스",
       emoji: "🔴",
       color: "#E7425D",
       tagline: "당신은 통념에 도전합니다. 불편한 진실도 직시하는\n반골 기질의 혁신가.",
@@ -1203,15 +1203,15 @@ const ALL_FACTIONS = {
         { num: "가장 빠른\n성장", desc: "전체 AI 중\n성장 속도 1위" },
       ],
       vs: [
-        { label: "Claude 진영과의 차이", you: "직설·반골", them: "공감·섬세함" },
-        { label: "GPT 진영과의 차이",   you: "도발·반항", them: "실용·안정" },
-        { label: "Gemini 진영과의 차이", you: "직설·혼돈", them: "체계·질서" },
+        { label: "Claude 하우스와의 차이", you: "직설·반골", them: "공감·섬세함" },
+        { label: "GPT 하우스와의 차이",   you: "도발·반항", them: "실용·안정" },
+        { label: "Gemini 하우스와의 차이", you: "직설·혼돈", them: "체계·질서" },
       ],
       ctaText: "Grok 시작하기 (X Premium) →",
       ctaUrl: "https://x.com/i/grok",
-      ctaSecondaryText: "반골 진영의 AI 리서치 툴",
+      ctaSecondaryText: "반골 성향의 AI 리서치 툴",
       ctaSecondaryUrl: "https://perplexity.ai",
-      alliesTitle: "🔴 Grok 진영 연합군 — 혁신가의 도구들",
+      alliesTitle: "🔴 Grok 하우스 연합군 — 혁신가의 도구들",
       allies: [
         { icon: "🔍", badge: "실시간 정보 특공대", name: "Perplexity", desc: "지금 이 순간 일어나는 일을 바로 검색. 주류 미디어 대신 원본 소스 직접 확인", url: "https://perplexity.ai" },
         { icon: "🎨", badge: "이미지 창작 돌격대", name: "Midjourney", desc: "머릿속 이미지를 그대로 생성. 광고·썸네일·아이디어 시각화를 텍스트 한 줄로", url: "https://midjourney.com" },
@@ -1221,7 +1221,7 @@ const ALL_FACTIONS = {
   },
   en: {
     claude: {
-      name: "Claude Faction",
+      name: "Claude House",
       emoji: "🟣",
       color: "#C17CE4",
       tagline: "You think deeply and choose words carefully.\nYou'd rather be right than fast — a true creative thinker.",
@@ -1239,15 +1239,15 @@ const ALL_FACTIONS = {
         { num: "Fortune 100\n70%", desc: "Enterprise adoption\nLeads all AI tools" },
       ],
       vs: [
-        { label: "vs. GPT Faction",    you: "Depth & context",   them: "Speed & versatility" },
-        { label: "vs. Gemini Faction", you: "Creative reasoning", them: "Info & search" },
-        { label: "vs. Grok Faction",   you: "Empathy & nuance",  them: "Bluntness & edge" },
+        { label: "vs. GPT House",    you: "Depth & context",   them: "Speed & versatility" },
+        { label: "vs. Gemini House", you: "Creative reasoning", them: "Info & search" },
+        { label: "vs. Grok House",   you: "Empathy & nuance",  them: "Bluntness & edge" },
       ],
       ctaText: "Try Claude for Free →",
       ctaUrl: "https://claude.ai",
-      ctaSecondaryText: "Best AI writing tools for Claude faction members",
+      ctaSecondaryText: "Best AI writing tools for Claude House members",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🟣 Claude Faction's Allied Forces — Tools for Deep Thinkers",
+      alliesTitle: "🟣 Claude House Allied Forces — Tools for Deep Thinkers",
       allies: [
         { icon: "📝", badge: "Planning & Notes Division", name: "Notion AI", desc: "Turn thoughts into plans, plans into docs. AI auto-organizes your meetings, tasks, and ideas", url: "https://notion.so" },
         { icon: "🎙️", badge: "Transcription & Summary Corps", name: "Otter.ai", desc: "Auto-transcribes meetings, lectures, and interviews. Never listen back to a recording again", url: "https://otter.ai" },
@@ -1255,7 +1255,7 @@ const ALL_FACTIONS = {
       ],
     },
     gpt: {
-      name: "GPT Faction",
+      name: "GPT House",
       emoji: "🟢",
       color: "#10A37F",
       tagline: "You act first, reflect later.\nA versatile, unstoppable executor who gets things done.",
@@ -1273,15 +1273,15 @@ const ALL_FACTIONS = {
         { num: "1,000+\nPlugins", desc: "Ecosystem scale\nlarger than any rival" },
       ],
       vs: [
-        { label: "vs. Claude Faction",  you: "Speed & versatility",  them: "Depth & context" },
-        { label: "vs. Gemini Faction",  you: "Universal ecosystem",  them: "Google integration" },
-        { label: "vs. Grok Faction",    you: "Practical & stable",   them: "Provocative & raw" },
+        { label: "vs. Claude House",  you: "Speed & versatility",  them: "Depth & context" },
+        { label: "vs. Gemini House",  you: "Universal ecosystem",  them: "Google integration" },
+        { label: "vs. Grok House",    you: "Practical & stable",   them: "Provocative & raw" },
       ],
       ctaText: "Start with ChatGPT →",
       ctaUrl: "https://chatgpt.com",
-      ctaSecondaryText: "Top AI automation tools for GPT faction members",
+      ctaSecondaryText: "Top AI automation tools for GPT House members",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🟢 GPT Faction's Allied Forces — Tools for Action Takers",
+      alliesTitle: "🟢 GPT House Allied Forces — Tools for Action Takers",
       allies: [
         { icon: "🎨", badge: "Rapid Design Strike Team", name: "Canva AI", desc: "No design skills needed. Build social posts, decks, and logos in a few clicks", url: "https://canva.com" },
         { icon: "📧", badge: "Copywriting Assault Unit", name: "Copy.ai", desc: "Emails, ads, and product descriptions done in under a minute. Works in English and more", url: "https://copy.ai" },
@@ -1289,7 +1289,7 @@ const ALL_FACTIONS = {
       ],
     },
     gemini: {
-      name: "Gemini Faction",
+      name: "Gemini House",
       emoji: "🔵",
       color: "#4285F4",
       tagline: "You love structure. You collect data, build systems,\nand turn information into strategy.",
@@ -1307,15 +1307,15 @@ const ALL_FACTIONS = {
         { num: "Google\nIntegrated", desc: "Gmail, Docs & Drive\nfully connected" },
       ],
       vs: [
-        { label: "vs. Claude Faction", you: "Info & search",      them: "Creative reasoning" },
-        { label: "vs. GPT Faction",    you: "Google integration", them: "Universal ecosystem" },
-        { label: "vs. Grok Faction",   you: "Structure & order",  them: "Bluntness & chaos" },
+        { label: "vs. Claude House", you: "Info & search",      them: "Creative reasoning" },
+        { label: "vs. GPT House",    you: "Google integration", them: "Universal ecosystem" },
+        { label: "vs. Grok House",   you: "Structure & order",  them: "Bluntness & chaos" },
       ],
       ctaText: "Start with Gemini →",
       ctaUrl: "https://gemini.google.com",
-      ctaSecondaryText: "Best AI content tools for Gemini faction members",
+      ctaSecondaryText: "Best AI content tools for Gemini House members",
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-      alliesTitle: "🔵 Gemini Faction's Allied Forces — Tools for Methodical Strategists",
+      alliesTitle: "🔵 Gemini House Allied Forces — Tools for Methodical Strategists",
       allies: [
         { icon: "🔍", badge: "Intelligence Recon Unit", name: "Perplexity", desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data", url: "https://perplexity.ai" },
         { icon: "📊", badge: "Content Strategy Division", name: "Writesonic", desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings", url: "https://writesonic.com/?via=aifaction" },
@@ -1323,7 +1323,7 @@ const ALL_FACTIONS = {
       ],
     },
     grok: {
-      name: "Grok Faction",
+      name: "Grok House",
       emoji: "🔴",
       color: "#E7425D",
       tagline: "You challenge the consensus. You stare down\nuncomfortable truths and call them out anyway.",
@@ -1341,15 +1341,15 @@ const ALL_FACTIONS = {
         { num: "Fastest\nGrowing", desc: "Highest growth velocity\nof any AI tool" },
       ],
       vs: [
-        { label: "vs. Claude Faction", you: "Bluntness & edge",    them: "Empathy & nuance" },
-        { label: "vs. GPT Faction",    you: "Provocative & raw",   them: "Practical & stable" },
-        { label: "vs. Gemini Faction", you: "Bluntness & chaos",   them: "Structure & order" },
+        { label: "vs. Claude House", you: "Bluntness & edge",    them: "Empathy & nuance" },
+        { label: "vs. GPT House",    you: "Provocative & raw",   them: "Practical & stable" },
+        { label: "vs. Gemini House", you: "Bluntness & chaos",   them: "Structure & order" },
       ],
       ctaText: "Start Grok (X Premium) →",
       ctaUrl: "https://x.com/i/grok",
-      ctaSecondaryText: "AI research tools for the Grok faction",
+      ctaSecondaryText: "AI research tools for the Grok House",
       ctaSecondaryUrl: "https://perplexity.ai",
-      alliesTitle: "🔴 Grok Faction's Allied Forces — Tools for Contrarian Innovators",
+      alliesTitle: "🔴 Grok House Allied Forces — Tools for Contrarian Innovators",
       allies: [
         { icon: "🔍", badge: "Real-Time Intel Strike Force", name: "Perplexity", desc: "What's happening right now, from primary sources — not filtered through mainstream media", url: "https://perplexity.ai" },
         { icon: "🎨", badge: "Visual Concept Assault Unit", name: "Midjourney", desc: "Generate exactly what's in your head. One line of text becomes a finished visual", url: "https://midjourney.com" },
@@ -1700,10 +1700,10 @@ function showPreviewFull() {
 
 // ── SHARE HOOKS (KO only) ──
 const SHARE_HOOKS_KO = {
-  claude:  ["AI가 나를 Claude 진영으로 판정했다 🟣", "섬세한 사색가 타입이래... 근데 꽤 맞는 것 같음", "너는 어떤 진영 나와?"],
-  gpt:     ["AI가 나를 GPT 진영으로 분류함 🟢", "일단 실행하고 보는 타입이라는데 맞음ㅋㅋ", "너도 해봐 어디 나오는지"],
-  gemini:  ["AI가 나를 Gemini 진영으로 판정 🔵", "체계적 전략가 타입이래. 구글러 기질인가봄", "너는 어떻게 나올지 궁금하면 해봐"],
-  grok:    ["AI가 나를 Grok 진영으로 찍었다 🔴", "반골 기질 맞음 ㅋ 불편한 진실 말하는 타입", "너는 순응형이야 반골형이야?"],
+  claude:  ["AI 성향 테스트 결과 Claude 하우스 나왔다 🟣", "섬세한 사색가 타입이래... 근데 꽤 맞는 것 같음", "너는 어떤 AI 하우스 나와?"],
+  gpt:     ["AI 성향 테스트 결과 GPT 하우스 나옴 🟢", "일단 실행하고 보는 타입이라는데 맞음ㅋㅋ", "너도 해봐 어디 나오는지"],
+  gemini:  ["AI 성향 테스트 결과 Gemini 하우스 나왔다 🔵", "체계적 전략가 타입이래. 구글러 기질인가봄", "너는 어떻게 나올지 궁금하면 해봐"],
+  grok:    ["AI 성향 테스트 결과 Grok 하우스 찍혔다 🔴", "반골 기질 맞음 ㅋ 불편한 진실 말하는 타입", "너는 순응형이야 반골형이야?"],
 };
 
 function getShareText() {
@@ -1712,7 +1712,7 @@ function getShareText() {
     return `${h[0]}\n${h[1]}\n\n${h[2]} 👇`;
   } else {
     const faction = FACTIONS[resultFaction];
-    return `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI faction are you? 👇`;
+    return `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI House are you? 👇`;
   }
 }
 
@@ -1721,10 +1721,10 @@ function shareTwitter() {
   let text;
   if (LANG === 'ko') {
     const h = SHARE_HOOKS_KO[resultFaction];
-    text = `${h[0]}\n${h[1]}\n\n${h[2]} 👇\n${shareUrl}\n\n#AI진영테스트 #Claude #ChatGPT #Gemini #Grok`;
+    text = `${h[0]}\n${h[1]}\n\n${h[2]} 👇\n${shareUrl}\n\n#AI성향테스트 #Claude #ChatGPT #Gemini #Grok`;
   } else {
     const faction = FACTIONS[resultFaction];
-    text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI faction are you? 👇\n${shareUrl}\n\n#AIFactionQuiz #Claude #ChatGPT #Gemini #Grok`;
+    text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI House are you? 👇\n${shareUrl}\n\n#WhichAIHouse #Claude #ChatGPT #Gemini #Grok`;
   }
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
@@ -1794,14 +1794,14 @@ function shareInsta() {
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.font = '500 22px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('AI FACTION QUIZ', W/2, 97);
+  ctx.fillText('WHICH AI HOUSE?', W/2, 97);
 
-  // "YOUR FACTION IS" label
+  // "YOUR HOUSE IS" label
   ctx.fillStyle = 'rgba(255,255,255,0.35)';
   ctx.font = '700 28px Arial';
   ctx.letterSpacing = '4px';
   ctx.textAlign = 'center';
-  ctx.fillText('YOUR FACTION IS', W/2, 210);
+  ctx.fillText('YOUR HOUSE IS', W/2, 210);
 
   // Big faction circle
   ctx.fillStyle = col + '22';
@@ -1843,7 +1843,7 @@ function shareInsta() {
 
   ctx.fillStyle = 'rgba(255,255,255,0.3)';
   ctx.font = '24px Arial';
-  ctx.fillText(LANG === 'ko' ? '나는 어떤 AI 진영일까? 👆' : 'Which AI faction are you? 👆', W/2, 990);
+  ctx.fillText(LANG === 'ko' ? '나는 어떤 AI 하우스일까? 👆' : 'Which AI House are you? 👆', W/2, 990);
 
   // Download
   const a = document.createElement('a');
