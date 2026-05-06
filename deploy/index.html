@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="google-adsense-account" content="ca-pub-3036702261797984">
 <title>당신의 AI 하우스는? — AI 성향 테스트</title>
 <meta name="description" content="사용하는 AI가 당신의 성격을 드러냅니다. 8문항으로 Claude·ChatGPT·Gemini·Grok 중 내 AI 하우스를 찾아보세요.">
 <meta property="og:type" content="website">
@@ -33,7 +34,9 @@
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<!-- profitablecpmratenetwork — restored with UX guards: delayed inject, popunder block, CSS overrides, dismiss button -->
+<!-- DISABLED 2026-05-06: AdSense 심사 통과 위해 popunder 광고망 일시 비활성화.
+     승인 완료 후 정책 검토 거쳐 재활성화 여부 결정. 코드 보존용. -->
+<!--
 <script>
 (function () {
   var AD_SRC = "https://pl29346307.profitablecpmratenetwork.com/2d/e3/c6/2de3c6d4d86edf3bc9f0b02537b4ec1a.js";
@@ -44,7 +47,6 @@
     document.addEventListener(ev, function () { lastUserAction = Date.now(); }, true);
   });
 
-  /* (b) CSS overrides — force popunder/floating into a dismissible 60px bottom strip */
   var style = document.createElement('style');
   style.id = 'ad-ux-guards';
   style.textContent =
@@ -57,7 +59,6 @@
     '}';
   document.head.appendChild(style);
 
-  /* (c) Block non-user-initiated popunders + page-exit hijacks */
   var realOpen = window.open;
   window.open = function (url) {
     if (Date.now() - lastUserAction < 1500) return realOpen.apply(window, arguments);
@@ -73,7 +74,6 @@
     return realAdd.apply(this, arguments);
   };
 
-  /* (d) Attach a dismiss button to any ad container that appears */
   function ensureDismiss() {
     var sel = 'iframe[src*="profitable"],iframe[src*="popunder"],div[id*="popunder" i],div[class*="popunder" i],div[id^="ad-overlay" i],div[class^="ad-overlay" i]';
     try {
@@ -91,7 +91,6 @@
   }
   setInterval(ensureDismiss, 1500);
 
-  /* (a) Delayed injection — quiz_complete OR 30s timeout, whichever fires first */
   function injectAd() {
     if (loaded) return;
     loaded = true;
@@ -104,6 +103,7 @@
   setTimeout(injectAd, 30000);
 })();
 </script>
+-->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036702261797984"
      crossorigin="anonymous"></script>
 <!-- Google tag (gtag.js) -->
