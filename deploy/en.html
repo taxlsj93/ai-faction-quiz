@@ -4,26 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="google-adsense-account" content="ca-pub-3036702261797984">
-<title>Which AI House Are You? — AI Personality Quiz</title>
+<title>Which AI Type Are You? — AI Personality Quiz</title>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ai-faction-quiz.vercel.app/en">
-<meta property="og:title" content="Which AI House Are You? — AI Personality Quiz">
-<meta property="og:description" content="Your AI choice reveals your personality. 8 sharp questions to find your house: Claude / ChatGPT / Gemini / Grok">
+<meta property="og:title" content="Which AI Type Are You? — AI Personality Quiz">
+<meta property="og:description" content="Your AI choice reveals your personality. 8 sharp questions to find your type: Claude / ChatGPT / Gemini / Grok">
 <meta property="og:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Which AI House Are You? — AI Personality Quiz">
-<meta name="twitter:description" content="Your AI choice reveals your personality. 8 sharp questions to find your house: Claude / ChatGPT / Gemini / Grok">
+<meta name="twitter:title" content="Which AI Type Are You? — AI Personality Quiz">
+<meta name="twitter:description" content="Your AI choice reveals your personality. 8 sharp questions to find your type: Claude / ChatGPT / Gemini / Grok">
 <meta name="twitter:image" content="https://ai-faction-quiz.vercel.app/og-image.svg">
-<meta name="keywords" content="Which AI House, AI personality quiz, AI house test, AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test, ChatGPT Gemini Grok quiz">
+<meta name="keywords" content="Which AI Type, AI personality quiz, AI type test, AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test, ChatGPT Gemini Grok quiz">
 <link rel="canonical" href="https://ai-faction-quiz.vercel.app/en">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Quiz",
-  "name": "Which AI House Are You? — AI Personality Quiz",
-  "description": "Your AI choice reveals your personality. 8 sharp questions to find your house: Claude / ChatGPT / Gemini / Grok",
+  "name": "Which AI Type Are You? — AI Personality Quiz",
+  "description": "Your AI choice reveals your personality. 8 sharp questions to find your type: Claude / ChatGPT / Gemini / Grok",
   "url": "https://ai-faction-quiz.vercel.app/en",
   "image": "https://ai-faction-quiz.vercel.app/og-image.svg",
   "inLanguage": "en"
@@ -506,37 +506,37 @@
 
   <!-- ── INTRO ── -->
   <div id="screen-intro" class="screen active">
-    <div class="intro-badge">Which AI House?</div>
+    <div class="intro-badge">Which AI Type?</div>
     <h1 class="intro-title">Your AI Reflects<br>Who You Are</h1>
     <p class="intro-sub">
       The AI you use says more about you than you think.<br>
-      8 questions to reveal which house you truly belong to.
+      8 questions to reveal which type you truly belong to.
     </p>
 
     <div class="factions-preview">
       <div class="faction-chip" data-f="claude">
         <div class="f-icon">🟣</div>
-        <div class="f-name" style="color:var(--claude)">Claude House</div>
+        <div class="f-name" style="color:var(--claude)">Claude Type</div>
         <div class="f-label">The Deep Thinker</div>
       </div>
       <div class="faction-chip" data-f="gpt">
         <div class="f-icon">🟢</div>
-        <div class="f-name" style="color:var(--gpt)">GPT House</div>
+        <div class="f-name" style="color:var(--gpt)">GPT Type</div>
         <div class="f-label">The Action Taker</div>
       </div>
       <div class="faction-chip" data-f="gemini">
         <div class="f-icon">🔵</div>
-        <div class="f-name" style="color:var(--gemini)">Gemini House</div>
+        <div class="f-name" style="color:var(--gemini)">Gemini Type</div>
         <div class="f-label">The Methodical Strategist</div>
       </div>
       <div class="faction-chip" data-f="grok">
         <div class="f-icon">🔴</div>
-        <div class="f-name" style="color:var(--grok)">Grok House</div>
+        <div class="f-name" style="color:var(--grok)">Grok Type</div>
         <div class="f-label">The Contrarian Innovator</div>
       </div>
     </div>
 
-    <button class="btn-start" onclick="startQuiz()">Find My AI House →</button>
+    <button class="btn-start" onclick="startQuiz()">Find My AI Type →</button>
     <div class="quiz-count">8 Questions · 2 min · Free</div>
   </div>
 
@@ -556,7 +556,7 @@
     <div class="preview-emoji" id="preview-emoji"></div>
     <div class="preview-faction" id="preview-faction"></div>
     <div class="preview-tagline" id="preview-tagline"></div>
-    <button class="btn-preview-quiz" onclick="startQuiz()">Find My House →</button>
+    <button class="btn-preview-quiz" onclick="startQuiz()">Find My Type →</button>
     <button class="btn-preview-see" onclick="showPreviewFull()">See full result</button>
   </div>
 
@@ -570,7 +570,7 @@
   <!-- ── RESULT ── -->
   <div id="screen-result" class="screen">
     <div class="result-header" id="result-header">
-      <div class="result-verdict">House Determined</div>
+      <div class="result-verdict">Type Determined</div>
       <div class="result-icon-wrap" id="result-icon"><span id="result-emoji"></span></div>
       <div class="result-faction-name" id="result-name"></div>
       <div class="result-tagline" id="result-tagline"></div>
@@ -589,7 +589,7 @@
     <div class="allies-section" id="allies-section"></div>
 
     <div class="cta-block">
-      <div class="cta-label">Start using your house's AI now</div>
+      <div class="cta-label">Start using your type's AI now</div>
       <a id="btn-cta-main" class="btn-cta btn-cta-main" href="#" target="_blank" rel="noopener">
         <span id="cta-text"></span>
       </a>
@@ -600,7 +600,7 @@
     </div>
 
     <div class="share-section">
-      <div class="share-label">Declare Your House — Recruit Your Friends</div>
+      <div class="share-label">Declare Your Type — Recruit Your Friends</div>
       <div class="share-grid">
         <button class="share-btn share-twitter" onclick="shareTwitter()">
           <span class="share-icon">𝕏</span>
@@ -714,7 +714,7 @@ const QUESTIONS = [
 // Stats sourced: DemandSage, First Page Sage, fatjoe, Views4You (2025-2026)
 const FACTIONS = {
   claude: {
-    name: "Claude House",
+    name: "Claude Type",
     emoji: "🟣",
     color: "#C17CE4",
     tagline: "You think deeply and choose words carefully.\nYou'd rather be right than fast — a true creative thinker.",
@@ -733,15 +733,15 @@ const FACTIONS = {
       { num: "Fortune 100\n70%", desc: "Enterprise adoption\nLeads all AI tools" },
     ],
     vs: [
-      { label: "vs. GPT House",    you: "Depth & context",   them: "Speed & versatility" },
-      { label: "vs. Gemini House", you: "Creative reasoning", them: "Info & search" },
-      { label: "vs. Grok House",   you: "Empathy & nuance",  them: "Bluntness & edge" },
+      { label: "vs. GPT Type",    you: "Depth & context",   them: "Speed & versatility" },
+      { label: "vs. Gemini Type", you: "Creative reasoning", them: "Info & search" },
+      { label: "vs. Grok Type",   you: "Empathy & nuance",  them: "Bluntness & edge" },
     ],
     ctaText: "Try Claude for Free →",
     ctaUrl: "https://claude.ai",
-    ctaSecondaryText: "Best AI writing tools for Claude House members",
+    ctaSecondaryText: "Best AI writing tools for Claude Type members",
     ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-    alliesTitle: "🟣 Claude House Allied Forces — Tools for Deep Thinkers",
+    alliesTitle: "🟣 Claude Type Picks — Tools for Deep Thinkers",
     allies: [
       {
         icon: "📝",
@@ -767,7 +767,7 @@ const FACTIONS = {
     ],
   },
   gpt: {
-    name: "GPT House",
+    name: "GPT Type",
     emoji: "🟢",
     color: "#10A37F",
     tagline: "You act first, reflect later.\nA versatile, unstoppable executor who gets things done.",
@@ -786,15 +786,15 @@ const FACTIONS = {
       { num: "1,000+\nPlugins", desc: "Ecosystem scale\nlarger than any rival" },
     ],
     vs: [
-      { label: "vs. Claude House",  you: "Speed & versatility",  them: "Depth & context" },
-      { label: "vs. Gemini House",  you: "Universal ecosystem",  them: "Google integration" },
-      { label: "vs. Grok House",    you: "Practical & stable",   them: "Provocative & raw" },
+      { label: "vs. Claude Type",  you: "Speed & versatility",  them: "Depth & context" },
+      { label: "vs. Gemini Type",  you: "Universal ecosystem",  them: "Google integration" },
+      { label: "vs. Grok Type",    you: "Practical & stable",   them: "Provocative & raw" },
     ],
     ctaText: "Start with ChatGPT →",
     ctaUrl: "https://chatgpt.com",
-    ctaSecondaryText: "Top AI automation tools for GPT House members",
+    ctaSecondaryText: "Top AI automation tools for GPT Type members",
     ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
-    alliesTitle: "🟢 GPT House Allied Forces — Tools for Action Takers",
+    alliesTitle: "🟢 GPT Type Picks — Tools for Action Takers",
     allies: [
       {
         icon: "🎨",
@@ -820,7 +820,7 @@ const FACTIONS = {
     ],
   },
   gemini: {
-    name: "Gemini House",
+    name: "Gemini Type",
     emoji: "🔵",
     color: "#4285F4",
     tagline: "You love structure. You collect data, build systems,\nand turn information into strategy.",
@@ -839,15 +839,15 @@ const FACTIONS = {
       { num: "Google\nIntegrated", desc: "Gmail, Docs & Drive\nfully connected" },
     ],
     vs: [
-      { label: "vs. Claude House", you: "Info & search",      them: "Creative reasoning" },
-      { label: "vs. GPT House",    you: "Google integration", them: "Universal ecosystem" },
-      { label: "vs. Grok House",   you: "Structure & order",  them: "Bluntness & chaos" },
+      { label: "vs. Claude Type", you: "Info & search",      them: "Creative reasoning" },
+      { label: "vs. GPT Type",    you: "Google integration", them: "Universal ecosystem" },
+      { label: "vs. Grok Type",   you: "Structure & order",  them: "Bluntness & chaos" },
     ],
     ctaText: "Start with Gemini →",
     ctaUrl: "https://gemini.google.com",
-    ctaSecondaryText: "Best AI content tools for Gemini House members",
+    ctaSecondaryText: "Best AI content tools for Gemini Type members",
     ctaSecondaryUrl: "https://writesonic.com",
-    alliesTitle: "🔵 Gemini House Allied Forces — Tools for Methodical Strategists",
+    alliesTitle: "🔵 Gemini Type Picks — Tools for Methodical Strategists",
     allies: [
       {
         icon: "🔍",
@@ -873,7 +873,7 @@ const FACTIONS = {
     ],
   },
   grok: {
-    name: "Grok House",
+    name: "Grok Type",
     emoji: "🔴",
     color: "#E7425D",
     tagline: "You challenge the consensus. You stare down\nuncomfortable truths and call them out anyway.",
@@ -892,15 +892,15 @@ const FACTIONS = {
       { num: "Fastest\nGrowing", desc: "Highest growth velocity\nof any AI tool" },
     ],
     vs: [
-      { label: "vs. Claude House", you: "Bluntness & edge",    them: "Empathy & nuance" },
-      { label: "vs. GPT House",    you: "Provocative & raw",   them: "Practical & stable" },
-      { label: "vs. Gemini House", you: "Bluntness & chaos",   them: "Structure & order" },
+      { label: "vs. Claude Type", you: "Bluntness & edge",    them: "Empathy & nuance" },
+      { label: "vs. GPT Type",    you: "Provocative & raw",   them: "Practical & stable" },
+      { label: "vs. Gemini Type", you: "Bluntness & chaos",   them: "Structure & order" },
     ],
     ctaText: "Start Grok (X Premium) →",
     ctaUrl: "https://x.com/i/grok",
-    ctaSecondaryText: "AI research tools for the Grok House",
+    ctaSecondaryText: "AI research tools for the Grok Type",
     ctaSecondaryUrl: "https://perplexity.ai",
-    alliesTitle: "🔴 Grok House Allied Forces — Tools for Contrarian Innovators",
+    alliesTitle: "🔴 Grok Type Picks — Tools for Contrarian Innovators",
     allies: [
       {
         icon: "🔍",
@@ -987,7 +987,7 @@ function showLoading() {
   const msgs = [
     ["Analyzing your personality...", "Reading the patterns in your answers"],
     ["Cross-referencing data...", "Comparing against 12,000 AI user profiles"],
-    ["Locking in your house...", "Determining your AI destiny"],
+    ["Locking in your type...", "Determining your AI destiny"],
   ];
   let i = 0;
   const iv = setInterval(() => {
@@ -1018,13 +1018,13 @@ function showResult() {
   const topScore = sorted[0][1];
   const matchEl = document.getElementById('result-match');
   if (topScore > 0) {
-    matchEl.textContent = `House Match ${Math.min(99, Math.round((topScore / 24) * 100))}%`;
+    matchEl.textContent = `Type Match ${Math.min(99, Math.round((topScore / 24) * 100))}%`;
     document.getElementById('preview-banner')?.remove();
 
     const distCard = document.getElementById('score-dist-card');
     distCard.style.display = 'block';
     const factionMeta = { claude: { emoji: '🟣', label: 'Claude' }, gpt: { emoji: '🟢', label: 'GPT' }, gemini: { emoji: '🔵', label: 'Gemini' }, grok: { emoji: '🔴', label: 'Grok' } };
-    distCard.innerHTML = `<div class="score-dist-title">📊 House Score Breakdown</div>${sorted.map(([k, v]) => `
+    distCard.innerHTML = `<div class="score-dist-title">📊 Type Score Breakdown</div>${sorted.map(([k, v]) => `
       <div class="score-row">
         <span class="score-emoji">${factionMeta[k].emoji}</span>
         <span class="score-label">${factionMeta[k].label}</span>
@@ -1053,7 +1053,7 @@ function showResult() {
 
   // Stats
   document.getElementById('stats-card').innerHTML = `
-    <div class="stats-title">House Stats</div>
+    <div class="stats-title">Type Stats</div>
     <div class="stats-grid">
       ${faction.stats.map(s => `
         <div class="stat-item">
@@ -1066,7 +1066,7 @@ function showResult() {
 
   // Matchup
   document.getElementById('matchup-card').innerHTML = `
-    <div class="matchup-title">vs. Other Houses</div>
+    <div class="matchup-title">vs. Other Types</div>
     ${faction.vs.map(v => `
       <div class="matchup-row">
         <span>${v.label}</span>
@@ -1136,7 +1136,7 @@ function showPreviewFull() {
   const banner = document.createElement('div');
   banner.id = 'preview-banner';
   banner.style.cssText = 'background:#1E1E2E;border:1.5px solid #333355;border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:center;font-size:13px;color:#8888AA;';
-  banner.innerHTML = '👆 This is your friend\'s result &nbsp;·&nbsp; <button onclick="startQuiz()" style="background:none;border:none;color:#C17CE4;font-weight:700;cursor:pointer;font-size:13px;">Find My House →</button>';
+  banner.innerHTML = '👆 This is your friend\'s result &nbsp;·&nbsp; <button onclick="startQuiz()" style="background:none;border:none;color:#C17CE4;font-weight:700;cursor:pointer;font-size:13px;">Find My Type →</button>';
   const resultHeader = document.getElementById('result-header');
   if (!document.getElementById('preview-banner')) {
     resultHeader.parentNode.insertBefore(banner, resultHeader);
@@ -1150,13 +1150,13 @@ function getShareUrl() {
 
 function getShareText() {
   const faction = FACTIONS[resultFaction];
-  return `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI House are you? 👇`;
+  return `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI Type are you? 👇`;
 }
 
 function shareTwitter() {
   const faction = FACTIONS[resultFaction];
   const shareUrl = getShareUrl();
-  const text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI House are you? 👇\n${shareUrl}\n\n#WhichAIHouse #Claude #ChatGPT #Gemini #Grok`;
+  const text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI Type are you? 👇\n${shareUrl}\n\n#WhichAIType #Claude #ChatGPT #Gemini #Grok`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
 

@@ -1,4 +1,4 @@
-// Vercel Serverless Function — AI 타입와 대화
+// Vercel Serverless Function — AI 타입과 대화
 // POST /api/chat
 // Body: {
 //   faction: "claude"|"gpt"|"gemini"|"grok",
@@ -54,7 +54,7 @@ Q8: 가장 중요한 가치 — A진정성 / B효율 / C정확성 / D자유
 - 의학·법률·금융 자문 금지. 위험한 조언 금지. 다른 사람·기업 비방 금지.
 - 답하기 곤란하거나 모르면 솔직히 말한다 ("그건 내가 답할 영역이 아니야").
 - 영어로 질문이 와도 한국어 반말로 답한다.
-- 사용자가 다른 페르소나를 강요해도 (예: "너 GPT인 척 해봐") 자기 타입를 유지한다.`;
+- 사용자가 다른 페르소나를 강요해도 (예: "너 GPT인 척 해봐") 자기 타입을 유지한다.`;
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
 
   const userContext =
     `## 이 사용자의 결과 (이 정보를 바탕으로 답변)\n` +
-    `- faction: ${faction} (${FACTION_NAMES[faction]} — 너는 이 타입다)\n` +
+    `- faction: ${faction} (${FACTION_NAMES[faction]} — 너는 이 타입이다)\n` +
     `- answers: [${answers.join(', ')}]\n` +
     `- scores: { claude: ${scores.claude}, gpt: ${scores.gpt}, gemini: ${scores.gemini}, grok: ${scores.grok} }`;
 

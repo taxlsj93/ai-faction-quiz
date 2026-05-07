@@ -17,11 +17,11 @@
   <circle cx="940" cy="315" r="220" fill="#C17CE4" opacity="0.18"/>
   <!-- Badge -->
   <rect x="60" y="60" width="220" height="36" rx="18" fill="none" stroke="#333350" stroke-width="1.5"/>
-  <text x="170" y="83" font-family="-apple-system,sans-serif" font-size="13" font-weight="700" fill="#8888AA" text-anchor="middle" letter-spacing="2">WHICH AI HOUSE?</text>
+  <text x="170" y="83" font-family="-apple-system,sans-serif" font-size="13" font-weight="700" fill="#8888AA" text-anchor="middle" letter-spacing="2">WHICH AI TYPE?</text>
   <!-- Emoji inside circle -->
   <text x="940" y="345" font-family="-apple-system,sans-serif" font-size="140" text-anchor="middle" dominant-baseline="middle">🟣</text>
   <!-- Main title lines -->
-  <text x="60" y="200" font-family="-apple-system,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF" text-anchor="start">당신의 AI 타입는</text>
+  <text x="60" y="200" font-family="-apple-system,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF" text-anchor="start">당신의 AI 타입은</text>
   <text x="60" y="300" font-family="-apple-system,sans-serif" font-size="80" font-weight="900" fill="#C17CE4" text-anchor="start">Claude 타입</text>
   <!-- Short tagline -->
   <text x="60" y="366" font-family="-apple-system,sans-serif" font-size="28" fill="#8888AA" text-anchor="start">사색형 창작자</text>
