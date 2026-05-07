@@ -467,6 +467,56 @@
     border-top: 1px solid var(--border);
   }
 
+  /* AI Analysis (LLM-generated personalized) */
+  .ai-analysis-section {
+    background: linear-gradient(135deg, rgba(108,63,168,0.10), rgba(59,95,212,0.10));
+    border: 1px solid #2A2A40;
+    border-radius: 16px;
+    padding: 20px 18px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-analysis-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(193,124,228,0.05) 50%, transparent 100%);
+    pointer-events: none;
+  }
+  .ai-analysis-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+    font-size: 12px; font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .ai-analysis-spark { font-size: 14px; }
+  .ai-analysis-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    position: relative;
+  }
+  .ai-analysis-body p { margin-bottom: 10px; }
+  .ai-analysis-body strong { color: #F4F4F8; font-weight: 700; }
+  .ai-analysis-body ul { padding-left: 18px; margin: 6px 0 12px; }
+  .ai-analysis-body li { margin-bottom: 4px; }
+  .ai-skeleton {
+    height: 11px;
+    background: linear-gradient(90deg, #1E1E2E, #2A2A40, #1E1E2E);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    margin-bottom: 9px;
+    animation: shimmer 1.6s infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
   /* Allies */
   .allies-section { margin-bottom: 20px; }
   .allies-title {
@@ -780,6 +830,20 @@
       <div class="result-tagline" id="result-tagline"></div>
       <div id="result-match" style="font-size:13px;font-weight:700;margin-top:10px;opacity:0.8;letter-spacing:0.5px;"></div>
       <div id="result-mbti" style="font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.3px;"></div>
+    </div>
+
+    <div class="ai-analysis-section" id="ai-analysis-section" style="display:none">
+      <div class="ai-analysis-header">
+        <span class="ai-analysis-spark">✨</span>
+        <span id="ai-analysis-title">AI가 당신만의 분석을 작성 중...</span>
+      </div>
+      <div class="ai-analysis-body" id="ai-analysis-body">
+        <div class="ai-skeleton"></div>
+        <div class="ai-skeleton" style="width:88%"></div>
+        <div class="ai-skeleton" style="width:92%"></div>
+        <div class="ai-skeleton" style="width:74%;margin-top:14px"></div>
+        <div class="ai-skeleton" style="width:84%"></div>
+      </div>
     </div>
 
     <div class="traits" id="traits-section"></div>
@@ -1366,6 +1430,7 @@ const FACTIONS  = ALL_FACTIONS[LANG];
 // ── STATE ──
 let scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
 let currentQ = 0;
+let answerHistory = [];
 let resultFaction = null;
 let currentAI = null;
 
@@ -1466,6 +1531,7 @@ function show(id) {
 function startQuiz() {
   scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
   currentQ = 0;
+  answerHistory = [];
   if (window.trackEvent) trackEvent('quiz_start', { lang: document.documentElement.lang || 'ko' });
   show('screen-quiz');
   renderQuestion();
@@ -1484,12 +1550,12 @@ function renderQuestion() {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + i)}</div>${opt.text}`;
-    btn.onclick = () => selectOption(opt.scores, btn);
+    btn.onclick = () => selectOption(opt.scores, btn, i);
     opts.appendChild(btn);
   });
 }
 
-function selectOption(optScores, btn) {
+function selectOption(optScores, btn, optIndex) {
   document.querySelectorAll('.option-btn').forEach(b => {
     b.classList.remove('selected');
     b.style.pointerEvents = 'none';
@@ -1497,6 +1563,7 @@ function selectOption(optScores, btn) {
   btn.classList.add('selected');
 
   for (const k in optScores) scores[k] += optScores[k];
+  answerHistory.push(optIndex);
 
   setTimeout(() => {
     currentQ++;
@@ -1665,6 +1732,70 @@ function showResult() {
   if (window.trackEvent) trackEvent('quiz_complete', { faction: resultFaction, lang: document.documentElement.lang || 'ko' });
   window.dispatchEvent(new Event('quiz_complete_signal'));
   show('screen-result');
+
+  if (LANG === 'ko' && answerHistory.length === 8) {
+    fetchAnalysis();
+  }
+}
+
+async function fetchAnalysis() {
+  const section = document.getElementById('ai-analysis-section');
+  const titleEl = document.getElementById('ai-analysis-title');
+  const bodyEl = document.getElementById('ai-analysis-body');
+  if (!section || !titleEl || !bodyEl) return;
+
+  section.style.display = 'block';
+
+  try {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 30000);
+
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        answers: answerHistory,
+        faction: resultFaction,
+        scores: scores,
+      }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) throw new Error('api_' + response.status);
+
+    const data = await response.json();
+    if (!data || typeof data.analysis !== 'string' || !data.analysis.trim()) {
+      throw new Error('empty');
+    }
+
+    titleEl.textContent = '✨ 당신만을 위한 AI 분석';
+    bodyEl.innerHTML = renderAnalysisMarkdown(data.analysis);
+
+    if (window.trackEvent) trackEvent('ai_analysis_shown', { faction: resultFaction });
+  } catch (e) {
+    section.style.display = 'none';
+    if (window.trackEvent) trackEvent('ai_analysis_failed', { faction: resultFaction, reason: (e && e.message) || 'unknown' });
+  }
+}
+
+function renderAnalysisMarkdown(text) {
+  const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let s = escape(text).trim();
+  s = s.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+
+  const blocks = s.split(/\n\s*\n/);
+  const html = blocks.map((block) => {
+    const lines = block.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (lines.length === 0) return '';
+    const isList = lines.every((l) => l.startsWith('- '));
+    if (isList) {
+      return '<ul>' + lines.map((l) => '<li>' + l.replace(/^- /, '') + '</li>').join('') + '</ul>';
+    }
+    return '<p>' + lines.join('<br>') + '</p>';
+  }).join('');
+
+  return html;
 }
 
 // ── DEEP LINK ──

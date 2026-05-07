@@ -1,0 +1,9 @@
+{
+  "name": "ai-faction-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI 성향 테스트 / Which AI House — Hogwarts-style personality quiz",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.88.0"
+  }
+}
