@@ -21,8 +21,8 @@
   <!-- Emoji inside circle -->
   <text x="940" y="345" font-family="-apple-system,sans-serif" font-size="140" text-anchor="middle" dominant-baseline="middle">🔵</text>
   <!-- Main title lines -->
-  <text x="60" y="200" font-family="-apple-system,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF" text-anchor="start">당신의 AI 하우스는</text>
-  <text x="60" y="300" font-family="-apple-system,sans-serif" font-size="80" font-weight="900" fill="#4285F4" text-anchor="start">Gemini 하우스</text>
+  <text x="60" y="200" font-family="-apple-system,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF" text-anchor="start">당신의 AI 타입는</text>
+  <text x="60" y="300" font-family="-apple-system,sans-serif" font-size="80" font-weight="900" fill="#4285F4" text-anchor="start">Gemini 타입</text>
   <!-- Short tagline -->
   <text x="60" y="366" font-family="-apple-system,sans-serif" font-size="28" fill="#8888AA" text-anchor="start">체계형 전략가</text>
   <!-- Long tagline first line -->
