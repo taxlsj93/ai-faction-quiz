@@ -504,6 +504,45 @@
   .ai-analysis-body strong { color: #F4F4F8; font-weight: 700; }
   .ai-analysis-body ul { padding-left: 18px; margin: 6px 0 12px; }
   .ai-analysis-body li { margin-bottom: 4px; }
+  .ai-analysis-cta {
+    display: block; width: 100%;
+    margin-top: 16px;
+    padding: 13px 16px;
+    background: linear-gradient(135deg, rgba(193,124,228,0.15), rgba(108,63,168,0.15));
+    border: 1px solid rgba(193,124,228,0.4);
+    border-radius: 12px;
+    color: #F4F4F8;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.05s;
+    position: relative;
+  }
+  .ai-analysis-cta:hover { background: linear-gradient(135deg, rgba(193,124,228,0.25), rgba(108,63,168,0.25)); border-color: rgba(193,124,228,0.7); }
+  .ai-analysis-cta:active { transform: scale(0.99); }
+  .ai-analysis-cta:disabled { opacity: 0.6; cursor: wait; }
+  .ai-analysis-cta-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  .ai-analysis-divider {
+    height: 1px;
+    background: rgba(193,124,228,0.25);
+    margin: 18px 0 14px;
+  }
+  .ai-analysis-error {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(231,66,93,0.08);
+    border: 1px solid rgba(231,66,93,0.3);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
   .ai-skeleton {
     height: 11px;
     background: linear-gradient(90deg, #1E1E2E, #2A2A40, #1E1E2E);
@@ -835,14 +874,26 @@
     <div class="ai-analysis-section" id="ai-analysis-section" style="display:none">
       <div class="ai-analysis-header">
         <span class="ai-analysis-spark">✨</span>
-        <span id="ai-analysis-title">AI가 당신만의 분석을 작성 중...</span>
+        <span id="ai-analysis-title">당신의 분석</span>
       </div>
-      <div class="ai-analysis-body" id="ai-analysis-body">
-        <div class="ai-skeleton"></div>
-        <div class="ai-skeleton" style="width:88%"></div>
-        <div class="ai-skeleton" style="width:92%"></div>
-        <div class="ai-skeleton" style="width:74%;margin-top:14px"></div>
-        <div class="ai-skeleton" style="width:84%"></div>
+      <div class="ai-analysis-body" id="ai-analysis-body"></div>
+      <button type="button" class="ai-analysis-cta" id="btn-ai-deeper" style="display:none">
+        🤖 AI에게 더 자세한 개인 분석 받기
+        <span class="ai-analysis-cta-hint">당신의 답변 패턴을 분석해 더 구체적인 코멘트를 작성합니다 (약 3초)</span>
+      </button>
+      <div id="ai-deeper-zone" style="display:none">
+        <div class="ai-analysis-divider"></div>
+        <div class="ai-analysis-header">
+          <span class="ai-analysis-spark">🤖</span>
+          <span id="ai-deeper-title">AI가 당신만의 분석을 작성 중...</span>
+        </div>
+        <div class="ai-analysis-body" id="ai-deeper-body">
+          <div class="ai-skeleton"></div>
+          <div class="ai-skeleton" style="width:88%"></div>
+          <div class="ai-skeleton" style="width:92%"></div>
+          <div class="ai-skeleton" style="width:74%;margin-top:14px"></div>
+          <div class="ai-skeleton" style="width:84%"></div>
+        </div>
       </div>
     </div>
 
@@ -1151,6 +1202,7 @@ const ALL_FACTIONS = {
       emoji: "🟣",
       color: "#C17CE4",
       tagline: "당신은 깊이 생각하고 신중하게 말합니다.\n빠른 답보다 옳은 답을 추구하는 사색형 창작자.",
+      staticAnalysis: "**왜 당신이 Claude 하우스인가**\n답을 빨리 내는 것보다 옳은 답을 내는 데 더 시간을 쓴다. 누군가 무심코 던진 말을 며칠 뒤에 곱씹는 타입. 빠른 결정보다 신중한 응답을 본능적으로 신뢰하고, 글이든 대화든 '정확한 단어 한 개'를 찾는 데 집착한다.\n\n**당신의 일상 시그널**\n- 메신저 답장 보내기 전에 한 번 더 읽어본다 (가끔 두 번)\n- 누가 위로해달라고 하면 해결책 대신 일단 들어준다\n- '왜?'라는 질문이 답변보다 먼저 머리에 떠오른다",
       mbti: ["INFJ", "INFP", "INTJ"],
       traits: [
         { label: "창의적 사고력", value: 92 },
@@ -1185,6 +1237,7 @@ const ALL_FACTIONS = {
       emoji: "🟢",
       color: "#10A37F",
       tagline: "당신은 일단 해봅니다. 생각보다 행동이 앞서는\n실행력의 만능 플레이어.",
+      staticAnalysis: "**왜 당신이 GPT 하우스인가**\n생각과 동시에 손이 움직인다. 완벽한 계획을 세우는 시간에 일단 시작해서 굴러가게 만드는 게 더 효율적이라고 믿는다. 새 도구가 나오면 매뉴얼 읽기 전에 일단 눌러봐야 직성이 풀리고, '일단 해보고 안 되면 고치자'가 인생 좌우명에 가깝다.\n\n**당신의 일상 시그널**\n- 새 앱 다운받자마자 튜토리얼 스킵하고 시작\n- 모르는 길도 검색보다 일단 들어가서 헤매면서 찾기\n- 회의 중 '그거 그냥 제가 해볼게요' 자주 함",
       mbti: ["ENTJ", "ENTP", "ESTP"],
       traits: [
         { label: "실행력·추진력",  value: 94 },
@@ -1219,6 +1272,7 @@ const ALL_FACTIONS = {
       emoji: "🔵",
       color: "#4285F4",
       tagline: "당신은 체계를 사랑합니다. 데이터를 정리하고\n전략을 세우는 조직화의 달인.",
+      staticAnalysis: "**왜 당신이 Gemini 하우스인가**\n정보가 흩어져 있는 걸 못 견딘다. 노션·스프레드시트·폴더 트리에서 안정감을 느끼고, 결정 전에 데이터를 충분히 모아야 마음이 놓인다. 충동적으로 보이는 행동도 사실은 머릿속에서 이미 시나리오 3개를 굴려본 결과물이다.\n\n**당신의 일상 시그널**\n- 여행 가기 전에 엑셀로 일정·예산 정리부터 한다\n- 새 정보를 알면 '이거 어디다 정리하지' 먼저 생각함\n- 사람들이 즉흥적이라고 부러워해도 사실 그게 더 불안함",
       mbti: ["ISTJ", "INTJ", "ESTJ"],
       traits: [
         { label: "정보 수집·정리", value: 95 },
@@ -1253,6 +1307,7 @@ const ALL_FACTIONS = {
       emoji: "🔴",
       color: "#E7425D",
       tagline: "당신은 통념에 도전합니다. 불편한 진실도 직시하는\n반골 기질의 혁신가.",
+      staticAnalysis: "**왜 당신이 Grok 하우스인가**\n다수가 '이게 맞아' 할 때 본능적으로 '정말?' 물어본다. 분위기 맞추느라 입 다무는 걸 무능보다 싫어하고, 불편한 사실을 직접 말하는 게 결국 모두에게 이익이라고 믿는다. 권위·관습·'원래 그런 거'라는 말에 가장 알레르기.\n\n**당신의 일상 시그널**\n- 단톡방에서 다들 동의할 때 혼자 '근데...'로 시작\n- '원래 그런 거야'라는 답을 가장 못 받아들임\n- 칭찬보다 솔직한 비판이 더 고맙게 느껴짐",
       mbti: ["ENTP", "ISTP", "INTP"],
       traits: [
         { label: "비판적 사고력", value: 95 },
@@ -1734,17 +1789,62 @@ function showResult() {
   show('screen-result');
 
   if (LANG === 'ko' && answerHistory.length === 8) {
-    fetchAnalysis();
+    renderStaticAnalysis(faction, scores);
+  }
+}
+
+function renderStaticAnalysis(faction, scoreObj) {
+  const section = document.getElementById('ai-analysis-section');
+  const bodyEl = document.getElementById('ai-analysis-body');
+  const btn = document.getElementById('btn-ai-deeper');
+  if (!section || !bodyEl || !faction || !faction.staticAnalysis) return;
+
+  const factionLabel = { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', grok: 'Grok' };
+  let secondaryLine = '';
+  try {
+    const total = (scoreObj.claude || 0) + (scoreObj.gpt || 0) + (scoreObj.gemini || 0) + (scoreObj.grok || 0);
+    if (total > 0) {
+      const ranked = Object.keys(scoreObj)
+        .filter((k) => k !== resultFaction)
+        .sort((a, b) => scoreObj[b] - scoreObj[a]);
+      const second = ranked[0];
+      const pct = Math.round((scoreObj[second] / total) * 100);
+      if (second && pct >= 10) {
+        secondaryLine = `\n\n**보조 하우스: ${factionLabel[second] || second} 하우스 (${pct}%)**`;
+      }
+    }
+  } catch (_) {}
+
+  bodyEl.innerHTML = renderAnalysisMarkdown(faction.staticAnalysis + secondaryLine);
+  section.style.display = 'block';
+  if (btn) {
+    btn.style.display = 'block';
+    btn.disabled = false;
+    btn.onclick = () => fetchAnalysis();
   }
 }
 
 async function fetchAnalysis() {
-  const section = document.getElementById('ai-analysis-section');
-  const titleEl = document.getElementById('ai-analysis-title');
-  const bodyEl = document.getElementById('ai-analysis-body');
-  if (!section || !titleEl || !bodyEl) return;
+  const btn = document.getElementById('btn-ai-deeper');
+  const zone = document.getElementById('ai-deeper-zone');
+  const titleEl = document.getElementById('ai-deeper-title');
+  const bodyEl = document.getElementById('ai-deeper-body');
+  if (!zone || !bodyEl || !titleEl) return;
 
-  section.style.display = 'block';
+  if (btn) {
+    btn.disabled = true;
+    btn.style.display = 'none';
+  }
+  zone.style.display = 'block';
+  titleEl.textContent = 'AI가 당신만의 분석을 작성 중...';
+  bodyEl.innerHTML =
+    '<div class="ai-skeleton"></div>' +
+    '<div class="ai-skeleton" style="width:88%"></div>' +
+    '<div class="ai-skeleton" style="width:92%"></div>' +
+    '<div class="ai-skeleton" style="width:74%;margin-top:14px"></div>' +
+    '<div class="ai-skeleton" style="width:84%"></div>';
+
+  if (window.trackEvent) trackEvent('ai_analysis_button_clicked', { faction: resultFaction });
 
   try {
     const ctrl = new AbortController();
@@ -1774,7 +1874,13 @@ async function fetchAnalysis() {
 
     if (window.trackEvent) trackEvent('ai_analysis_shown', { faction: resultFaction });
   } catch (e) {
-    section.style.display = 'none';
+    titleEl.textContent = '😅 AI 분석을 불러오지 못했어요';
+    bodyEl.innerHTML =
+      '<div class="ai-analysis-error">일시적인 문제가 있었어요. 잠시 후 아래 버튼으로 다시 시도해주세요.</div>';
+    if (btn) {
+      btn.disabled = false;
+      btn.style.display = 'block';
+    }
     if (window.trackEvent) trackEvent('ai_analysis_failed', { faction: resultFaction, reason: (e && e.message) || 'unknown' });
   }
 }
