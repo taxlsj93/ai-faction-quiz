@@ -988,14 +988,14 @@
       </div>
       <div class="ai-analysis-body" id="ai-analysis-body"></div>
       <button type="button" class="ai-analysis-cta" id="btn-open-chat" style="display:none">
-        💬 AI 타입에게 직접 질문하기
-        <span class="ai-analysis-cta-hint">당신의 답변 패턴을 알고 있는 타입이 캐릭터로 답해줍니다</span>
+        💬 내 AI에게 직접 질문하기
+        <span class="ai-analysis-cta-hint">당신의 답변 패턴을 알고 있는 AI 캐릭터가 답해줍니다</span>
       </button>
       <div id="ai-chat-zone" style="display:none">
         <div class="ai-analysis-divider"></div>
         <div class="ai-chat-header">
           <span class="ai-chat-spark">💬</span>
-          <span id="ai-chat-title">타입에게 질문하기</span>
+          <span id="ai-chat-title">내 AI에게 질문하기</span>
         </div>
         <div class="ai-chat-messages" id="ai-chat-messages"></div>
         <div class="ai-chat-suggestions" id="ai-chat-suggestions"></div>
@@ -2047,7 +2047,7 @@ async function sendChat() {
   input.value = '';
   updateChatMeta();
 
-  const typingEl = appendChatMsg('assistant', '타입이 생각 중…', { extraClass: 'typing' });
+  const typingEl = appendChatMsg('assistant', 'AI가 생각 중…', { extraClass: 'typing' });
 
   if (window.trackEvent) trackEvent('chat_message_sent', { faction: resultFaction, turn: chatSent });
 
