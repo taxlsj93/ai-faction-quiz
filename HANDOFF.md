@@ -1,4 +1,4 @@
-# 🤝 세션 핸드오프 — AI 성향 테스트 / Which AI House?
+# 🤝 세션 핸드오프 — AI 성향 테스트 / Which AI Type?
 
 > **새 세션 사용법**: 이 파일이 워크스페이스 루트에 있어야 다음 세션이 자동으로 인덱싱.
 > 또는 새 세션 첫 메시지로 "HANDOFF.md 읽고 거기 적힌 컨텍스트로 이어서 작업해줘" 라고 말하면 됨.
@@ -20,9 +20,9 @@
 | 항목 | 값 |
 |------|-----|
 | 사이트명 (KO) | **AI 성향 테스트** |
-| 사이트명 (EN) | **AI Personality Quiz / Which AI House?** |
-| 부제 (KO) | 당신의 AI 하우스는? |
-| 부제 (EN) | Which AI House Are You? |
+| 사이트명 (EN) | **AI Personality Quiz / Which AI Type?** |
+| 부제 (KO) | 당신의 AI 타입은? |
+| 부제 (EN) | Which AI Type Are You? |
 | 라이브 URL | https://ai-faction-quiz.vercel.app/ |
 | 라이브 URL (EN) | https://ai-faction-quiz.vercel.app/en |
 | GitHub | https://github.com/taxlsj93/ai-faction-quiz |
@@ -32,10 +32,10 @@
 | 도메인 (Vercel) | 무료 .vercel.app — 커스텀 도메인 없음 |
 
 ### 🚨 용어 정책 (모든 작업 시 반드시 준수)
-- **사용자 노출 텍스트**: 반드시 **하우스 / House** 사용 ("진영 / Faction" ❌)
+- **사용자 노출 텍스트**: 반드시 **타입 / Type** 사용 ("진영 / Faction" ❌, "하우스 / House" ❌ 구버전)
 - **코드 내부 변수·CSS·URL**: `faction` 유지 (변경 시 버그 + SEO 손실)
   - 예: `resultFaction` JS 변수, `.faction-claude` CSS 클래스, `ai-faction-quiz.vercel.app` 도메인
-- SEO meta keywords 태그에는 "진영/faction" 병기 허용 (검색 유입)
+- SEO meta keywords 태그에는 "진영/faction/house" 병기 허용 (검색 유입)
 - 자세한 표는 `CLAUDE.md`의 "브랜드 용어 정책" 섹션 또는 `brand-guide.html` 참고
 
 ---
@@ -82,8 +82,8 @@
 - (d) 자동 닫기 X 버튼 오버레이 (1.5초 주기 스캔)
 
 ### 어필리에이트 매핑 (CTA 2차)
-| 하우스 | URL | 트래킹 |
-|--------|-----|--------|
+| 타입 | URL | 트래킹 |
+|------|-----|--------|
 | Claude | `writesonic.com/?via=aifaction` | ✅ |
 | GPT | `writesonic.com/?via=aifaction` | ✅ |
 | Gemini | `writesonic.com/?via=aifaction` | ✅ |
@@ -114,7 +114,7 @@
 ## 5. LLM 분석 기능 (Haiku 4.5, opt-in)
 
 - 결과 페이지에서 "AI에게 더 자세한 개인 분석 받기" 버튼 — **opt-in 토글** 방식
-- 정적 콘텐츠("왜 당신이 X 하우스인가" + 일상 시그널 + 보조 하우스 비율)는 즉시 표시
+- 정적 콘텐츠("왜 당신이 X 타입인가" + 일상 시그널 + 보조 타입 비율)는 즉시 표시
 - 버튼 클릭 시에만 LLM 호출 → 비용 최적화 (예상 5–20% click-through)
 - 관련 커밋: `565de53 refactor(ai): switch LLM analysis from auto-call to opt-in toggle`
 
@@ -137,9 +137,8 @@
 ├── robots.txt, sitemap.xml
 ├── vercel.json            # cleanUrls + trailingSlash
 ├── README.md, STATUS.md, CLAUDE.md, HANDOFF.md
-├── brand-guide.html       # 미커밋, 브랜드 가이드 별도 페이지
-├── audit-report.html      # 미커밋, 실험
-├── deploy/                # 백업 — 사용 안 함
+├── brand-guide.html       # 브랜드 가이드 별도 페이지
+├── audit-report.html      # 실험
 ├── _archive/experiments/  # Phase 0 실험 12개 보존
 ├── phoney-war/            # 보류 (Phase 3 부활 예정)
 └── .claude/agents/        # 5개 에이전트 정의
@@ -155,6 +154,8 @@
 ## 7. 최근 커밋 히스토리 (최신 → 과거)
 
 ```
+25a32de Merge PR #5: 하우스 → 타입 리브랜딩 + 멀티턴 채팅
+3043a8d docs: 브랜드 용어 정책 추가 + 세션2 핸드오프 갱신
 dfb5684 fix: 어필리에이트 트래킹 파라미터 추가 + AdSense 재심사 준비
 9eef6c2 Merge: opt-in AI analysis toggle
 565de53 refactor(ai): switch LLM analysis from auto-call to opt-in toggle
@@ -187,8 +188,8 @@ b949348 Initial commit — AI Faction Quiz v1.0
 | # | 액션 | 누가 | 상태 |
 |---|------|------|------|
 | 1 | **AdSense 심사 결과 모니터링** — adsense.google.com 또는 모바일 앱 | 사용자 (모바일 ✅) | ✅ 요청 완료 (2026-05-09), 결과 대기 |
-| 2 | **CLAUDE.md + HANDOFF.md 미커밋 커밋** — 브랜드 용어 정책·세션2 갱신 내용 origin 반영 | coordinator | 대기 |
-| 3 | **`brand-guide.html`, `audit-report.html` 처리** — 커밋·삭제·_archive 이동 중 결정 | coordinator | 대기 |
+| 2 | **CLAUDE.md + HANDOFF.md + brand-guide.html 타입 리브랜딩** — 완료 | coordinator | ✅ 완료 (2026-05-09) |
+| 3 | **`audit-report.html` 처리** — 커밋·삭제·_archive 이동 중 결정 | coordinator | 대기 |
 | 4 | **TikTok / Instagram Reels 영상** — 컨셉·스크립트·해시태그 확정 후 제작·업로드 | 사용자 + coordinator | 🆕 논의 시작, 미완 |
 | 5 | **에펨코리아 게시** — brand-guide.html 한국어 카피 사용, 결과 스크린샷 첨부 권장 | 사용자 | 대기 |
 | 6 | **X(트위터) 게시** — brand-guide.html X 카피 사용 | 사용자 | 대기 |
@@ -247,7 +248,7 @@ TOKEN=$(printf "protocol=https\nhost=github.com\n\n" | git credential fill 2>/de
 ## 12. 작업 시작 체크리스트 (새 세션이 따라야 할 순서)
 
 1. ✅ 이 파일(HANDOFF.md) 통독
-2. ✅ `CLAUDE.md`의 "브랜드 용어 정책" 섹션 확인 (하우스/House 일관성)
+2. ✅ `CLAUDE.md`의 "브랜드 용어 정책" 섹션 확인 (타입/Type 일관성)
 3. ✅ `git status`로 미커밋 상태 확인 (위 §2 항목)
 4. ✅ `git log --oneline master -5`로 최근 커밋 확인
 5. ✅ 라이브 라우트 헬스체크 (위 §10)
@@ -256,5 +257,5 @@ TOKEN=$(printf "protocol=https\nhost=github.com\n\n" | git credential fill 2>/de
 
 ---
 
-**이 핸드오프는 2026-05-09 (세션 2) 기준이며, 마지막 커밋 `dfb5684` 시점의 상태를 반영합니다.**
+**이 핸드오프는 2026-05-09 (세션 3) 기준이며, 마지막 커밋 `25a32de` 시점의 상태를 반영합니다.**
 **다음 세션에서 작업 후 이 파일도 함께 갱신해 주세요.**

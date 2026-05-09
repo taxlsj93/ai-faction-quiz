@@ -169,24 +169,24 @@ SEO 타겟 키워드:
 > 코드 작성, 카피 작성, 게시글 초안, 문서 작성 등 모든 작업에 적용됩니다.
 
 ### 핵심 원칙
-- **사용자 노출 텍스트**: 반드시 **하우스 / House** 사용
+- **사용자 노출 텍스트**: 반드시 **타입 / Type** 사용
 - **코드 내부 변수·CSS 클래스·URL**: `faction` 유지 (변경 금지 — 버그·SEO 손실)
-- **SEO 메타 keywords 태그**: "진영 / faction" 병기 허용 (검색 유입 목적)
+- **SEO 메타 keywords 태그**: "진영 / faction / house" 병기 허용 (검색 유입 목적)
 
 ### 확정 용어표
 
 | 구분 | 한국어 ✅ | 영어 ✅ | 금지 한국어 ❌ | 금지 영어 ❌ |
 |------|---------|--------|------------|-----------|
 | 사이트명 | AI 성향 테스트 | AI Personality Quiz | AI 진영 퀴즈 | AI Faction Quiz |
-| 부제 | 당신의 AI 하우스는? | Which AI House Are You? | 당신의 AI 진영은? | Which AI Faction Are You? |
-| 소속 단위 | 하우스 | House | 진영 | Faction |
-| Claude | Claude 하우스 | Claude House | Claude 진영 | Claude Faction |
-| GPT | GPT 하우스 | GPT House | GPT 진영 | GPT Faction |
-| Gemini | Gemini 하우스 | Gemini House | Gemini 진영 | Gemini Faction |
-| Grok | Grok 하우스 | Grok House | Grok 진영 | Grok Faction |
-| 메인 해시태그 | #AI하우스테스트 | #AIHouseTest | #AI진영테스트 | #AIFactionQuiz |
-| 결과 해시태그 | #Claude하우스 등 | #ClaudeHouse 등 | #Claude진영 등 | #ClaudeFaction 등 |
-| CTA 버튼 | 내 AI 하우스 알아보기 → | Find My AI House → | 내 AI 진영 알아보기 | Find My Faction |
+| 부제 | 당신의 AI 타입은? | Which AI Type Are You? | 당신의 AI 진영은? / 당신의 AI 하우스는? | Which AI Faction Are You? / Which AI House Are You? |
+| 소속 단위 | 타입 | Type | 진영/하우스 | Faction/House |
+| Claude | Claude 타입 | Claude Type | Claude 진영/Claude 하우스 | Claude Faction/Claude House |
+| GPT | GPT 타입 | GPT Type | GPT 진영/GPT 하우스 | GPT Faction/GPT House |
+| Gemini | Gemini 타입 | Gemini Type | Gemini 진영/Gemini 하우스 | Gemini Faction/Gemini House |
+| Grok | Grok 타입 | Grok Type | Grok 진영/Grok 하우스 | Grok Faction/Grok House |
+| 메인 해시태그 | #AI타입테스트 | #AITypeTest | #AI진영테스트 / #AI하우스테스트 | #AIFactionQuiz / #AIHouseTest |
+| 결과 해시태그 | #Claude타입 등 | #ClaudeType 등 | #Claude진영 / #Claude하우스 등 | #ClaudeFaction / #ClaudeHouse 등 |
+| CTA 버튼 | 내 AI 타입 알아보기 → | Find My AI Type → | 내 AI 진영/하우스 알아보기 | Find My Faction/House |
 
 ### 변경 불필요 항목 (코드 내부)
 아래 항목은 사용자에게 노출되지 않으므로 `faction` 유지:
@@ -196,11 +196,11 @@ SEO 타겟 키워드:
 - Vercel URL: `ai-faction-quiz.vercel.app`
 
 ### 어필리에이트 링크 현황 (2026-05-09 기준)
-| 하우스 | CTA 2차 URL | 트래킹 |
-|--------|------------|--------|
-| Claude 하우스 | writesonic.com/?via=aifaction | ✅ |
-| GPT 하우스 | writesonic.com/?via=aifaction | ✅ |
-| Gemini 하우스 | writesonic.com/?via=aifaction | ✅ |
-| Grok 하우스 | perplexity.ai/?via=aifaction | ✅ |
+| 타입 | CTA 2차 URL | 트래킹 |
+|------|------------|--------|
+| Claude 타입 | writesonic.com/?via=aifaction | ✅ |
+| GPT 타입 | writesonic.com/?via=aifaction | ✅ |
+| Gemini 타입 | writesonic.com/?via=aifaction | ✅ |
+| Grok 타입 | perplexity.ai/?via=aifaction | ✅ |
 
 > 상세 가이드: `brand-guide.html` 참조
