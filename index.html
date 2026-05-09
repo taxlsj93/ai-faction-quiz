@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -62,15 +62,11 @@
   var realOpen = window.open;
   window.open = function (url) {
     if (Date.now() - lastUserAction < 1500) return realOpen.apply(window, arguments);
-    console.warn('[ad-guard] blocked non-user-initiated window.open:', url);
     return null;
   };
   var realAdd = EventTarget.prototype.addEventListener;
   EventTarget.prototype.addEventListener = function (type) {
-    if ((type === 'beforeunload' || type === 'unload') && (this === window || this === document)) {
-      console.warn('[ad-guard] blocked', type, 'listener');
-      return;
-    }
+    if ((type === 'beforeunload' || type === 'unload') && (this === window || this === document)) return;
     return realAdd.apply(this, arguments);
   };
 
@@ -1263,7 +1259,7 @@ const ALL_FACTIONS = {
       alliesTitle: "🟢 GPT 하우스 연합군 — 실행가의 도구들",
       allies: [
         { icon: "🎨", badge: "디자인 즉결부대", name: "Canva AI", desc: "디자인 몰라도 OK. 클릭 몇 번으로 SNS 카드·발표자료·로고 완성", url: "https://canva.com" },
-        { icon: "📧", badge: "카피라이팅 돌격대", name: "Copy.ai", desc: "이메일·광고 문구·상품 설명을 1분 안에 완성. 영어·한국어 모두 가능", url: "https://copy.ai" },
+        { icon: "📧", badge: "카피라이팅 돌격대", name: "Copy.ai", desc: "이메일·광고 문구·상품 설명을 1분 안에 완성. 영어·한국어 모두 가능", url: "https://copy.ai/?via=aifaction" },
         { icon: "⚡", badge: "자동화 공병부대", name: "Zapier", desc: "코딩 없이 앱끼리 자동 연결. '폼 제출 → 이메일 발송 → 시트 기록' 자동화", url: "https://zapier.com" },
       ],
     },
@@ -1297,7 +1293,7 @@ const ALL_FACTIONS = {
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
       alliesTitle: "🔵 Gemini 하우스 연합군 — 전략가의 도구들",
       allies: [
-        { icon: "🔍", badge: "정보 수집 정찰대", name: "Perplexity", desc: "구글처럼 검색하면 AI가 답을 바로 정리해줌. 뉴스·논문·최신 정보에 강함", url: "https://perplexity.ai" },
+        { icon: "🔍", badge: "정보 수집 정찰대", name: "Perplexity", desc: "구글처럼 검색하면 AI가 답을 바로 정리해줌. 뉴스·논문·최신 정보에 강함", url: "https://perplexity.ai/?via=aifaction" },
         { icon: "📊", badge: "콘텐츠 전략부대", name: "Writesonic", desc: "블로그·뉴스레터·마케팅 글을 SEO에 맞게 자동 작성. 구글 상위노출 목표", url: "https://writesonic.com/?via=aifaction" },
         { icon: "🗂️", badge: "지식 관리 사령부", name: "Notion AI", desc: "프로젝트·정보·일정을 한 곳에서. AI가 알아서 정리·요약·분류해줌", url: "https://notion.so" },
       ],
@@ -1329,10 +1325,10 @@ const ALL_FACTIONS = {
       ctaText: "Grok 시작하기 (X Premium) →",
       ctaUrl: "https://x.com/i/grok",
       ctaSecondaryText: "반골 성향의 AI 리서치 툴",
-      ctaSecondaryUrl: "https://perplexity.ai",
+      ctaSecondaryUrl: "https://perplexity.ai/?via=aifaction",
       alliesTitle: "🔴 Grok 하우스 연합군 — 혁신가의 도구들",
       allies: [
-        { icon: "🔍", badge: "실시간 정보 특공대", name: "Perplexity", desc: "지금 이 순간 일어나는 일을 바로 검색. 주류 미디어 대신 원본 소스 직접 확인", url: "https://perplexity.ai" },
+        { icon: "🔍", badge: "실시간 정보 특공대", name: "Perplexity", desc: "지금 이 순간 일어나는 일을 바로 검색. 주류 미디어 대신 원본 소스 직접 확인", url: "https://perplexity.ai/?via=aifaction" },
         { icon: "🎨", badge: "이미지 창작 돌격대", name: "Midjourney", desc: "머릿속 이미지를 그대로 생성. 광고·썸네일·아이디어 시각화를 텍스트 한 줄로", url: "https://midjourney.com" },
         { icon: "🎙️", badge: "음성 복제 특수부대", name: "ElevenLabs", desc: "내 목소리로 AI 나레이션·팟캐스트·콘텐츠 제작. 언어도 자동 번역", url: "https://elevenlabs.io" },
       ],
@@ -1436,7 +1432,7 @@ const ALL_FACTIONS = {
       ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
       alliesTitle: "🔵 Gemini House Allied Forces — Tools for Methodical Strategists",
       allies: [
-        { icon: "🔍", badge: "Intelligence Recon Unit", name: "Perplexity", desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data", url: "https://perplexity.ai" },
+        { icon: "🔍", badge: "Intelligence Recon Unit", name: "Perplexity", desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data", url: "https://perplexity.ai/?via=aifaction" },
         { icon: "📊", badge: "Content Strategy Division", name: "Writesonic", desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings", url: "https://writesonic.com/?via=aifaction" },
         { icon: "🗂️", badge: "Knowledge Management HQ", name: "Notion AI", desc: "One place for projects, info, and schedules. AI auto-sorts, summarizes, and categorizes", url: "https://notion.so" },
       ],
@@ -1470,7 +1466,7 @@ const ALL_FACTIONS = {
       ctaSecondaryUrl: "https://perplexity.ai",
       alliesTitle: "🔴 Grok House Allied Forces — Tools for Contrarian Innovators",
       allies: [
-        { icon: "🔍", badge: "Real-Time Intel Strike Force", name: "Perplexity", desc: "What's happening right now, from primary sources — not filtered through mainstream media", url: "https://perplexity.ai" },
+        { icon: "🔍", badge: "Real-Time Intel Strike Force", name: "Perplexity", desc: "What's happening right now, from primary sources — not filtered through mainstream media", url: "https://perplexity.ai/?via=aifaction" },
         { icon: "🎨", badge: "Visual Concept Assault Unit", name: "Midjourney", desc: "Generate exactly what's in your head. One line of text becomes a finished visual", url: "https://midjourney.com" },
         { icon: "🎙️", badge: "Voice & Audio Special Ops", name: "ElevenLabs", desc: "Clone your voice for narration, podcasts, and content. Auto-translates across languages", url: "https://elevenlabs.io" },
       ],
