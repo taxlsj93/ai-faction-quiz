@@ -160,3 +160,47 @@ SEO 타겟 키워드:
 기기 감지(iOS/Android) 대신 퀴즈 하우스 결과를 활용하는 방향 검토.
 
 `phoney-war/` 디렉토리 및 관련 파일은 삭제하지 않고 보존.
+
+---
+
+## 브랜드 용어 정책 (모든 에이전트 필독)
+
+> **이 섹션은 모든 에이전트·작업자가 반드시 준수해야 하는 용어 기준입니다.**
+> 코드 작성, 카피 작성, 게시글 초안, 문서 작성 등 모든 작업에 적용됩니다.
+
+### 핵심 원칙
+- **사용자 노출 텍스트**: 반드시 **하우스 / House** 사용
+- **코드 내부 변수·CSS 클래스·URL**: `faction` 유지 (변경 금지 — 버그·SEO 손실)
+- **SEO 메타 keywords 태그**: "진영 / faction" 병기 허용 (검색 유입 목적)
+
+### 확정 용어표
+
+| 구분 | 한국어 ✅ | 영어 ✅ | 금지 한국어 ❌ | 금지 영어 ❌ |
+|------|---------|--------|------------|-----------|
+| 사이트명 | AI 성향 테스트 | AI Personality Quiz | AI 진영 퀴즈 | AI Faction Quiz |
+| 부제 | 당신의 AI 하우스는? | Which AI House Are You? | 당신의 AI 진영은? | Which AI Faction Are You? |
+| 소속 단위 | 하우스 | House | 진영 | Faction |
+| Claude | Claude 하우스 | Claude House | Claude 진영 | Claude Faction |
+| GPT | GPT 하우스 | GPT House | GPT 진영 | GPT Faction |
+| Gemini | Gemini 하우스 | Gemini House | Gemini 진영 | Gemini Faction |
+| Grok | Grok 하우스 | Grok House | Grok 진영 | Grok Faction |
+| 메인 해시태그 | #AI하우스테스트 | #AIHouseTest | #AI진영테스트 | #AIFactionQuiz |
+| 결과 해시태그 | #Claude하우스 등 | #ClaudeHouse 등 | #Claude진영 등 | #ClaudeFaction 등 |
+| CTA 버튼 | 내 AI 하우스 알아보기 → | Find My AI House → | 내 AI 진영 알아보기 | Find My Faction |
+
+### 변경 불필요 항목 (코드 내부)
+아래 항목은 사용자에게 노출되지 않으므로 `faction` 유지:
+- JS 변수: `resultFaction`, `faction:` 파라미터
+- CSS 클래스: `.faction-chip`, `.faction-claude` 등
+- GA4 이벤트 파라미터: `faction:`
+- Vercel URL: `ai-faction-quiz.vercel.app`
+
+### 어필리에이트 링크 현황 (2026-05-09 기준)
+| 하우스 | CTA 2차 URL | 트래킹 |
+|--------|------------|--------|
+| Claude 하우스 | writesonic.com/?via=aifaction | ✅ |
+| GPT 하우스 | writesonic.com/?via=aifaction | ✅ |
+| Gemini 하우스 | writesonic.com/?via=aifaction | ✅ |
+| Grok 하우스 | perplexity.ai/?via=aifaction | ✅ |
+
+> 상세 가이드: `brand-guide.html` 참조

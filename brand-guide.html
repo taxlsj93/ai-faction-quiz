@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 성향 테스트 — 브랜드 & 마케팅 용어 가이드 v1.0</title>
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --card: #13131A;
+    --card2: #0E0E16;
+    --border: #222230;
+    --text: #F0F0F8;
+    --muted: #8888AA;
+    --green: #22C55E;
+    --red: #EF4444;
+    --yellow: #EAB308;
+    --blue: #3B82F6;
+    --purple: #A855F7;
+    --claude: #C17CE4;
+    --gpt: #10A37F;
+    --gemini: #4285F4;
+    --grok: #E7425D;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    padding: 32px 16px 64px;
+    max-width: 760px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─ Header ─ */
+  .header-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 14px; margin-bottom: 16px;
+  }
+  h1 { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+
+  /* ─ Chapter heading ─ */
+  .chapter {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; margin-top: 40px;
+  }
+  .chapter-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─ Section card ─ */
+  .section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+  h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+  /* ─ Term block ─ */
+  .term-official {
+    background: #0D2218; border: 1px solid #1A5C35;
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+  }
+  .term-wrong {
+    background: #1A0B0B; border: 1px solid #5C1A1A;
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+  }
+  .term-note {
+    background: #12120E; border: 1px solid #4B4B00;
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+  }
+  .term-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .ok { color: #4ADE80; }
+  .no { color: #F87171; }
+  .note-c { color: #FDE68A; }
+
+  .term-word { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .term-word-ok { color: #4ADE80; }
+  .term-word-no { color: #F87171; text-decoration: line-through; }
+  .term-desc { font-size: 13px; color: var(--muted); }
+  .term-example { font-size: 13px; color: #D0D0E8; margin-top: 8px; font-style: italic; border-left: 2px solid var(--border); padding-left: 10px; }
+
+  /* ─ Compare table ─ */
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  th {
+    background: var(--card2); color: var(--muted); font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 11px 14px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .td-ok { color: #4ADE80; font-weight: 700; }
+  .td-no { color: #F87171; text-decoration: line-through; }
+  .td-note { color: var(--muted); font-size: 12px; }
+
+  /* ─ House chips ─ */
+  .houses-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .house-card {
+    border-radius: 12px; padding: 16px; border: 1px solid;
+  }
+  .house-claude { background: #1A0C28; border-color: #5C3A84; }
+  .house-gpt    { background: #081C14; border-color: #0D5C3A; }
+  .house-gemini { background: #0C1830; border-color: #1A3A6E; }
+  .house-grok   { background: #1C080C; border-color: #6E1A28; }
+  .house-name-ko { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+  .house-name-en { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .house-chip {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 10px;
+    border-radius: 20px; margin-right: 4px; margin-bottom: 4px;
+  }
+  .chip-ok { background: #14532D; color: #86EFAC; }
+  .chip-no { background: #7F1D1D; color: #FCA5A5; }
+
+  /* ─ Tone grid ─ */
+  .tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .tone-card { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .tone-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tone-value { font-size: 14px; font-weight: 600; }
+
+  /* ─ Copy block ─ */
+  .copy-block {
+    background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; margin-top: 10px; font-size: 14px; color: #D0D0E8;
+    white-space: pre-line; cursor: pointer; transition: border-color 0.2s;
+    position: relative;
+  }
+  .copy-block:hover { border-color: #5555AA; }
+  .copy-block::after {
+    content: '복사'; position: absolute; top: 10px; right: 12px;
+    font-size: 11px; color: var(--muted); font-weight: 600;
+  }
+  .copy-hint { font-size: 11px; color: var(--muted); margin-top: 5px; text-align: right; }
+
+  /* ─ Tag ─ */
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; margin-right: 6px; margin-bottom: 6px;
+  }
+  .tag-green { background: #14532D; color: #86EFAC; }
+  .tag-red   { background: #7F1D1D; color: #FCA5A5; }
+  .tag-blue  { background: #1E3A5F; color: #93C5FD; }
+  .tag-yellow { background: #713F12; color: #FDE68A; }
+  .tag-purple { background: #3B1F5E; color: #D8B4FE; }
+
+  /* ─ Warning box ─ */
+  .warn-box {
+    background: #1C1500; border: 1px solid #4B3000; border-radius: 10px;
+    padding: 14px 16px; font-size: 13px; color: #FDE68A; margin-top: 14px;
+  }
+  .warn-box strong { color: #FCD34D; }
+
+  /* ─ Info box ─ */
+  .info-box {
+    background: #0D1A2D; border: 1px solid #1E3A5F; border-radius: 10px;
+    padding: 14px 16px; font-size: 13px; color: #93C5FD; margin-top: 14px;
+  }
+
+  /* ─ Divider ─ */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  .footnote { font-size: 12px; color: var(--muted); margin-top: 48px; text-align: center; }
+  code { background: #1A1A2A; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #A5B4FC; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<div class="header-badge">BRAND GUIDE v1.0</div>
+<h1>AI 성향 테스트<br>마케팅 용어 통일 가이드</h1>
+<p class="subtitle">최종 확정 기준일: 2026-05-09 · 모든 채널·문서에 이 가이드를 우선 적용</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 1: 핵심 용어 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 1</span><div class="chapter-line"></div><span>핵심 용어 확정</span></div>
+
+<div class="section">
+  <h2>사이트 공식 명칭</h2>
+  <p class="section-sub">모든 채널에서 동일하게 사용</p>
+
+  <table>
+    <tr>
+      <th>언어</th>
+      <th>공식 명칭 ✅</th>
+      <th>쓰면 안 되는 표현 ❌</th>
+      <th>비고</th>
+    </tr>
+    <tr>
+      <td>한국어</td>
+      <td class="td-ok">AI 성향 테스트</td>
+      <td class="td-no">AI 진영 퀴즈 / AI 팩션 퀴즈</td>
+      <td class="td-note">부제: "어떤 AI 하우스가 나한테 맞아?"</td>
+    </tr>
+    <tr>
+      <td>영어</td>
+      <td class="td-ok">AI Personality Quiz</td>
+      <td class="td-no">AI Faction Quiz</td>
+      <td class="td-note">부제: "Which AI House Are You?"</td>
+    </tr>
+    <tr>
+      <td>URL</td>
+      <td class="td-ok">ai-faction-quiz.vercel.app</td>
+      <td>—</td>
+      <td class="td-note">URL은 바꾸지 않음 (SEO 손실)</td>
+    </tr>
+  </table>
+
+  <div class="warn-box">
+    ⚠️ <strong>URL에 "faction"이 들어가도 괜찮아.</strong> URL은 SEO와 연결되어 있어서 바꾸면 오히려 손해. 내용(텍스트/카피)에서만 "하우스/House"를 쓰면 됨.
+  </div>
+</div>
+
+<!-- ─── 핵심 단어: 하우스 vs 진영 ─── -->
+<div class="section">
+  <h2>핵심 단어 비교</h2>
+  <p class="section-sub">가장 많이 혼용되는 용어</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div class="term-official">
+      <div class="term-label ok">✅ 공식 — 한국어</div>
+      <div class="term-word term-word-ok">하우스</div>
+      <div class="term-desc">소속감·커뮤니티 느낌. "내 하우스"처럼 쓸 수 있음.</div>
+      <div class="term-example">"Claude 하우스가 뭐야?"<br>"내 하우스는 GPT야."<br>"4개 하우스 중 하나를 배정받아요."</div>
+    </div>
+    <div class="term-wrong">
+      <div class="term-label no">❌ 구버전 — 쓰지 말 것</div>
+      <div class="term-word term-word-no">진영</div>
+      <div class="term-desc">군사·정치적 뉘앙스. 리브랜딩으로 하우스로 교체됨.</div>
+      <div class="term-example" style="border-left-color:#5C1A1A;">"Claude 진영이 뭐야?" ❌<br>"내 진영은 GPT야." ❌<br>"4개 진영 중 하나." ❌</div>
+    </div>
+    <div class="term-official">
+      <div class="term-label ok">✅ 공식 — 영어</div>
+      <div class="term-word term-word-ok">House</div>
+      <div class="term-desc">Harry Potter의 기숙사 개념과 유사. 친숙하고 바이럴에 유리.</div>
+      <div class="term-example">"Which house are you?"<br>"I'm in the Claude House."<br>"Find your AI house."</div>
+    </div>
+    <div class="term-wrong">
+      <div class="term-label no">❌ 구버전 — 쓰지 말 것</div>
+      <div class="term-word term-word-no">Faction</div>
+      <div class="term-desc">분열·대립 뉘앙스. 커뮤니티 느낌 약함.</div>
+      <div class="term-example" style="border-left-color:#5C1A1A;">"Which faction are you?" ❌<br>"I'm in the Claude Faction." ❌</div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:16px;">
+    💡 <strong>예외:</strong> SEO 키워드로는 "진영" "faction"을 메타 keywords에 병기해도 됨. 구글 검색에서 "AI 진영 테스트"로 유입되는 트래픽을 놓치지 않기 위함.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 2: 하우스별 공식 명칭 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 2</span><div class="chapter-line"></div><span>4개 하우스 공식 명칭</span></div>
+
+<div class="section">
+  <h2>하우스별 공식 명칭표</h2>
+  <p class="section-sub">SNS, 게시글, 카드 이미지 등 모든 곳에서 이 표기를 사용</p>
+
+  <div class="houses-grid">
+    <div class="house-card house-claude">
+      <div class="house-name-ko" style="color:var(--claude);">🟣 Claude 하우스</div>
+      <div class="house-name-en">Claude House</div>
+      <div>
+        <span class="house-chip chip-ok">Claude 하우스</span>
+        <span class="house-chip chip-no">Claude 진영</span>
+      </div>
+      <div>
+        <span class="house-chip chip-ok">Claude House</span>
+        <span class="house-chip chip-no">Claude Faction</span>
+      </div>
+    </div>
+    <div class="house-card house-gpt">
+      <div class="house-name-ko" style="color:var(--gpt);">🟢 GPT 하우스</div>
+      <div class="house-name-en">GPT House</div>
+      <div>
+        <span class="house-chip chip-ok">GPT 하우스</span>
+        <span class="house-chip chip-no">GPT 진영</span>
+      </div>
+      <div>
+        <span class="house-chip chip-ok">GPT House</span>
+        <span class="house-chip chip-no">GPT Faction</span>
+      </div>
+    </div>
+    <div class="house-card house-gemini">
+      <div class="house-name-ko" style="color:var(--gemini);">🔵 Gemini 하우스</div>
+      <div class="house-name-en">Gemini House</div>
+      <div>
+        <span class="house-chip chip-ok">Gemini 하우스</span>
+        <span class="house-chip chip-no">Gemini 진영</span>
+      </div>
+      <div>
+        <span class="house-chip chip-ok">Gemini House</span>
+        <span class="house-chip chip-no">Gemini Faction</span>
+      </div>
+    </div>
+    <div class="house-card house-grok">
+      <div class="house-name-ko" style="color:var(--grok);">🔴 Grok 하우스</div>
+      <div class="house-name-en">Grok House</div>
+      <div>
+        <span class="house-chip chip-ok">Grok 하우스</span>
+        <span class="house-chip chip-no">Grok 진영</span>
+      </div>
+      <div>
+        <span class="house-chip chip-ok">Grok House</span>
+        <span class="house-chip chip-no">Grok Faction</span>
+      </div>
+    </div>
+  </div>
+
+  <table style="margin-top:20px;">
+    <tr>
+      <th>하우스</th>
+      <th>한국어 공식</th>
+      <th>영어 공식</th>
+      <th>성향 한 줄</th>
+    </tr>
+    <tr>
+      <td>🟣</td>
+      <td class="td-ok">Claude 하우스</td>
+      <td class="td-ok">Claude House</td>
+      <td class="td-note">사색가 · 창작 · 공감</td>
+    </tr>
+    <tr>
+      <td>🟢</td>
+      <td class="td-ok">GPT 하우스</td>
+      <td class="td-ok">GPT House</td>
+      <td class="td-note">실행가 · 범용 · 추진력</td>
+    </tr>
+    <tr>
+      <td>🔵</td>
+      <td class="td-ok">Gemini 하우스</td>
+      <td class="td-ok">Gemini House</td>
+      <td class="td-note">전략가 · 체계 · 정보</td>
+    </tr>
+    <tr>
+      <td>🔴</td>
+      <td class="td-ok">Grok 하우스</td>
+      <td class="td-ok">Grok House</td>
+      <td class="td-note">혁신가 · 직설 · 반골</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 3: 채널별 용어 사용 기준 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 3</span><div class="chapter-line"></div><span>채널별 사용 기준</span></div>
+
+<div class="section">
+  <h2>채널별 공식 카피 기준</h2>
+  <p class="section-sub">채널마다 뉘앙스가 달라도 핵심 단어(하우스/House)는 동일하게</p>
+
+  <table>
+    <tr>
+      <th>채널</th>
+      <th>톤</th>
+      <th>공식 표현 ✅</th>
+      <th>금지 표현 ❌</th>
+    </tr>
+    <tr>
+      <td><strong>사이트 UI</strong></td>
+      <td class="td-note">중립·친근</td>
+      <td class="td-ok">하우스 / House</td>
+      <td class="td-no">진영 / Faction</td>
+    </tr>
+    <tr>
+      <td><strong>에펨코리아</strong></td>
+      <td class="td-note">반말·캐주얼</td>
+      <td class="td-ok">"AI 하우스 테스트" "내 하우스 나왔음"</td>
+      <td class="td-no">"AI 진영 퀴즈"</td>
+    </tr>
+    <tr>
+      <td><strong>Reddit</strong></td>
+      <td class="td-note">자연스러운 영어</td>
+      <td class="td-ok">"Which AI house are you?" "I'm in Claude House"</td>
+      <td class="td-no">"AI faction quiz" "Claude Faction"</td>
+    </tr>
+    <tr>
+      <td><strong>X (트위터)</strong></td>
+      <td class="td-note">짧고 임팩트</td>
+      <td class="td-ok">"내 AI 하우스 나왔다" "#AIHouseTest"</td>
+      <td class="td-no">"#AIFactionQuiz" (해시태그도 House)</td>
+    </tr>
+    <tr>
+      <td><strong>Instagram</strong></td>
+      <td class="td-note">시각 중심</td>
+      <td class="td-ok">"Claude House 결과 🟣" "#AIHouseTest"</td>
+      <td class="td-no">"Claude Faction 결과"</td>
+    </tr>
+    <tr>
+      <td><strong>TikTok</strong></td>
+      <td class="td-note">짧고 호기심</td>
+      <td class="td-ok">"which AI house are you?" "find your house"</td>
+      <td class="td-no">"AI faction" "which faction"</td>
+    </tr>
+    <tr>
+      <td><strong>뉴스레터</strong></td>
+      <td class="td-note">정중·정보</td>
+      <td class="td-ok">"AI 하우스 소식" "하우스별 이번 주 AI 트렌드"</td>
+      <td class="td-no">"AI 진영 소식"</td>
+    </tr>
+    <tr>
+      <td><strong>SEO 메타 키워드</strong></td>
+      <td class="td-note">키워드 병기 허용</td>
+      <td class="td-ok">하우스 + 진영 + faction 모두 keywords에 포함</td>
+      <td class="td-note">텍스트가 아닌 메타 태그에만 허용</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 4: 토큰(해시태그·슬로건) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 4</span><div class="chapter-line"></div><span>해시태그 & 슬로건</span></div>
+
+<div class="section">
+  <h2>공식 해시태그</h2>
+
+  <table>
+    <tr>
+      <th>용도</th>
+      <th>한국어</th>
+      <th>영어</th>
+    </tr>
+    <tr>
+      <td>메인 태그</td>
+      <td class="td-ok">#AI하우스테스트</td>
+      <td class="td-ok">#AIHouseTest</td>
+    </tr>
+    <tr>
+      <td>결과 공유</td>
+      <td class="td-ok">#Claude하우스 #GPT하우스 #Gemini하우스 #Grok하우스</td>
+      <td class="td-ok">#ClaudeHouse #GPTHouse #GeminiHouse #GrokHouse</td>
+    </tr>
+    <tr>
+      <td>보조 태그</td>
+      <td class="td-ok">#AI성향테스트 #어떤AI가나한테맞아</td>
+      <td class="td-ok">#AIPersonalityQuiz #WhichAIHouseAreYou</td>
+    </tr>
+    <tr>
+      <td>❌ 쓰지 말 것</td>
+      <td class="td-no">#AI진영테스트 #AI진영퀴즈</td>
+      <td class="td-no">#AIFactionQuiz #AIFaction</td>
+    </tr>
+  </table>
+
+  <div class="warn-box" style="margin-top:16px;">
+    ⚠️ <strong>예외:</strong> 초기에 #AIFactionQuiz로 이미 노출된 콘텐츠는 수정하지 않아도 됨. 신규 콘텐츠부터 #AIHouseTest 적용.
+  </div>
+</div>
+
+<div class="section">
+  <h2>공식 슬로건 / 캐치프레이즈</h2>
+  <p class="section-sub">광고·소개·공유 카드에 반복 사용</p>
+
+  <table>
+    <tr>
+      <th>상황</th>
+      <th>한국어 ✅</th>
+      <th>영어 ✅</th>
+    </tr>
+    <tr>
+      <td>메인 슬로건</td>
+      <td class="td-ok">사용하는 AI가 당신의 성격을 드러냅니다</td>
+      <td class="td-ok">The AI you use reveals your personality</td>
+    </tr>
+    <tr>
+      <td>CTA 버튼</td>
+      <td class="td-ok">내 AI 하우스 알아보기 →</td>
+      <td class="td-ok">Find My AI House →</td>
+    </tr>
+    <tr>
+      <td>결과 공유</td>
+      <td class="td-ok">나는 [하우스명] 하우스! 너는?</td>
+      <td class="td-ok">I'm in [House Name] House! What's yours?</td>
+    </tr>
+    <tr>
+      <td>SNS 게시 도입부</td>
+      <td class="td-ok">AI 하우스 테스트 해봤는데</td>
+      <td class="td-ok">Just found out my AI house —</td>
+    </tr>
+    <tr>
+      <td>❌ 쓰지 말 것</td>
+      <td class="td-no">내 AI 진영 알아보기 / 나는 Claude 진영!</td>
+      <td class="td-no">Find My AI Faction / Claude Faction!</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 5: 즉시 복사 카피 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 5</span><div class="chapter-line"></div><span>즉시 복사 카피 (수정된 버전)</span></div>
+
+<div class="section">
+  <h2>Reddit (영어) — 수정본</h2>
+  <div class="copy-block" onclick="copyText(this)">제목: Just found out my AI house and it's weirdly accurate
+
+Found this 8-question quiz that puts you into one of four AI houses — Claude, ChatGPT, Gemini, or Grok — based on your personality traits. Got Claude House (apparently I overthink everything 😅).
+
+Results are backed by real usage stats, takes 30 seconds, and it's free. Drop your house below, curious if the pattern holds across Reddit.
+
+https://ai-faction-quiz.vercel.app</div>
+  <div class="copy-hint">클릭하면 복사됨</div>
+  <div style="margin-top:8px;">
+    <span class="tag tag-green">✅ House 용어 사용</span>
+    <span class="tag tag-green">✅ 자연스러운 톤</span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>에펨코리아 (한국어) — 수정본</h2>
+  <div class="copy-block" onclick="copyText(this)">제목: AI 하우스 테스트 해봤는데 나 Claude 하우스 나옴 ㅋㅋ
+
+8문제 성격 테스트인데 Claude, ChatGPT, Gemini, Grok 중 내 AI 하우스 찾아주는 거임 ㅋㅋ
+30초면 끝나고 무료임. 근데 결과가 진짜 맞아서 좀 소름...
+
+실제 통계 데이터 기반이라 신빙성도 있음. 한국어 자동감지됨.
+너네는 뭐 나왔어? 댓글로 알려줘 ㅋㅋ
+
+https://ai-faction-quiz.vercel.app</div>
+  <div class="copy-hint">클릭하면 복사됨</div>
+  <div style="margin-top:8px;">
+    <span class="tag tag-green">✅ 하우스 용어 사용</span>
+    <span class="tag tag-green">✅ 에펨 스타일</span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>X (트위터) 결과 공유 템플릿</h2>
+
+  <h3>한국어</h3>
+  <div class="copy-block" onclick="copyText(this)">AI 하우스 테스트 해봤는데 나 Claude 하우스 나왔음 🟣
+"사색가 · 창작 · 공감형"
+
+8문제로 4개 하우스 중 배정해줌. 30초 무료
+↓ 해봐
+https://ai-faction-quiz.vercel.app
+
+#AI하우스테스트 #Claude하우스</div>
+  <div class="copy-hint">클릭하면 복사됨</div>
+
+  <h3 style="margin-top:16px;">영어</h3>
+  <div class="copy-block" onclick="copyText(this)">Just got sorted into Claude House 🟣
+Apparently I'm the "deep thinker" type
+
+8 questions, completely free, 30 seconds
+Which house are you?
+https://ai-faction-quiz.vercel.app
+
+#AIHouseTest #ClaudeHouse #AIPersonalityQuiz</div>
+  <div class="copy-hint">클릭하면 복사됨</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHAPTER 6: 코드 내부 예외 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="chapter"><span>Chapter 6</span><div class="chapter-line"></div><span>코드 내부 예외 — 변경 불필요</span></div>
+
+<div class="section">
+  <h2>코드 안에서는 "faction" 그대로 유지해도 됨</h2>
+  <p class="section-sub">사용자 눈에 보이지 않는 코드 내부 변수·클래스명은 변경 불필요</p>
+
+  <table>
+    <tr>
+      <th>코드 내부</th>
+      <th>상태</th>
+      <th>이유</th>
+    </tr>
+    <tr>
+      <td><code>resultFaction</code>, <code>faction:</code> (JS 변수)</td>
+      <td><span class="tag tag-yellow">유지</span></td>
+      <td class="td-note">내부 로직 변수 — 사용자에게 노출 안 됨. 변경 시 버그 위험</td>
+    </tr>
+    <tr>
+      <td><code>.faction-chip</code>, <code>.faction-claude</code> (CSS 클래스)</td>
+      <td><span class="tag tag-yellow">유지</span></td>
+      <td class="td-note">스타일 변수 — 사용자에게 노출 안 됨</td>
+    </tr>
+    <tr>
+      <td><code>affiliate_card_click</code> 이벤트 파라미터 <code>faction:</code></td>
+      <td><span class="tag tag-yellow">유지</span></td>
+      <td class="td-note">GA4 분석 데이터 — 바꾸면 히스토리 단절</td>
+    </tr>
+    <tr>
+      <td>URL: <code>ai-faction-quiz.vercel.app</code></td>
+      <td><span class="tag tag-yellow">유지</span></td>
+      <td class="td-note">SEO 페이지 랭킹 연결됨 — 변경 시 트래픽 손실</td>
+    </tr>
+    <tr>
+      <td>메타 <code>keywords</code>: "AI 진영 테스트, AI faction quiz"</td>
+      <td><span class="tag tag-green">유지 허용</span></td>
+      <td class="td-note">SEO 유입용 — 검색 트래픽 확보 목적으로 병기 가능</td>
+    </tr>
+  </table>
+
+  <div class="info-box">
+    💡 <strong>요약:</strong> 사용자가 읽는 텍스트(제목, 버튼, 카피, SNS 글)에는 <strong>하우스/House</strong>. 코드 내부 변수·URL에는 faction 유지. 두 세계를 분리해서 생각하면 됨.
+  </div>
+</div>
+
+<p class="footnote">AI 성향 테스트 브랜드 가이드 v1.0 · 2026-05-09<br>다음 버전 업데이트 시 이 파일 수정</p>
+
+<script>
+function copyText(el) {
+  const text = el.innerText.replace(/^복사/, '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = el.style.borderColor;
+    el.style.borderColor = '#22C55E';
+    setTimeout(() => { el.style.borderColor = orig; }, 900);
+  });
+}
+</script>
+</body>
+</html>
