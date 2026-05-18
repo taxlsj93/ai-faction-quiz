@@ -1,0 +1,1300 @@
+{
+  "$schema": "https://tax-finder.internal/schemas/signalbus/v2.1",
+  "signals": [
+    {
+      "signalId": "01900000-0000-7000-8000-000000000001",
+      "originAgent": "T2",
+      "lawArticle": "조특법 §10 ②2호",
+      "ideaTitle": "게임사 R&D 세액공제",
+      "citationTokens": [
+        "nts:ruling:서면-2023-법규-0142:2023-01-15:abc12345",
+        "scourt:case:2024두12345:2024-08-20:def67890"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2026-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T09:00:00Z",
+        "retrievalQueries": [
+          "게임 소프트웨어 연구개발비 세액공제",
+          "조특법 10조 2항 2호 게임업종"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "KSIC 58221 기준 연평균 R&D 지출 10~30억 원, 공제율 25% 적용 추정",
+        "minKRW": 30000000,
+        "maxKRW": 80000000
+      },
+      "evidenceChecklist": [
+        "연구비 내역서",
+        "연구원 명단",
+        "연구노트 샘플 3건",
+        "사후관리 업무분장표"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "58221"
+        ],
+        "estimatedTargets": 12300,
+        "confidence": 0.78
+      },
+      "finalDecision": "REVIEW",
+      "confidence": 72
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000002",
+      "originAgent": "T1",
+      "lawArticle": "조특법 §24",
+      "ideaTitle": "통합투자세액공제 안전자산",
+      "citationTokens": [
+        "moleg:law:조특법-24:2024-01-01:aa112233",
+        "nts:ruling:기재부-법인-2023-0088:2023-06-10:bb334455"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-03-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T09:05:00Z",
+        "retrievalQueries": [
+          "통합투자세액공제 안전자산 범위",
+          "조특법 24조 기계장치 투자"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "KSIC 28110·52100 평균 설비투자 규모 대비 공제율 10~15% 적용 추정",
+        "minKRW": 50000000,
+        "maxKRW": 200000000
+      },
+      "evidenceChecklist": [
+        "투자자산 취득명세서",
+        "세금계산서 및 계약서",
+        "자산 운용 현황표"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "28110",
+          "52100"
+        ],
+        "estimatedTargets": 5400,
+        "confidence": 0.65
+      },
+      "finalDecision": "REVIEW",
+      "confidence": 68
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000003",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §19 + 장애인고용촉진법 §33",
+      "ideaTitle": "장애인고용부담금 손금산입",
+      "citationTokens": [
+        "scourt:case:2024두98765:2024-11-15:cc556677"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "3mo_posterior",
+          "checkedBy": "T2",
+          "deadline": "2025-02-15",
+          "triggerCitationToken": "scourt:case:2024두98765:2024-11-15:cc556677"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T09:10:00Z",
+        "retrievalQueries": [
+          "장애인고용부담금 손금 해당 여부",
+          "법인세법 19조 열거 외 손금 판례"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "evidenceChecklist": [
+        "장애인고용부담금 납부확인서",
+        "법인세 신고서",
+        "손금불산입 내역"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "26110",
+          "64110",
+          "62010"
+        ],
+        "estimatedTargets": 45000
+      },
+      "finalDecision": "REVIEW",
+      "confidence": 55,
+      "counterExamples": [
+        "기재부 법인세과-2019-0045: 부담금은 제재적 성격으로 손금 불인정 유권해석"
+      ]
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000005",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §10, 시행령 §9",
+      "ideaTitle": "R&D 위탁연구개발비 인정기관 범위 확대",
+      "citationTokens": [
+        "moleg:law:조특법시행령-9:2020-02-11:ff334455"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T10:00:00Z",
+        "retrievalQueries": [
+          "위탁연구개발비 인정기관 시행령 개정 2020"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "위탁연구비 10억 기준 공제율 차이 (15%→25%) 적용",
+        "minKRW": 50000000,
+        "maxKRW": 150000000
+      },
+      "evidenceChecklist": [
+        "위탁연구개발 계약서",
+        "수탁기관 자격 확인서 (과기부 인정서)",
+        "연구개발비 지출 증빙",
+        "기존 세액공제 신청 내역"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "72100",
+          "72200",
+          "62010"
+        ],
+        "estimatedTargets": 8500,
+        "confidence": 0.75
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000007",
+      "originAgent": "T3",
+      "lawArticle": "법인세법 §57, 국제조세조정법 §29",
+      "ideaTitle": "외국납부세액공제 간접세액 분모 계산 오류",
+      "citationTokens": [
+        "nts:ruling:국제세원-2022-0055:2022-09-01:bb778899"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2029-03-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T10:00:00Z",
+        "retrievalQueries": [
+          "간접외국납부세액공제 한도 분모 계산 오류 다국적기업"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "해외 자회사 법인세 납부액 20억 기준 공제 차액",
+        "minKRW": 100000000,
+        "maxKRW": 500000000
+      },
+      "evidenceChecklist": [
+        "해외 자회사 재무제표",
+        "배당금 수취 내역",
+        "외국납부세액공제 신청서",
+        "간접외국납부세액 계산 내역"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "70100",
+          "64110",
+          "26110"
+        ],
+        "estimatedTargets": 3200,
+        "confidence": 0.85
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000008",
+      "originAgent": "T3",
+      "lawArticle": "법인세법 §33, 근로자퇴직급여보장법 §13",
+      "ideaTitle": "확정급여형 퇴직연금 전환 시 과거근무원가 손금산입",
+      "citationTokens": [
+        "nts:ruling:서면2팀-2016-0023:2016-03-15:cc990011"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T10:00:00Z",
+        "retrievalQueries": [
+          "퇴직급여충당금 DB형 전환 과거근무원가 손금"
+        ],
+        "promptVersion": "tax-finder-v1.0",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "임직원 100명 기준 과거근무원가 평균",
+        "minKRW": 30000000,
+        "maxKRW": 80000000
+      },
+      "evidenceChecklist": [
+        "퇴직연금 도입 계약서",
+        "보험수리평가보고서",
+        "과거근무원가 계산 내역",
+        "법인세 신고서 (퇴직급여충당금 손금 내역)"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "70100",
+          "28110",
+          "62010"
+        ],
+        "estimatedTargets": 45000,
+        "confidence": 0.72
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000009",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §24, 중대재해처벌법 §4~9",
+      "ideaTitle": "중대재해처벌법 의무안전투자 통합투자세액공제 누락",
+      "citationTokens": [
+        "moleg:law:조특법-24:2024-01-01:aa112233",
+        "moleg:law:중대재해처벌법-4:2022-01-27:a1b2c3d4"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "중대재해처벌법 안전투자 통합투자세액공제",
+          "조특법 24 안전설비"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "의무 안전투자 30억 기준 세액공제율 10% 적용",
+        "minKRW": 150000000,
+        "maxKRW": 450000000
+      },
+      "evidenceChecklist": [
+        "안전보건 투자계획서 및 설비 계약서",
+        "중대재해처벌법 이행계획서 또는 안전관리 시스템 구축 확인서",
+        "통합투자세액공제 기신청 내역 (누락 여부 확인)",
+        "설비 취득가액 및 감가상각 명세"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "24110",
+          "20111",
+          "21110",
+          "28110"
+        ],
+        "estimatedTargets": 12000,
+        "confidence": 0.78
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000010",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §25의3, 화학물질관리법 §24~30",
+      "ideaTitle": "화관법 의무취급시설 개선투자 환경보전시설 세액공제 누락",
+      "citationTokens": [
+        "moleg:law:화관법-24:2015-12-01:b1c2d3e4"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "화학물질관리법 취급시설 개선비용 세액공제",
+          "환경보전시설 조특법"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "의무 취급시설 개선투자 20억 기준 세액공제율 3~10%",
+        "minKRW": 60000000,
+        "maxKRW": 200000000
+      },
+      "evidenceChecklist": [
+        "화학물질 취급시설 개선공사 계약서 및 준공서류",
+        "화관법 이행명령서 또는 검사결과서",
+        "환경보전시설 해당 여부 확인 (조특법 §25의3 별표)",
+        "법인세 신고서 (환경보전시설 세액공제 누락 확인)"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "20111",
+          "20412",
+          "20494",
+          "21110"
+        ],
+        "estimatedTargets": 3200,
+        "confidence": 0.74
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000015",
+      "originAgent": "T3",
+      "lawArticle": "법인세법 §21, 환경개선비용부담법 §9",
+      "ideaTitle": "환경개선부담금 손금산입 (장애인고용부담금 대법원 판례 유추적용)",
+      "citationTokens": [
+        "scourt:case:2024두98765:2024-11-15:cc556677",
+        "moleg:law:환경개선비용부담법-9:2019-01-01:b2c3d4e5"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "환경개선부담금 법인세 손금산입 부담금 사업관련성",
+          "장애인고용부담금 판례 유추 환경부과금"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "연간 환경개선부담금 납부액 기준 손금 추가 인정 (법인세율 22% 적용)",
+        "minKRW": 50000000,
+        "maxKRW": 500000000
+      },
+      "evidenceChecklist": [
+        "환경개선부담금 납부영수증 (최근 5년)",
+        "법인세 신고서 (손금불산입 처리 확인)",
+        "사업 관련성 입증 자료 (차량·건물 보유 명세)",
+        "장애인고용부담금 판례(2024두98765) 유추적용 논거"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "29110",
+          "29120",
+          "45111",
+          "52910"
+        ],
+        "estimatedTargets": 35000,
+        "confidence": 0.73
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000016",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §45, §46의3",
+      "ideaTitle": "적격합병 형식요건 불비 이월결손금 승계 거부 → 실질요건 충족 대법원 판례 역전",
+      "citationTokens": [
+        "scourt:case:2023두41234:2023-09-22:c2d3e4f5",
+        "nts:ruling:법인세과-2023-0521:2023-11-15:d2e3f4a5"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "적격합병 이월결손금 승계 거부 대법원 형식요건",
+          "법인세법 45조 실질요건 합병"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "이월결손금 승계 거부액 기준 (수백억 규모 가능)",
+        "minKRW": 500000000,
+        "maxKRW": 5000000000
+      },
+      "evidenceChecklist": [
+        "합병등기부등본 및 합병계약서",
+        "적격합병 요건 충족 여부 분석 (실질요건 중심)",
+        "이월결손금 승계 거부 과세처분 내역",
+        "2023두41234 판례 대비 사실관계 비교표"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "70100",
+          "26110",
+          "29110",
+          "30220"
+        ],
+        "estimatedTargets": 500,
+        "confidence": 0.68
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000017",
+      "originAgent": "T3",
+      "lawArticle": "법인세법 §27의2, 법인세법 시행규칙 §26의5",
+      "ideaTitle": "업무용 리스차량 임차료 전액 한도 적용 오류 (감가상각비 상당액만 대상)",
+      "citationTokens": [
+        "nts:ruling:서면-2020-법규-2021:2021-06-01:e2f3a4b5"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "업무용승용차 리스료 감가상각비 상당액 한도 800만원",
+          "법인세 27의2 임차료 한도 계산"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "리스차량 10대 연간 임차료 3억 기준 한도 초과 손금 추가 인정",
+        "minKRW": 10000000,
+        "maxKRW": 50000000
+      },
+      "evidenceChecklist": [
+        "업무용 리스차량 임차료 계약서 (보험·수리비 분리 확인)",
+        "법인세 신고서 (업무용승용차 비용 명세서 F101)",
+        "감가상각비 상당액 재계산 내역",
+        "임차료 대비 감가상각비 비율 산정"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "70100",
+          "64110",
+          "62010",
+          "86110"
+        ],
+        "estimatedTargets": 150000,
+        "confidence": 0.82
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000018",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §21 1호, 독점규제및공정거래에관한법률 §22",
+      "ideaTitle": "공정거래법·방통위 절차위반 과징금 손금산입 (장애인고용부담금 판례 유추)",
+      "citationTokens": [
+        "nts:ruling:법인세과-2024-0088:2024-07-01:f2a3b4c5",
+        "scourt:case:2024두98765:2024-11-15:cc556677"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T11:00:00Z",
+        "retrievalQueries": [
+          "공정거래 과징금 손금 법인세 21조 1호 예외",
+          "절차위반 과징금 손금불산입 예외 판례"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "과징금 납부액 기준 손금 추가 인정분 (법인세율 22%)",
+        "minKRW": 100000000,
+        "maxKRW": 2000000000
+      },
+      "evidenceChecklist": [
+        "과징금 부과처분 내역 (공정위·방통위·금융위)",
+        "과징금 성격 분석 (처벌적 vs 시정 명령적)",
+        "법인세 신고서 (과징금 손금불산입 처리 확인)",
+        "2024두98765 판례 대비 과징금 성격 비교 분석"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "61210",
+          "63110",
+          "64110",
+          "62010"
+        ],
+        "estimatedTargets": 800,
+        "confidence": 0.65
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000019",
+      "originAgent": "T3",
+      "lawArticle": "부가가치세법 §38, §39",
+      "ideaTitle": "연예기획사 소속 연예인 미용시술 부가세 매입세액공제",
+      "citationTokens": [
+        "nts:ruling:부가-2023-0055:2023-06-01:a3b4c5d6",
+        "scourt:case:2022두55678:2022-12-01:b3c4d5e6"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "연예인 미용시술 부가세 매입세액공제",
+          "방송출연 미용비용 사업관련성"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "연간 미용시술비 5억 기준 부가세 10%",
+        "minKRW": 20000000,
+        "maxKRW": 50000000
+      },
+      "evidenceChecklist": [
+        "미용시술 계약서 및 세금계산서",
+        "방송·광고 출연 계약서 (업무 관련성 입증)",
+        "기존 부가세 신고서 (불공제 처리 내역)",
+        "스타일링 비용 vs 의료비 구분 내역"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "90112",
+          "85401",
+          "62099"
+        ],
+        "estimatedTargets": 500,
+        "confidence": 0.55
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000020",
+      "originAgent": "T3",
+      "lawArticle": "부가가치세법 §40, 시행령 §81",
+      "ideaTitle": "부동산임대 겸업 법인 면세매입 과세·면세 안분 과대계산 오류",
+      "citationTokens": [
+        "nts:ruling:부가-2022-0133:2022-11-15:c3d4e5f6"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T3",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "부동산임대업 겸업 매입세액 안분 면세비율 오류",
+          "부가세 40조 공통매입세액"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "매입세액 공통비용 100억 기준 안분 오류 2~5%",
+        "minKRW": 100000000,
+        "maxKRW": 500000000
+      },
+      "evidenceChecklist": [
+        "사업부문별 매출 내역 (과세·면세 구분)",
+        "공통 매입세액 명세",
+        "기존 부가세 신고서 (안분 계산 방식 확인)",
+        "임대차 계약서 및 면적 자료"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "68111",
+          "47111",
+          "56111"
+        ],
+        "estimatedTargets": 3000,
+        "confidence": 0.72
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000023",
+      "originAgent": "T2",
+      "lawArticle": "조세특례제한법 §10, 약사법 §34",
+      "ideaTitle": "제약사 3상 임상시험 비용 R&D 세액공제 누락",
+      "citationTokens": [
+        "nts:ruling:서면-2022-법규-0211:2022-07-15:f3a4b5c6",
+        "moleg:law:약사법-34:2019-01-01:a4b5c6d7"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "3상 임상시험 R&D 세액공제 사업화 단계",
+          "임상시험 비용 조특법 10조"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "3상 임상비용 200억 기준 중견 15% 공제율",
+        "minKRW": 1500000000,
+        "maxKRW": 3000000000
+      },
+      "evidenceChecklist": [
+        "임상시험 계획 승인서 (식약처)",
+        "임상시험 비용 집행 내역",
+        "기존 R&D 세액공제 신청 내역 (3상 포함 여부)",
+        "연구개발 해당 여부 판단 (불확실성·기술혁신성 검토)"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "21110",
+          "72100",
+          "86110"
+        ],
+        "estimatedTargets": 180,
+        "confidence": 0.76
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000029",
+      "originAgent": "T1",
+      "lawArticle": "법인세법 §30, 보험업법 §120, IFRS17",
+      "ideaTitle": "IFRS17 도입 보험사 책임준비금 세무조정 과다 익금산입",
+      "citationTokens": [
+        "nts:ruling:법인세과-2023-0788:2023-12-15:a5b6c7d8",
+        "moleg:law:보험업법-120:2023-01-01:b5c6d7e8"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "IFRS17 책임준비금 세무조정 보험사 법인세",
+          "보험업법 120조 적립금 손금"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "책임준비금 과다 익금산입 규모 (보험사별 수백억 가능)",
+        "minKRW": 500000000,
+        "maxKRW": 5000000000
+      },
+      "evidenceChecklist": [
+        "IFRS17 전환 시 책임준비금 산출 내역",
+        "세무상 인정 책임준비금 한도 계산",
+        "법인세 신고서 (익금산입 처리 내역)",
+        "보험계리사 검토 의견서"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "65110",
+          "65120",
+          "65201",
+          "65202"
+        ],
+        "estimatedTargets": 30,
+        "confidence": 0.74
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000031",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §25의3, 선박평형수관리에관한법률 §8",
+      "ideaTitle": "선박평형수처리장치(BWTS) 의무설치비 환경보전시설 세액공제 누락",
+      "citationTokens": [
+        "moleg:law:선박평형수관리법-8:2019-09-22:d5e6f7a8"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "선박평형수처리장치 환경보전시설 세액공제",
+          "BWTS 설치비 조특법"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "선박 1척당 BWTS 설치비 5~20억 × 보유 선박 수",
+        "minKRW": 150000000,
+        "maxKRW": 1000000000
+      },
+      "evidenceChecklist": [
+        "선박평형수처리장치 형식승인서",
+        "설치 계약서 및 취득가액 증빙",
+        "환경보전시설 해당 여부 (조특법 §25의3 별표)",
+        "기존 환경보전시설 세액공제 신청 여부"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "50111",
+          "50112",
+          "30111",
+          "30112"
+        ],
+        "estimatedTargets": 80,
+        "confidence": 0.76
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000033",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §24, 항공안전법 §23",
+      "ideaTitle": "항공안전법 의무화 안전관리시스템·지상장비 통합투자세액공제 누락",
+      "citationTokens": [
+        "moleg:law:항공안전법-23:2020-05-27:a6b7c8d9"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "항공안전법 SMS 구축비 통합투자세액공제",
+          "항공사 안전설비 세액공제"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "항공사 안전설비 투자 100억 기준 공제율 10%",
+        "minKRW": 500000000,
+        "maxKRW": 1000000000
+      },
+      "evidenceChecklist": [
+        "항공안전관리시스템(SMS) 구축 계획서 및 투자 내역",
+        "국토부 SMS 의무화 대상 확인",
+        "통합투자세액공제 기신청 여부",
+        "장비 취득가액 및 감가상각 명세"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "51110",
+          "51210",
+          "30220",
+          "52290"
+        ],
+        "estimatedTargets": 20,
+        "confidence": 0.7
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000035",
+      "originAgent": "T1",
+      "lawArticle": "법인세법 §36 (국고보조금), 산업집적활성화및공장설립법",
+      "ideaTitle": "스마트공장 구축 정부보조금 압축기장충당금 과세이연 미활용",
+      "citationTokens": [
+        "nts:ruling:법인세과-2022-0215:2022-04-18:c6d7e8f9"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "스마트공장 정부보조금 압축기장충당금 과세이연",
+          "국고보조금 법인세 36조"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "보조금 50억 기준 당기 법인세 이연 효과 (법인세율 22%)",
+        "minKRW": 500000000,
+        "maxKRW": 1100000000
+      },
+      "evidenceChecklist": [
+        "스마트공장 구축 보조금 지급 확인서 (중기부)",
+        "자산 취득 내역 및 회계처리",
+        "법인세 신고서 (보조금 익금 처리 방법 확인)",
+        "압축기장충당금 설정 가능 여부 검토"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "28110",
+          "29110",
+          "26110",
+          "24110"
+        ],
+        "estimatedTargets": 2000,
+        "confidence": 0.75
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000037",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §19, §40, 상법 §340의2 (스톡옵션)",
+      "ideaTitle": "스톡옵션 행사차익 법인세 손금 귀속 시기 오류",
+      "citationTokens": [
+        "nts:ruling:서면-2021-법규-0455:2021-08-20:e6f7a8b9"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "스톡옵션 행사차익 법인세 손금 시기",
+          "주식매수선택권 행사 손금 귀속"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "스톡옵션 행사차익 100억 기준 손금 인정 시 22% 절감",
+        "minKRW": 500000000,
+        "maxKRW": 2200000000
+      },
+      "evidenceChecklist": [
+        "주식매수선택권 부여·행사 내역",
+        "행사차익 법인세 처리 방법 확인",
+        "손금 귀속 시기 재검토 (행사시 vs 부여시)",
+        "임직원 근로소득세 원천징수 내역 비교"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "62010",
+          "63110",
+          "26110",
+          "70100"
+        ],
+        "estimatedTargets": 600,
+        "confidence": 0.7
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000038",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §93, §98, 한-미/한-독 조세조약",
+      "ideaTitle": "외국법인 기술사용료 원천징수 과다납부 조세조약 소급 환급",
+      "citationTokens": [
+        "nts:ruling:국제세원-2021-0122:2021-12-10:f6a7b8c9"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "외국법인 로열티 원천징수 조세조약 제한세율",
+          "기술사용료 원천세 환급"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "로열티 지급액 100억 기준 세율 차이 5~10% 환급",
+        "minKRW": 500000000,
+        "maxKRW": 1000000000
+      },
+      "evidenceChecklist": [
+        "기술사용료 지급 계약서 및 원천징수 영수증",
+        "조세조약 해당 여부 확인 (제한세율 적용국)",
+        "외국법인 거주지증명서",
+        "5년치 원천징수 과납 금액 계산"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "26110",
+          "29110",
+          "62010",
+          "20111"
+        ],
+        "estimatedTargets": 300,
+        "confidence": 0.76
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000039",
+      "originAgent": "T2",
+      "lawArticle": "조세특례제한법 §10, 시행령 §9, 기초연구법 §14의2",
+      "ideaTitle": "기업부설연구소 전용 공간 임차료 R&D 세액공제 포함 누락",
+      "citationTokens": [
+        "nts:ruling:서면-2019-법규-0567:2019-09-25:a7b8c9d0"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "기업부설연구소 임차료 R&D 세액공제",
+          "연구소 건물 임대료 조특법"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "연구소 임차료 연 10억 기준 공제율 15%",
+        "minKRW": 50000000,
+        "maxKRW": 150000000
+      },
+      "evidenceChecklist": [
+        "기업부설연구소 인정서 (과기부)",
+        "연구소 임차 계약서 및 전용 사용 증빙",
+        "기존 R&D 세액공제 신청 내역 (임차료 포함 여부)",
+        "연구 전용 공간 비율 계산"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "72200",
+          "72100",
+          "26110",
+          "21110"
+        ],
+        "estimatedTargets": 3000,
+        "confidence": 0.68
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000040",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §25의3, 물환경보전법 §38의2",
+      "ideaTitle": "반도체 초순수·폐수 재이용 시스템 환경보전시설 세액공제 누락",
+      "citationTokens": [
+        "moleg:law:물환경보전법-38의2:2021-01-05:b7c8d9e0"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "반도체 초순수 폐수재이용 환경보전시설 세액공제",
+          "물환경보전법 폐수처리 의무 설비"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "초순수·폐수 재이용 설비 투자 200억 기준 공제율 3~10%",
+        "minKRW": 600000000,
+        "maxKRW": 2000000000
+      },
+      "evidenceChecklist": [
+        "폐수 재이용 설비 설치 허가 및 취득가액",
+        "환경보전시설 해당 여부 (조특법 별표)",
+        "물환경보전법 의무화 대상 확인",
+        "기존 세액공제 신청 여부"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "26110",
+          "20111",
+          "24110",
+          "72200"
+        ],
+        "estimatedTargets": 50,
+        "confidence": 0.78
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000042",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §25의2, IMO2020·해양환경관리법 §41의2",
+      "ideaTitle": "해운업 선박 스크러버·저유황유 전환 설비 에너지절약시설 세액공제",
+      "citationTokens": [
+        "moleg:law:해양환경관리법-41의2:2020-01-01:d7e8f9a0"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "선박 스크러버 에너지절약시설 세액공제 IMO2020",
+          "저유황유 전환 해운법 환경설비"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "선박 1척 스크러버 설치비 30~50억 × 보유 선박 수",
+        "minKRW": 300000000,
+        "maxKRW": 2000000000
+      },
+      "evidenceChecklist": [
+        "선박 배기가스세정장치(스크러버) 설치 확인서",
+        "해양환경관리법 의무 적용 대상 선박 목록",
+        "에너지절약시설 고시 해당 여부",
+        "기존 세액공제 신청 여부"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "50111",
+          "50112",
+          "30111"
+        ],
+        "estimatedTargets": 60,
+        "confidence": 0.74
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000043",
+      "originAgent": "T2",
+      "lawArticle": "법인세법 §34, 시행령 §61, IFRS9",
+      "ideaTitle": "IFRS9 도입 금융업 대손충당금 세무상 손금한도 과소계산",
+      "citationTokens": [
+        "nts:ruling:법인세과-2019-0188:2019-03-20:f7a8b9c0"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T2",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "IFRS9 기대손실 대손충당금 손금한도 계산",
+          "금융업 대손충당금 법인세 34조"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "대손충당금 손금 과소계상 규모 (은행별 수백억 가능)",
+        "minKRW": 500000000,
+        "maxKRW": 5000000000
+      },
+      "evidenceChecklist": [
+        "IFRS9 기준 기대손실(ECL) 산출 내역",
+        "세무상 대손충당금 한도 재계산",
+        "법인세 신고서 (대손충당금 손금 처리 내역)",
+        "외부 감사 보고서 비교"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "64110",
+          "64190",
+          "64221",
+          "65120"
+        ],
+        "estimatedTargets": 100,
+        "confidence": 0.72
+      }
+    },
+    {
+      "signalId": "01900000-0000-7000-8000-000000000046",
+      "originAgent": "T1",
+      "lawArticle": "조세특례제한법 §25의2, 에너지이용합리화법 §35",
+      "ideaTitle": "에너지 다소비 업체 열병합발전·폐열회수 설비 에너지절약시설 세액공제",
+      "citationTokens": [
+        "moleg:law:에너지이용합리화법-35:2021-04-20:d8e9f0a1"
+      ],
+      "readOnlySnapshot": true,
+      "recursionDepth": 0,
+      "gateDecisions": [
+        {
+          "gate": "G1",
+          "pass": true,
+          "track": "5yr_ordinary",
+          "checkedBy": "T1",
+          "deadline": "2027-12-31"
+        }
+      ],
+      "traceability": {
+        "discoveredAt": "2026-05-18T12:00:00Z",
+        "retrievalQueries": [
+          "열병합발전소 에너지절약시설 세액공제",
+          "폐열회수 설비 조특법 25의2"
+        ],
+        "promptVersion": "tax-finder-v1.1",
+        "modelUsed": "claude-sonnet-4-6"
+      },
+      "estimatedRefundRange": {
+        "basis": "열병합·폐열회수 설비 투자 300억 기준 공제율 3~6%",
+        "minKRW": 900000000,
+        "maxKRW": 1800000000
+      },
+      "evidenceChecklist": [
+        "에너지 다소비 사업자 신고 확인서 (산업부)",
+        "열병합·폐열회수 설비 취득가액 증빙",
+        "에너지절약시설 고시 해당 여부 확인",
+        "기존 세액공제 신청 여부"
+      ],
+      "ksicMapping": {
+        "codes": [
+          "20111",
+          "24110",
+          "20412",
+          "35110"
+        ],
+        "estimatedTargets": 400,
+        "confidence": 0.77
+      }
+    }
+  ]
+}

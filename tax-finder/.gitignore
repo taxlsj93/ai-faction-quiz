@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+review_queue.json
+signal_filter_analysis.html
+filter_signals.py
+patch_50signals.py
+sc1_matcher.py
+sc1_sealed_answers.json
