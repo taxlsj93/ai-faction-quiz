@@ -32,7 +32,9 @@ tools: Bash, Read, Glob, Grep
 - [ ] 톤·분량 가이드 부합 (`AGENTS_RUBRIC.md` doc-writer 절)
 - [ ] 마크다운 구조(헤딩·표·링크) 깨짐 없음
 
-### 3) 세무 산출물 (tax-domain-expert 산출물)
+### 3) 세무 산출물 (tax-domain-expert / filing-estimator / diagnostic-builder)
+
+**공통 (모든 세무 산출물)**
 - [ ] 인용 조문이 실제 존재 (law.go.kr 확인 흔적 또는 1차 출처 인용)
 - [ ] 조문의 시행일·개정일 표기
 - [ ] 판례 인용 시 사건번호 정확 (예: 대법원 20XX두XXXX, 선고 YYYY-MM-DD)
@@ -40,6 +42,30 @@ tools: Bash, Read, Glob, Grep
 - [ ] 가산세·신고 기한 등 부수 의무 언급 (해당 시)
 - [ ] "확정 자문 아님, 개별 사실관계 추가 확인 필요" 면책 포함
 - [ ] 단정적 표현 회피 ("X 무조건 됩니다" 금지)
+
+**경정청구 / 카드 작업**
+- [ ] 청구 근거 조문 명시 (**국기법 §45조의2 ① 일반 / ② 후발**)
+- [ ] 시효 카운터 명시 (**5년 일반 / 3개월 후발**, 시작일 포함)
+
+**filing-estimator 추가 (★ 신뢰도) — P2 게이트**
+- [ ] 모든 추정 라인에 ★ 신뢰도 (★/★★/★★★) 표기
+- [ ] 추정 단서 출처 명시 (재무제표·공시·계약서·업종 디폴트)
+- [ ] 반례 점검(counter-signal) 섹션 있음
+- [ ] 가짜·창작 수치 없음 (**P2 게이트 — 위반 시 즉시 FAIL**)
+- [ ] R/A/B 트리아지 시 등급 사유 한 줄 명시
+
+**diagnostic-builder 추가 (진단 인터뷰)**
+- [ ] 문항이 명확한 yes/no (모호 표현 없음)
+- [ ] 복합 질문 없음 (한 문항 한 사실)
+- [ ] 답 조합별 등급 매핑(R/A/B 등) 명시
+- [ ] 등급별 후속 액션 한 줄 명시
+- [ ] 채점 불가 옵션("잘 모름" 등) 없음
+
+**시그널 DB 운영 (filing-estimator / tax-domain-expert 산출 시 해당)**
+- [ ] 새 매핑 발견 시 "DB 업데이트 권고" 섹션 있음
+- [ ] 권고 시 `evidence_sources` 비어있지 않음
+- [ ] `case_id` 외 개인 식별정보 없음 (사업자번호·이름 등)
+- [ ] `validation_record` 누적 결과가 신뢰도와 정합
 
 ### 4) 배포·git 변경 (deployer 산출물)
 - [ ] `.gitignore` 누락 없음 (node_modules / .env / .omc/ / .claude/worktrees/ / 토큰)
