@@ -62,6 +62,7 @@ Jasper 평균 커미션: $12.25/유저/월
 | `phoney-war-mvp.html` | 보류 | 일일 배틀 MVP (Phase 3 활용) |
 | `war-map.html` | 보류 | 헥사곤 영토전 시각화 |
 | `territory-war.html` | 아카이브 | Phase 1 프로토타입 |
+| `income-strategy-notes.md` | 전략 메모 | 수입 파이프라인 전략 논의 요약 (2026-05-23 세션) |
 
 ---
 
