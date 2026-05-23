@@ -199,6 +199,7 @@ b949348 Initial commit — AI Faction Quiz v1.0
 | 10 | **어필리에이트 실 트래킹 ID 확인** — `?via=aifaction` 가 실제 가입한 ID와 일치하는지 | 사용자 | 대기 |
 | 11 | **Plausible Analytics 활성화** (선택) — 코드 주석 해제만 하면 됨 | code-implementer | 옵션 |
 | 12 | **AdSense 승인 후 popunder 재활성화 검토** | 사용자 + coordinator | AdSense 승인 후 |
+| 13 | **Post-Chat AI UI/UX 신규 프로젝트** — 버티컬/도메인 선택 후 generative UI MVP 범위 확정 (상세: §13) | 사용자 결정 → coordinator | 🆕 논의됨 (세션 4), 도메인 미정 |
 
 ---
 
@@ -257,5 +258,39 @@ TOKEN=$(printf "protocol=https\nhost=github.com\n\n" | git credential fill 2>/de
 
 ---
 
-**이 핸드오프는 2026-05-09 (세션 3) 기준이며, 마지막 커밋 `25a32de` 시점의 상태를 반영합니다.**
+## 13. 신규 프로젝트 아이디어 — "Post-Chat AI UI/UX" (세션 4, 2026-05-23)
+
+> 코드 변경 없는 **전략·아이디어 논의 세션**. 미래 세션이 이어받을 수 있게 기록.
+
+### 발단 (사용자 관점)
+- 현재 AI 인터페이스(Claude 등)는 **MS-DOS 수준의 텍스트 대화형**.
+- 사람은 글보다 시각적 인지가 빠름 → MS-DOS→Windows급 전환 = **직관적 UI/UX**가 필요.
+- **별도 신규 프로젝트**로 탐색 의향 (현 AI 성향 테스트와 독립).
+
+### 검토한 패러다임 (post-chat UI)
+| # | 패러다임 | 핵심 | 사례 |
+|---|---------|------|------|
+| 1 | Generative UI | 응답을 글 대신 실시간 UI 컴포넌트로 렌더 | Vercel AI SDK, OpenAI Canvas, Claude Artifacts |
+| 2 | Direct Manipulation + AI | 클릭·드래그로 의도 전달 (프롬프트 X) | Figma AI, Cursor, v0.dev |
+| 3 | Spatial / AI-as-OS | 챗창 없는 OS형 (실패 사례 多) | Rabbit R1, Humane, Vision Pro |
+| 4 | Embedded Contextual AI | 앱마다 위젯으로 내장 — 가장 성공적 | Notion AI, Cursor, Linear |
+| 5 | Multimodal-first | 음성·카메라·스케치·제스처 1차 입력 | GPT-4o voice, Gemini Live |
+
+### 수익화 경로 (1인 개발자 기준)
+| 경로 | 모델 | 현실 매출 | 평가 |
+|------|------|----------|------|
+| **A. 버티컬 SaaS** | 한 도메인 특화 generative UI, $19~49/mo | 100~500명 → 월 $2k~25k | 신규 독립 프로젝트라면 **유일하게 의미있는 경로** |
+| **B. 기존 미디어 + generative UI 레이어** | 어필리에이트 (현 모델 유지) | 트래픽 자산 재활용 | **ROI 최고, 가장 안전** |
+| C. 위탁 개발/컨설팅 | "챗봇→GUI 전환" 건당 500~5,000만원 | 현금흐름 즉시 | 시간 팔기, 확장 불가 |
+| D. 템플릿/컴포넌트 판매 | Gumroad 일회성 $29~99 | 월 $500~3,000 | 대박 아님 |
+
+### 결론 / 다음 결정 포인트
+- generative UI 자체는 오픈소스화되어 **기술만으로는 차별화 불가** → "누구의 어떤 페인을 푸는가"가 핵심.
+- 완전 신규 독립 프로젝트로 간다면 **A(버티컬 SaaS)** 가 유일하게 의미있음 (단, 트래픽 0에서 시작).
+- 가장 빠르고 안전한 길 = **B(현 AI 성향 테스트 사이트에 generative UI 레이어 얹기)** — 기존 트래픽 파이프라인 활용.
+- ⏭ **사용자 결정 대기**: 어떤 버티컬/도메인에 전문성·관심이 있는지 → 정해지면 MVP 범위 구체화 가능. (실현 가능 출발점으로 "Generative UI + Tool-as-UI 조합, Vercel AI SDK + Next.js" 제안됨.)
+
+---
+
+**이 핸드오프는 2026-05-23 (세션 4) 기준입니다. 세션 4는 코드 변경 없는 전략 논의이며, 직전 코드 상태는 커밋 `25a32de`(세션 3) 그대로입니다.**
 **다음 세션에서 작업 후 이 파일도 함께 갱신해 주세요.**
