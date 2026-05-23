@@ -1,8 +1,11 @@
 # 📊 STATUS — AI 성향 테스트 미디어
 
-> **마지막 업데이트**: 2026-05-06 21:32 UTC
+> **마지막 업데이트**: 2026-05-23 (세션 4)
 > **사업 단계**: Phase 1 — 런치 직후
 > **메인 제품**: ai-faction-quiz (배포 완료)
+>
+> ⚠️ **세션 4 메모**: 이번 세션은 제품과 무관한 **개인 요청(기초화장품 사업 로드맵)** 작업이었음.
+> 산출물 `cosmetics-business-plan.md` / `cosmetics-roadmap.html` / `cosmetics-roadmap.pdf` 가 master에 추가됨(제품 아님). 상세는 `HANDOFF.md` §13.
 
 ---
 
@@ -58,6 +61,16 @@
 | `robots.txt`               | 검색엔진 정책 |
 | `sitemap.xml`              | 사이트맵 |
 | `vercel.json`              | cleanUrls + trailingSlash |
+
+### 🧾 별도 산출물 — 제품 외 (세션 4, 개인 요청)
+
+| 파일 | 역할 |
+|------|------|
+| `cosmetics-business-plan.md`  | 기초화장품 브랜드 창업 로드맵 (텍스트 원본) |
+| `cosmetics-roadmap.html`      | 위 내용 반응형 HTML (다운로드/인쇄 버튼) |
+| `cosmetics-roadmap.pdf`       | 위 내용 PDF (8쪽) |
+
+> AI 성향 테스트 제품과 무관. PDF 재생성·상세는 `HANDOFF.md` §13.
 
 ### 📁 deploy/ (백업 — 사용 안 함)
 

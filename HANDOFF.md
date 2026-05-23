@@ -257,5 +257,54 @@ TOKEN=$(printf "protocol=https\nhost=github.com\n\n" | git credential fill 2>/de
 
 ---
 
-**이 핸드오프는 2026-05-09 (세션 3) 기준이며, 마지막 커밋 `25a32de` 시점의 상태를 반영합니다.**
+## 13. 별도 산출물 — 기초화장품 사업 로드맵 (⚠️ AI 퀴즈 제품과 무관 / 개인 요청)
+
+> **세션 4 (2026-05-12 ~ 2026-05-23)** 작업. AI 성향 테스트 제품과 **무관한 개인 요청**으로,
+> 사용자 아내의 **기초화장품(스킨케어) 브랜드 창업** 로드맵 문서를 작성한 것. 제품 로드맵·마케팅과 섞지 말 것.
+
+### 무엇을 했나
+- 기초 스킨케어 브랜드 창업 로드맵 작성: 단계별(Phase 0~3, 12개월) · 자본 계획 · 인허가(화장품책임판매업 등록) · 정부지원 한도 · 1인 운영 가능성 · 세럼 1종 비용 예시
+- 동일 내용을 **3개 포맷**으로 산출: 마크다운 / 반응형 HTML / PDF(8쪽)
+- HTML에 다운로드 버튼(PDF·HTML·MD) + 인쇄용 print CSS 추가
+- PR #6, #7로 master 머지 완료 → Vercel 라이브 반영
+
+### 산출 파일 (master 반영됨)
+| 파일 | 설명 |
+|------|------|
+| `cosmetics-business-plan.md` | 텍스트 원본 (GitHub에서 렌더링해 보기 가장 편함) |
+| `cosmetics-roadmap.html` | 반응형 HTML (다운로드/인쇄 버튼 포함) |
+| `cosmetics-roadmap.pdf` | 생성된 PDF, 8쪽 |
+
+### 라이브 URL (Vercel)
+- https://ai-faction-quiz.vercel.app/cosmetics-roadmap.html
+- https://ai-faction-quiz.vercel.app/cosmetics-roadmap.pdf
+- https://ai-faction-quiz.vercel.app/cosmetics-business-plan.md
+
+### PDF 재생성 방법 (내용 수정 시)
+Playwright(Chromium)로 HTML → PDF 렌더. 글로벌 설치 사용:
+```bash
+cat > /tmp/gen_pdf.js <<'JS'
+const { chromium } = require('playwright');
+(async () => {
+  const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+  const p = await b.newPage();
+  await p.goto('file:///home/user/ai-faction-quiz/cosmetics-roadmap.html', { waitUntil: 'networkidle' });
+  await p.emulateMedia({ media: 'print' });
+  await p.pdf({ path: '/home/user/ai-faction-quiz/cosmetics-roadmap.pdf', format: 'A4', printBackground: true,
+    margin: { top: '12mm', bottom: '14mm', left: '10mm', right: '10mm' } });
+  await b.close();
+})();
+JS
+NODE_PATH=/opt/node22/lib/node_modules node /tmp/gen_pdf.js
+```
+
+### 미해결/주의
+- 금액·정부지원 제도는 2025~2026 추정치 → 신청 전 K-Startup·기업마당·식약처 최신 공고 확인 필요(문서에 면책 명시).
+- 사용자 아내 프로필: **디자이너 + 화장품 업계 인맥** → 디자인 인하우스로 린 스타트 1,000만원대 가능(문서 §8·§2-D 반영).
+- 다음 단계 후보(미진행): ① ODM 견적 비교 체크리스트 ② 정부지원 신청용 사업계획서 초안 템플릿.
+- ⚠️ master 직접 push는 **403(브랜치 보호)** — 변경은 브랜치 push 후 **PR 생성→머지**로만 가능.
+
+---
+
+**이 핸드오프는 세션 4(2026-05-23)에 갱신됨. AI 퀴즈 제품 상태는 §1~§12(세션 3, 커밋 `25a32de` 기준)가 유효하고, §13은 별도 개인 산출물 기록입니다.**
 **다음 세션에서 작업 후 이 파일도 함께 갱신해 주세요.**
