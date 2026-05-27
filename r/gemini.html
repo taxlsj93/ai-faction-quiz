@@ -88,7 +88,7 @@
   <button class="share-btn" onclick="reshareGemini()">📣 친구는 무슨 타입? — 공유하기</button>
   <script>
     function reshareGemini() {
-      var t = '나는 Gemini 타입! 체계형 전략가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app\n\n#AI성향테스트 #Gemini타입';
+      var t = '나는 Gemini 타입! 체계형 전략가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app/r/gemini\n\n#AI성향테스트 #Gemini타입';
       if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'gemini' });
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
     }

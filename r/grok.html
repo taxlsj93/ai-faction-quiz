@@ -88,7 +88,7 @@
   <button class="share-btn" onclick="reshareGrok()">📣 친구는 무슨 타입? — 공유하기</button>
   <script>
     function reshareGrok() {
-      var t = '나는 Grok 타입! 반골형 혁신가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app\n\n#AI성향테스트 #Grok타입';
+      var t = '나는 Grok 타입! 반골형 혁신가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app/r/grok\n\n#AI성향테스트 #Grok타입';
       if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'grok' });
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
     }
