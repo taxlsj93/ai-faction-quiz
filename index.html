@@ -1101,7 +1101,8 @@
 <script>
 // ── LANGUAGE DETECTION ──
 const params = new URLSearchParams(location.search);
-const LANG = params.get('lang') || (navigator.language.startsWith('ko') ? 'ko' : 'en');
+// C8: detect EN via pathname (/en rewrite) OR ?lang= query (legacy), then navigator fallback.
+const LANG = (location.pathname === '/en') ? 'en' : (params.get('lang') || (navigator.language.startsWith('ko') ? 'ko' : 'en'));
 document.documentElement.lang = LANG;
 
 // ── STRINGS ──
