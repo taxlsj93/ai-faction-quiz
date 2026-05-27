@@ -6,32 +6,65 @@
 
 ---
 
-## 🆕 세션 5 (2026-05-27) — 리뉴얼 Phase 1 완료
+## 🆕 세션 5 (2026-05-27) — 리뉴얼 Phase 1+2 라이브 완료
 
-진단(IMPROVEMENT_NOTES.md) 기반 ralplan v3.2 합의 → Phase 1 5 커밋 라이브.
+진단(IMPROVEMENT_NOTES.md) + designer 진단(DESIGN_AUDIT.md) + ralplan v3.2 consensus 합의
+→ **12 커밋, 14 surface, 8 신규 GA4 이벤트** 라이브 반영.
 
-| 커밋 | 의미 | 라이브 검증 |
+### Phase 1 (어트리뷰션 안전·외부 자격 무의존)
+| 커밋 | 의미 | 라이브 |
 |------|------|------|
-| C0 `5f148b7` chore: 워크트리 정리 | IMPROVEMENT_NOTES + CLAUDE.md(M) + reports → _archive | ✅ |
-| C1a `43dfe59` feat(og): SVG→PNG 14 surface | 공유 미리보기 부활 (FB·X·카카오 OG 지원) | ✅ `/og-image.png` 200, `image/png`, 112.5KB |
-| C1b `50f0c1b` chore(build): build-og.mjs + devDep | 재현성용. Vercel 빌드 무영향 | ✅ |
-| C2 `9fcaf18` fix(a11y): viewport pinch-zoom | WCAG 1.4.4 해소 | ✅ `maximum-scale` 제거 확인 |
-| C5a `35fc85b` refactor(affiliate): window.AFFILIATE 단일 소스 | URL 무변경, U1 받으면 1줄로 전체 교체 | ✅ |
+| C0  `5f148b7` chore: 워크트리 정리 | IMPROVEMENT_NOTES + CLAUDE.md(M) + reports archive | ✅ |
+| C1a `43dfe59` feat(og): SVG→PNG 14 surface + dead SVG 삭제 | 공유 미리보기 부활 (FB·X·카카오 OG 지원) | ✅ /og-image.png 200, image/png, 112.5KB |
+| C1b `50f0c1b` chore(build): build-og.mjs + devDep | 재현성용 puppeteer-core 빌드 | ✅ |
+| C2  `9fcaf18` fix(a11y): viewport 핀치줌 | WCAG 1.4.4 해소 | ✅ |
+| C5a `35fc85b` refactor(affiliate): window.AFFILIATE 단일 소스 | URL 무변경, U1 받으면 1줄 교체 | ✅ |
+| C9p1 `c9d1c2b` docs Phase 1 | STATUS·HANDOFF 갱신 | ✅ |
 
-**라이브 헬스체크 결과** (2026-05-27):
-- `/`, `/en`, `/r/{claude,gpt,gemini,grok}` → 모두 200
-- `/og-image.png`, `/og/claude.png`, `/og/grok.png` → 200, `Content-Type: image/png`
-- 메인·EN OG meta: `og:image=...png`, viewport 핀치줌 허용
+### Phase 2 (수익·재방문 attribution-safe)
+| 커밋 | 의미 | 라이브 |
+|------|------|------|
+| C8  `edc933e+1bc14b8` feat(en): /en URL atomic 통일 | rewrite + per-LANG canonical + en.html DELETE + launch-copy.md | ✅ /en EN content, /en.html 308 |
+| C7  `b8218d9` feat(quiz): 옵션 셔플 + 선택 피드백 | display-only shuffle, 백엔드 contract 보존 | ✅ |
+| C3  `eff1cca` feat(result): 보조타입 배지 + 백분위 + 친구비교 + 공유 상단 부상 | designer #2·#6, 시선 1초 단축 | ✅ result-secondary-badge·share-section id 라이브 |
+| C4  `4202508` feat(share): /r/{4} 재공유 CTA + 모바일 패딩 | designer #5, 2차 확산 루프 | ✅ "친구는 무슨 타입" 버튼 라이브 |
+| C6  `32a0b54` feat(newsletter): ConvertKit form (placeholder-gated) | designer #4, U2 받으면 1줄 활성 | ✅ inert mode 동작 |
 
-**사용자 작업 큐(U)**:
-- **U3 (즉시·중요)**: FB Sharing Debugger / X Card Validator / 카카오 디버거에서 강제 캐시 무효화 — Phase 1 OG 부활 측정 시작.
-- U1: 어필리에이트 실 ID 4종 (C5b 차단)
-- U2: ConvertKit form ID (C6는 placeholder 가드로 출시 가능)
-- U4: GA4 전환 표시 + Search Console
-- U5: GitHub Secrets `ANTHROPIC_API_KEY` (.github/ 별도)
+### 신규 GA4 이벤트 (사용자 작업 U4에서 전환 표시 권장)
+- `secondary_type_shown {faction, secondary, pct}`
+- `friend_compare_row_shown {faction}`
+- `landing_take_quiz_click {faction}`
+- `landing_reshare_click {faction}`
+- `newsletter_widget_inert {faction}` (placeholder 상태)
+- `newsletter_widget_shown {faction}` (실 ID 활성 시)
+- `newsletter_subscribed {faction}`
+- `newsletter_failed {faction, reason}`
 
-**Phase 2 진입 예정** (designer 진단 받고 적용):
-- C3 결과 차별화 / C4 재공유 CTA / C8 EN URL 통일 / C7 옵션 셔플 / C6 뉴스레터 / C5b U1 후 매핑 / C9p2 최종 보고
+### 사용자 작업 큐 (모바일에서 모두 가능, 우선순위 순)
+
+| # | 작업 | 어디서 | 효과 |
+|---|------|--------|------|
+| 🔴 **U3** | FB Sharing Debugger·X Card Validator·카카오 디버거에서 `/`, `/en`, `/r/{claude,gpt,gemini,grok}` 강제 캐시 무효화 | developers.facebook.com/tools/debug · cards-dev.twitter.com/validator · developers.kakao.com | 새 PNG 미리보기 즉시 노출 (현재 캐시는 옛 SVG) |
+| 🟠 **U1** | 어필리에이트 실 ID 4종 확인 → `window.AFFILIATE` 1곳 교체 지시 | Writesonic / Perplexity / Copy.ai 대시보드 (Jasper는 옵션) | C5b 진행 가능. 수익 누락 0 |
+| 🟡 **U2** | ConvertKit 무료 가입 → form 생성 → form ID → `window.CONVERTKIT_FORM_ID` 1줄 교체 지시 | convertkit.com | C6 즉시 활성, 일회성 트래픽 구독 자산화 |
+| 🟡 **U4** | GA4에서 `quiz_complete`·`cta_secondary_click`·`chat_opened`·`landing_take_quiz_click`·`newsletter_subscribed`를 전환 이벤트로 표시 + Search Console에 sitemap 제출 | analytics.google.com · search.google.com | 데이터로 의사결정 가능 |
+| ⚪ **U5** | GitHub Settings → Secrets → `ANTHROPIC_API_KEY` 등록 | github.com/taxlsj93/ai-faction-quiz/settings/secrets | .github/ 워크플로 별도 커밋 가능 |
+
+### Phase 3 백로그 (별도 세션)
+1. window.AFFILIATE에서 click-delegation regex 자동 파생
+2. @vercel/og 동적 OG (점수·MBTI 카드에 박기)
+3. 비교/블로그 콘텐츠 엔진 ("Claude vs ChatGPT 차이" 등)
+4. Phoney War 게임 부활 (커뮤니티 이벤트)
+5. AdSense 수동 유닛 (승인 후)
+6. 로딩 지연 단축 (700→500ms + 타입 컬러 ring)
+7. 인스타 캔버스 한글 폰트 폴백
+8. per-LANG /r/{faction} 4종 (EN bounce 관측 시)
+
+### 무손상 보존 확인
+- profitablecpm 주석 (index.html:37-102): 미접촉 ✅
+- GA4 `G-HPT1Y41HD8`: 무변경 ✅
+- Plausible 스캐폴딩: 무변경 ✅
+- 데스크톱 max-width:480px 컨테이너: 무변경 ✅
 
 ---
 

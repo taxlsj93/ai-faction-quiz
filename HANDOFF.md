@@ -5,33 +5,41 @@
 
 ---
 
-## 🆕 세션 5 (2026-05-27) — 리뉴얼 진행 중
+## 🆕 세션 5 (2026-05-27) — 리뉴얼 라이브 완료
 
-`IMPROVEMENT_NOTES.md` 진단 + `/ralplan v3.2` 합의(Architect APPROVE → Critic ACCEPT) 결과로
-14 커밋 2-Phase 계획. **Phase 1(5 커밋) 라이브 반영 완료**, Phase 2 진입 직전.
+`IMPROVEMENT_NOTES.md` 진단 + `DESIGN_AUDIT.md`(designer) + `/ralplan v3.2` consensus 합의
+(Planner → Architect→Critic 3 iteration → APPROVE)로 **12 커밋, 14 surface, 8 신규 GA4** 라이브.
 
-**Phase 1 라이브 (push→deploy 검증)**:
-| 커밋 | 효과 |
-|------|------|
-| C0  `5f148b7` | 워크트리 정리 (IMPROVEMENT_NOTES + CLAUDE.md(M) + reports archive) |
-| C1a `43dfe59` | OG SVG→PNG 14 surface — 공유 미리보기 부활 |
-| C1b `50f0c1b` | scripts/build-og.mjs + sharp/puppeteer-core devDep (재현성) |
-| C2  `9fcaf18` | viewport `maximum-scale` 제거 (WCAG 1.4.4) |
-| C5a `35fc85b` | `window.AFFILIATE` 단일 소스 (URL 무변경, U1 받으면 1줄로) |
+**라이브 검증** (curl + WebFetch):
+- `/`, `/en`, `/r/{4타입}` 200 · `/og-*.png` image/png 112-122KB
+- `/en.html` 308 → `/en` · `/en` body = index.html with EN content
+- `result-secondary-badge`·`share-section`·`newsletter-card` DOM 존재 확인
 
-**라이브 확인**: `/`, `/en`, `/r/{4타입}`, `/og-image.png`, `/og/{4}.png` 전부 200·image/png.
+**12 커밋 요약** (Phase 1 → Phase 2):
+| Phase | 커밋 | 효과 |
+|-------|------|------|
+| P1 | C0  `5f148b7` chore | 워크트리 정리 |
+| P1 | C1a `43dfe59` feat(og) | SVG→PNG 14 surface (FB·X·카카오 미리보기 부활) |
+| P1 | C1b `50f0c1b` chore(build) | build-og.mjs + puppeteer-core devDep |
+| P1 | C2  `9fcaf18` fix(a11y) | viewport 핀치줌 (WCAG 1.4.4) |
+| P1 | C5a `35fc85b` refactor(affiliate) | window.AFFILIATE 단일 소스 |
+| P1 | C9p1 `c9d1c2b` docs | Phase 1 인계 |
+| P2 | C8  `edc933e`+`1bc14b8` feat(en) | /en atomic 통일 (rewrite + per-LANG canonical + en.html DELETE) |
+| P2 | C7  `b8218d9` feat(quiz) | 옵션 셔플 (백엔드 무손상) + 선택 피드백 |
+| P2 | C3  `eff1cca` feat(result) | 보조타입 배지 + 백분위 + 친구비교 + 공유 상단 부상 |
+| P2 | C4  `4202508` feat(share) | /r/{4} 재공유 CTA + 모바일 패딩 |
+| P2 | C6  `32a0b54` feat(newsletter) | ConvertKit placeholder-gated |
 
-**Phase 2 진입 직전 — designer 진단 받는 중**:
-designer 에이전트가 `DESIGN_AUDIT.md` 작성 중. 산출물 받으면 C3/C4/C6 구현 시 반영.
+**남은 1 커밋**: C5b (어필리에이트 타입↔툴 재매핑 + CLAUDE.md/disclosure/privacy-en 동기화) — **U1 차단**.
 
-**Phase 2 커밋 큐**: C3(결과 차별화) → C4(재공유 CTA) → C8(/en 통일·atomic) → C7(옵션 셔플) → C6(뉴스레터) → C5b(타입↔툴 매핑·U1 게이트) → C9p2(최종 보고)
+**사용자 작업 큐 (모바일 가능)**:
+- 🔴 **U3 (즉시)**: FB·X·카카오 디버거에서 5 URL 강제 캐시 무효화 → 새 PNG 즉시 노출
+- 🟠 **U1**: 어필리에이트 실 ID 4종 → C5b 진행 가능
+- 🟡 **U2**: ConvertKit form ID → C6 활성 (현재는 inert 가드)
+- 🟡 **U4**: GA4 전환 표시 (8 신규 이벤트) + Search Console sitemap
+- ⚪ **U5**: GitHub Secrets `ANTHROPIC_API_KEY` → .github/ 별도
 
-**사용자 작업 큐(U)**:
-- 🔴 **U3 (즉시)**: FB Sharing Debugger / X Card Validator / 카카오 디버거 캐시 무효화 → Phase 1 OG 부활 시작
-- U1: 어필리에이트 실 ID 4종 (C5b 차단)
-- U2: ConvertKit form ID (C6는 가드 출시)
-- U4: GA4 전환 표시 + Search Console sitemap 제출
-- U5: GitHub Secrets `ANTHROPIC_API_KEY` 등록 → .github/ 별도 커밋 가능
+상세는 STATUS.md §세션 5 + DESIGN_AUDIT.md (디자인 권고 8개) 참조.
 
 ---
 
