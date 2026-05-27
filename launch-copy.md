@@ -73,7 +73,7 @@ What's in it:
 
 No ads, no signup, no email gate.
 
-👉 https://ai-faction-quiz.vercel.app/?lang=en
+👉 https://ai-faction-quiz.vercel.app/en
 
 Curious which one you get — drop your result in the comments?
 ```
@@ -99,7 +99,7 @@ Tech notes:
 Stats embedded in results pulled from public sources (DemandSage, First Page
 Sage, Views4You — 2025/2026).
 
-👉 https://ai-faction-quiz.vercel.app/?lang=en
+👉 https://ai-faction-quiz.vercel.app/en
 
 Open to feedback on the persona prompts especially — keeping each character
 distinct in 200~400 chars per turn was the trickiest part.
@@ -117,7 +117,7 @@ Includes real usage stats + you can chat with your matched AI's
 persona right on the result page.
 
 Which one are you?
-👉 https://ai-faction-quiz.vercel.app/?lang=en
+👉 https://ai-faction-quiz.vercel.app/en
 
 #WhichAIType #Claude #ChatGPT #Gemini #Grok
 ```

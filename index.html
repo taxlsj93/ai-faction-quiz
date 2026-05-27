@@ -20,8 +20,43 @@
 <meta name="keywords" content="AI 성향 테스트, AI 타입 테스트, AI 진영 테스트, AI 성격 퀴즈, Claude 타입, ChatGPT 타입, Gemini 타입, Grok 타입, 어떤 AI가 나한테 맞아, AI 성격 테스트, AI faction quiz, which AI are you, Claude vs ChatGPT personality, AI personality test">
 <link rel="canonical" href="https://ai-faction-quiz.vercel.app">
 <link rel="alternate" hreflang="ko" href="https://ai-faction-quiz.vercel.app">
-<link rel="alternate" hreflang="en" href="https://ai-faction-quiz.vercel.app/?lang=en">
+<link rel="alternate" hreflang="en" href="https://ai-faction-quiz.vercel.app/en">
 <link rel="alternate" hreflang="x-default" href="https://ai-faction-quiz.vercel.app">
+<script>
+// C8: LANG-conditional canonical / og:* / JSON-LD. Inline so it runs before parsing finishes.
+// /en (rewrite → index.html?lang=en) and /?lang=en (redirect to /en) → English metas.
+// Note: FB/Twitter crawlers don't execute JS; main share path is /r/{faction} (per-type
+// static OG, unchanged). For /en main page, KO static defaults remain as the safe baseline
+// that crawlers see; Google does execute JS so canonical/hreflang signals stay correct.
+(function () {
+  try {
+    var u = new URL(location.href);
+    var isEN = u.pathname === '/en' || u.searchParams.get('lang') === 'en';
+    if (!isEN) return;
+    var SITE = 'https://ai-faction-quiz.vercel.app';
+    var canon = SITE + '/en';
+    var t = 'Which AI Type Are You? — AI Personality Quiz';
+    var d = 'Your AI choice reveals your personality. 8 sharp questions to find your type: Claude / ChatGPT / Gemini / Grok.';
+    function set(sel, attr, val) { var el = document.querySelector(sel); if (el) el.setAttribute(attr, val); }
+    set('link[rel="canonical"]', 'href', canon);
+    set('meta[property="og:url"]', 'content', canon);
+    set('meta[property="og:title"]', 'content', t);
+    set('meta[property="og:description"]', 'content', d);
+    set('meta[name="twitter:title"]', 'content', t);
+    set('meta[name="twitter:description"]', 'content', d);
+    document.documentElement.lang = 'en';
+    var jsonld = document.querySelector('script[type="application/ld+json"]');
+    if (jsonld) {
+      var data = JSON.parse(jsonld.textContent);
+      data.url = canon;
+      data.inLanguage = 'en';
+      data.name = t;
+      data.description = d;
+      jsonld.textContent = JSON.stringify(data);
+    }
+  } catch (e) { /* keep KO defaults on any error */ }
+})();
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1132,7 +1167,7 @@ const STRINGS = {
     scoreDistTitle: '📊 Type Score Breakdown',
     ctaLabel: 'Start using your type\'s AI now',
     shareLabel: 'Declare Your Type — Recruit Your Friends',
-    shareTwitterText: (name) => `I got ${name} on the Which AI Type quiz. Which one are you?\n\nhttps://ai-faction-quiz.vercel.app/?lang=en`,
+    shareTwitterText: (name) => `I got ${name} on the Which AI Type quiz. Which one are you?\n\nhttps://ai-faction-quiz.vercel.app/en`,
     disclaimer: '* Ally tool links may include affiliate links · This quiz is for entertainment. Not affiliated with Anthropic, OpenAI, Google, or xAI. Stats based on publicly available data.',
     btnRetry: 'Retake Quiz',
     toast: 'Link copied!',
@@ -1619,11 +1654,11 @@ let currentAI = null;
 // ── SITE URL ──
 const SITE_URL = 'https://ai-faction-quiz.vercel.app';
 function getShareUrl() {
-  const base = LANG === 'ko' ? SITE_URL : `${SITE_URL}/?lang=en`;
+  const base = LANG === 'ko' ? SITE_URL : `${SITE_URL}/en`;
   if (!resultFaction) return base;
   return LANG === 'ko'
     ? `${SITE_URL}/r/${resultFaction}`
-    : `${SITE_URL}/r/${resultFaction}?lang=en`;
+    : `${SITE_URL}/r/${resultFaction}`;
 }
 
 // ── LANG TOGGLE ──
