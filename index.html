@@ -509,6 +509,53 @@
     border-top: 1px solid var(--border);
   }
 
+  /* C6 + designer #4: Newsletter card (placeholder-gated) */
+  .newsletter-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid currentColor; /* JS sets currentColor to faction color */
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .newsletter-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text);
+  }
+  .newsletter-spark { font-size: 18px; }
+  .newsletter-sub {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .newsletter-form {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .newsletter-form input[type="email"] {
+    flex: 1 1 180px; min-width: 0;
+    background: #0E0E14; color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+    font-size: 14px; font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .newsletter-form input[type="email"]:focus {
+    outline: none; border-color: currentColor;
+  }
+  .newsletter-form button {
+    background: currentColor; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 12px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .newsletter-form button:hover { opacity: 0.88; }
+  .newsletter-form button:disabled { opacity: 0.5; cursor: default; }
+  .newsletter-result {
+    font-size: 13px; padding: 10px 14px; border-radius: 10px;
+    background: rgba(108,63,168,0.10); color: var(--text);
+    margin-top: 12px;
+  }
+
   /* AI Analysis (LLM-generated personalized) */
   .ai-analysis-section {
     background: linear-gradient(135deg, rgba(108,63,168,0.10), rgba(59,95,212,0.10));
@@ -1092,6 +1139,20 @@
     <div class="allies-section" id="allies-section"></div>
     <div class="cross-allies-section" id="cross-allies-section" style="display:none"></div>
 
+    <!-- C6 + designer #4: 결과 화면 뉴스레터 폼 (placeholder-gated) -->
+    <div class="newsletter-card" id="newsletter-card" style="display:none">
+      <div class="newsletter-head">
+        <span class="newsletter-spark">📬</span>
+        <span id="newsletter-title">내 AI 타입에 맞는 툴 · 뉴스 받기 (월 2회)</span>
+      </div>
+      <div class="newsletter-sub" id="newsletter-sub">스팸 없음 · 언제든 해지 가능</div>
+      <form class="newsletter-form" id="newsletter-form" autocomplete="off">
+        <input type="email" id="newsletter-email" placeholder="이메일 주소" required>
+        <button type="submit" id="newsletter-submit">무료 구독</button>
+      </form>
+      <div class="newsletter-result" id="newsletter-result" style="display:none"></div>
+    </div>
+
     <div class="cta-block">
       <div class="cta-label" id="cta-label-text">당신의 AI 타입 지금 시작하기</div>
       <a id="btn-cta-main" class="btn-cta btn-cta-main" href="#" target="_blank" rel="noopener">
@@ -1375,6 +1436,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.AFFILIATE[k]) el.href = window.AFFILIATE[k];
   });
 });
+
+// C6: ConvertKit 뉴스레터 form ID — 사용자가 convertkit.com 가입 후 form 생성하면
+// 이 값을 발급받은 form ID로 교체하면 즉시 작동 (placeholder 가드가 알아서 활성화).
+// U2 차단 항목: 사용자 1줄 교체로 라이브 (페이지 reload만 필요, 코드 변경 없음).
+window.CONVERTKIT_FORM_ID = 'REPLACE_ME';
 
 // ── ALL FACTIONS (both languages) ──
 // Stats sourced: DemandSage, First Page Sage, fatjoe, Views4You (2025-2026)
@@ -1931,6 +1997,9 @@ function showResult() {
       if (window.trackEvent) trackEvent('friend_compare_row_shown', { faction: resultFaction });
     } catch (_) {}
 
+    // C6: newsletter card render (placeholder-gated)
+    try { renderNewsletter(); } catch (_) {}
+
     // Score distribution card
     const distCard = document.getElementById('score-dist-card');
     distCard.style.display = 'block';
@@ -2047,6 +2116,74 @@ function showResult() {
   if (LANG === 'ko' && answerHistory.length === 8) {
     renderStaticAnalysis(faction, scores);
   }
+}
+
+// C6: Newsletter card render (placeholder-gated + inert event)
+function renderNewsletter() {
+  const card = document.getElementById('newsletter-card');
+  if (!card) return;
+  const formId = window.CONVERTKIT_FORM_ID;
+  // Inert mode: form ID not yet provisioned. Emit one-shot tracking event so
+  // GA4 can distinguish "code rendered nothing" vs "users didn't subscribe".
+  if (!formId || formId === 'REPLACE_ME') {
+    card.style.display = 'none';
+    try {
+      if (!sessionStorage.getItem('_nwi')) {
+        if (window.trackEvent) trackEvent('newsletter_widget_inert', { faction: resultFaction });
+        sessionStorage.setItem('_nwi', '1');
+      }
+    } catch (_) {}
+    return;
+  }
+  // Live mode: render with faction color, wire submit to ConvertKit.
+  const faction = FACTIONS[resultFaction];
+  card.style.color = faction.color;  // currentColor propagates to border-left + button bg + focus border
+  card.style.display = 'block';
+  const isEN = (document.documentElement.lang || 'ko') === 'en';
+  document.getElementById('newsletter-title').textContent = isEN
+    ? `Tools & news for ${faction.name}s (2× / month)`
+    : `${faction.name} 전용 툴·뉴스 받기 (월 2회)`;
+  document.getElementById('newsletter-sub').textContent = isEN
+    ? 'No spam · unsubscribe anytime'
+    : '스팸 없음 · 언제든 해지 가능';
+  document.getElementById('newsletter-email').placeholder = isEN ? 'Email address' : '이메일 주소';
+  document.getElementById('newsletter-submit').textContent = isEN ? 'Subscribe' : '무료 구독';
+  if (window.trackEvent) trackEvent('newsletter_widget_shown', { faction: resultFaction });
+
+  const form = document.getElementById('newsletter-form');
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('newsletter-email').value.trim();
+    const btn = document.getElementById('newsletter-submit');
+    const out = document.getElementById('newsletter-result');
+    if (!email) return;
+    btn.disabled = true;
+    btn.textContent = isEN ? 'Sending…' : '전송 중…';
+    try {
+      const resp = await fetch(`https://app.convertkit.com/forms/${formId}/subscriptions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          email_address: email,
+          fields: { faction: resultFaction }
+        }),
+      });
+      if (resp.ok) {
+        out.textContent = isEN ? '✓ Subscribed — check your inbox.' : '✓ 구독 완료 — 메일함을 확인하세요.';
+        out.style.display = 'block';
+        form.style.display = 'none';
+        if (window.trackEvent) trackEvent('newsletter_subscribed', { faction: resultFaction });
+      } else {
+        throw new Error('http ' + resp.status);
+      }
+    } catch (err) {
+      out.textContent = isEN ? 'Something went wrong. Try again later.' : '문제가 발생했어요. 잠시 후 다시 시도해주세요.';
+      out.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = isEN ? 'Subscribe' : '무료 구독';
+      if (window.trackEvent) trackEvent('newsletter_failed', { faction: resultFaction, reason: (err && err.message) || 'unknown' });
+    }
+  };
 }
 
 function renderStaticAnalysis(faction, scoreObj) {
