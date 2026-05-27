@@ -50,15 +50,30 @@
 | 🟡 **U4** | GA4에서 `quiz_complete`·`cta_secondary_click`·`chat_opened`·`landing_take_quiz_click`·`newsletter_subscribed`를 전환 이벤트로 표시 + Search Console에 sitemap 제출 | analytics.google.com · search.google.com | 데이터로 의사결정 가능 |
 | ⚪ **U5** | GitHub Settings → Secrets → `ANTHROPIC_API_KEY` 등록 | github.com/taxlsj93/ai-faction-quiz/settings/secrets | .github/ 워크플로 별도 커밋 가능 |
 
+### 세션 5 후속 — Codex 리뷰 핫픽스 (F1~F6, 6 커밋 추가)
+
+`/codex` 두 번째 패스 리뷰에서 High 2건 + Medium 3건 + Low 1건 + Missing 3건 발견 → 모두 반영.
+
+| 커밋 | 의미 |
+|------|------|
+| F1+F3 `d21d549` fix(share+affiliate) | **자해 차단**: /r/{faction} 재공유가 root URL을 트윗하던 버그 → 각 faction URL로 (faction OG 회복). EN Grok CTA raw URL → AFFILIATE.PERPLEXITY |
+| F2 `cc2229a` fix(newsletter) | 버튼 배경 대비 버그 (`currentColor` × `color:#fff` → 흰=흰) → CSS 변수 `--faction-color`로 분리 |
+| F4 `07cb6fa` fix(en) | **/en SEO 회귀 차단**: JS 미실행 크롤러(Bing/Naver/Yandex/일부 봇)가 KO 메타 받던 문제 → en.html 정적 EN 메타 페이지로 부활, 사용자는 JS replace로 /?lang=en 이동 |
+| F5 `4cbce36` fix(chat) | C7 셔플 후 챗이 letter(A/B/C/D) 인용 시 사용자 화면과 불일치 → SYSTEM_PROMPT에서 letter 매핑 제거, 성향(0=Claude/1=GPT/2=Gemini/3=Grok)+요지로만 인용 강제 |
+| F6 `0c9b209` refine | 로딩 700→500ms + 결과 타입 컬러 ring (designer #3) / 챗 진입 버튼 alpha 0.15→0.25 (designer #7) / 친구비교 "(추정)" 명시 (Codex Low) |
+
+이제 master는 **19 커밋**으로 안정화. 남은 작업은 C5b(U1 게이트) 단 1개.
+
 ### Phase 3 백로그 (별도 세션)
 1. window.AFFILIATE에서 click-delegation regex 자동 파생
 2. @vercel/og 동적 OG (점수·MBTI 카드에 박기)
 3. 비교/블로그 콘텐츠 엔진 ("Claude vs ChatGPT 차이" 등)
 4. Phoney War 게임 부활 (커뮤니티 이벤트)
 5. AdSense 수동 유닛 (승인 후)
-6. 로딩 지연 단축 (700→500ms + 타입 컬러 ring)
-7. 인스타 캔버스 한글 폰트 폴백
-8. per-LANG /r/{faction} 4종 (EN bounce 관측 시)
+6. 인스타 캔버스 한글 폰트 폴백
+7. per-LANG /r/{faction} 4종 (EN bounce 관측 시)
+8. (designer #8) 인트로 "현재 쓰는 AI 선택" 가치 전달 강화
+9. 친구비교 baseline을 GA4 실데이터로 교체 (quiz_complete 분포 누적 후)
 
 ### 무손상 보존 확인
 - profitablecpm 주석 (index.html:37-102): 미접촉 ✅
