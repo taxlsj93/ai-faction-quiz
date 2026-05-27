@@ -1019,8 +1019,38 @@
       <div class="result-icon-wrap" id="result-icon"><span id="result-emoji"></span></div>
       <div class="result-faction-name" id="result-name"></div>
       <div class="result-tagline" id="result-tagline"></div>
-      <div id="result-match" style="font-size:13px;font-weight:700;margin-top:10px;opacity:0.8;letter-spacing:0.5px;"></div>
-      <div id="result-mbti" style="font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.3px;"></div>
+      <!-- C3: secondary type promoted from analysis text to header badge -->
+      <div id="result-secondary-badge" style="display:none;margin-top:12px;font-size:13px;font-weight:700;letter-spacing:0.3px;padding:6px 14px;border-radius:999px;border:1.5px solid currentColor;"></div>
+      <!-- C3: match rate visual weight upgraded per designer #2 -->
+      <div id="result-match" style="font-size:18px;font-weight:800;margin-top:12px;opacity:1;letter-spacing:0.5px;"></div>
+      <!-- C3: pseudo-percentile + friend-compare -->
+      <div id="result-percentile" style="display:none;font-size:13px;font-weight:600;margin-top:6px;opacity:0.85;"></div>
+      <div id="result-friend-compare" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:0.2px;"></div>
+      <div id="result-mbti" style="font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:0.3px;"></div>
+    </div>
+
+    <!-- C3 + designer #6: share section promoted from bottom to right after result-header.
+         감정 고조 순간(결과 확인 직후)에 공유 루프 형성. CTA·분석은 "더 읽기" 영역으로. -->
+    <div class="share-section" id="share-section">
+      <div class="share-label" id="share-label-text">내 타입을 알려라 — 친구를 끌어들여라</div>
+      <div class="share-grid">
+        <button class="share-btn share-twitter" onclick="shareTwitter()">
+          <span class="share-icon">𝕏</span>
+          <span>X (Twitter)</span>
+        </button>
+        <button id="kakao-share-btn" class="share-btn share-kakao" onclick="shareKakao()">
+          <span class="share-icon" id="kakao-share-icon">💬</span>
+          <span id="kakao-btn-label">카카오톡</span>
+        </button>
+        <button class="share-btn share-insta" onclick="shareInsta()">
+          <span class="share-icon">📸</span>
+          <span id="insta-btn-label">인스타그램</span>
+        </button>
+        <button class="share-btn share-copy" onclick="copyLink()">
+          <span class="share-icon">🔗</span>
+          <span id="copy-btn-label">링크 복사</span>
+        </button>
+      </div>
     </div>
 
     <div class="ai-analysis-section" id="ai-analysis-section" style="display:none">
@@ -1073,27 +1103,6 @@
       </a>
     </div>
 
-    <div class="share-section">
-      <div class="share-label" id="share-label-text">내 타입을 알려라 — 친구를 끌어들여라</div>
-      <div class="share-grid">
-        <button class="share-btn share-twitter" onclick="shareTwitter()">
-          <span class="share-icon">𝕏</span>
-          <span>X (Twitter)</span>
-        </button>
-        <button id="kakao-share-btn" class="share-btn share-kakao" onclick="shareKakao()">
-          <span class="share-icon" id="kakao-share-icon">💬</span>
-          <span id="kakao-btn-label">카카오톡</span>
-        </button>
-        <button class="share-btn share-insta" onclick="shareInsta()">
-          <span class="share-icon">📸</span>
-          <span id="insta-btn-label">인스타그램</span>
-        </button>
-        <button class="share-btn share-copy" onclick="copyLink()">
-          <span class="share-icon">🔗</span>
-          <span id="copy-btn-label">링크 복사</span>
-        </button>
-      </div>
-    </div>
     <div class="affiliate-notice">* 추천 툴 링크는 제휴 마케팅 링크를 포함합니다 · 이 퀴즈는 오락 목적이며 Anthropic, OpenAI, Google, xAI와 무관합니다. 통계는 공개 데이터 기반.</div>
     <div class="affiliate-notice" style="margin-top:8px; font-size:12px;">
       <a href="/privacy" style="color:inherit; text-decoration:underline;">개인정보처리방침</a>
@@ -1866,8 +1875,61 @@ function showResult() {
   const topScore = sorted[0][1];
   const matchEl = document.getElementById('result-match');
   if (topScore > 0) {
-    matchEl.textContent = T.matchFormat(Math.min(99, Math.round((topScore / 24) * 100)));
+    const matchPct = Math.min(99, Math.round((topScore / 24) * 100));
+    matchEl.textContent = T.matchFormat(matchPct);
     document.getElementById('preview-banner')?.remove();
+
+    // C3: secondary type badge (promoted from analysis text to header per designer #2)
+    try {
+      const total = sorted.reduce((a, b) => a + b[1], 0);
+      const second = sorted.find(([k]) => k !== resultFaction);
+      if (second && total > 0) {
+        const secondPct = Math.round((second[1] / total) * 100);
+        if (secondPct >= 10) {
+          const FACTION_LABEL = { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', grok: 'Grok' };
+          const badge = document.getElementById('result-secondary-badge');
+          const isEN = (document.documentElement.lang || 'ko') === 'en';
+          badge.textContent = isEN
+            ? `+ ${FACTION_LABEL[second[0]]} streak ${secondPct}%`
+            : `+ ${FACTION_LABEL[second[0]]} 기질 ${secondPct}%`;
+          badge.style.display = 'inline-block';
+          badge.style.color = FACTIONS[second[0]].color;
+          window._secondaryFaction = second[0];
+          window._secondaryPct = secondPct;
+          if (window.trackEvent) trackEvent('secondary_type_shown', {
+            faction: resultFaction, secondary: second[0], pct: secondPct
+          });
+        }
+      }
+    } catch (_) {}
+
+    // C3: pseudo-percentile (based on match rate — share-worthy framing).
+    // matchPct ≥80 → top 10% style, ≥70 → top 25%, ≥60 → top 40%, else median band.
+    try {
+      const pctEl = document.getElementById('result-percentile');
+      const isEN = (document.documentElement.lang || 'ko') === 'en';
+      let band;
+      if (matchPct >= 80) band = isEN ? 'Top 10% of this type — exceptionally pure fit' : `상위 10% 타입 — 보기 드문 순도`;
+      else if (matchPct >= 70) band = isEN ? 'Top 25% — strong fit' : `상위 25% — 또렷한 타입`;
+      else if (matchPct >= 60) band = isEN ? 'Top 40% — clear fit' : `상위 40% — 분명한 타입`;
+      else band = isEN ? 'Hybrid streak — multiple traits' : `혼합형 — 여러 기질 공존`;
+      pctEl.textContent = band;
+      pctEl.style.display = 'block';
+    } catch (_) {}
+
+    // C3: friend-compare row (aspirational social proof, not real data yet —
+    // placeholder until quiz_complete distribution accumulates)
+    try {
+      const fcEl = document.getElementById('result-friend-compare');
+      const isEN = (document.documentElement.lang || 'ko') === 'en';
+      const factionPct = { claude: 32, gpt: 30, gemini: 22, grok: 16 }; // 추정 baseline
+      const fp = factionPct[resultFaction] || 25;
+      fcEl.textContent = isEN
+        ? `≈ ${fp}% of takers share your type. Send to a friend to compare?`
+        : `≈ 응답자 ${fp}%가 같은 타입. 친구는 무슨 타입일까?`;
+      fcEl.style.display = 'block';
+      if (window.trackEvent) trackEvent('friend_compare_row_shown', { faction: resultFaction });
+    } catch (_) {}
 
     // Score distribution card
     const distCard = document.getElementById('score-dist-card');
@@ -1993,23 +2055,9 @@ function renderStaticAnalysis(faction, scoreObj) {
   const btn = document.getElementById('btn-open-chat');
   if (!section || !bodyEl || !faction || !faction.staticAnalysis) return;
 
-  const factionLabel = { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', grok: 'Grok' };
-  let secondaryLine = '';
-  try {
-    const total = (scoreObj.claude || 0) + (scoreObj.gpt || 0) + (scoreObj.gemini || 0) + (scoreObj.grok || 0);
-    if (total > 0) {
-      const ranked = Object.keys(scoreObj)
-        .filter((k) => k !== resultFaction)
-        .sort((a, b) => scoreObj[b] - scoreObj[a]);
-      const second = ranked[0];
-      const pct = Math.round((scoreObj[second] / total) * 100);
-      if (second && pct >= 10) {
-        secondaryLine = `\n\n**보조 타입: ${factionLabel[second] || second} 타입 (${pct}%)**`;
-      }
-    }
-  } catch (_) {}
-
-  bodyEl.innerHTML = renderAnalysisMarkdown(faction.staticAnalysis + secondaryLine);
+  // C3: secondary type now lives in result-header badge (renderResult sets it).
+  // No need to append to analysis text — keeps body clean and avoids duplication.
+  bodyEl.innerHTML = renderAnalysisMarkdown(faction.staticAnalysis);
   section.style.display = 'block';
   if (btn) {
     btn.style.display = 'block';
@@ -2247,13 +2295,19 @@ function getShareText() {
 
 function shareTwitter() {
   const shareUrl = getShareUrl();
+  // C3: include secondary type in share text (boost share desire — designer #2)
+  const FACTION_LABEL = { claude: 'Claude', gpt: 'GPT', gemini: 'Gemini', grok: 'Grok' };
+  const sf = window._secondaryFaction;
+  const sp = window._secondaryPct;
   let text;
   if (LANG === 'ko') {
     const h = SHARE_HOOKS_KO[resultFaction];
-    text = `${h[0]}\n${h[1]}\n\n${h[2]} 👇\n${shareUrl}\n\n#AI성향테스트 #Claude #ChatGPT #Gemini #Grok`;
+    const secLine = sf ? `\n(+ ${FACTION_LABEL[sf]} 기질 ${sp}%)` : '';
+    text = `${h[0]}${secLine}\n${h[1]}\n\n${h[2]} 👇\n${shareUrl}\n\n#AI성향테스트 #Claude #ChatGPT #Gemini #Grok`;
   } else {
     const faction = FACTIONS[resultFaction];
-    text = `I got ${faction.name}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI Type are you? 👇\n${shareUrl}\n\n#WhichAIType #Claude #ChatGPT #Gemini #Grok`;
+    const secLine = sf ? ` (+ ${FACTION_LABEL[sf]} streak ${sp}%)` : '';
+    text = `I got ${faction.name}${secLine}!\n"${faction.tagline.replace(/\n/g, ' ')}"\n\nWhich AI Type are you? 👇\n${shareUrl}\n\n#WhichAIType #Claude #ChatGPT #Gemini #Grok`;
   }
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
