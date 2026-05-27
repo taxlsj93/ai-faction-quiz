@@ -154,6 +154,26 @@ SEO 타겟 키워드:
 
 ---
 
+## GitHub Actions (Claude Code 자동화)
+
+> `.github/workflows/claude.yml` 파일 추가됨 (2026-05-21). push 후 활성화.
+
+### 활성화 절차 (최초 1회)
+1. https://github.com/apps/claude → `taxlsj93/ai-faction-quiz` 에 설치
+2. 레포 Settings → Secrets → `ANTHROPIC_API_KEY` 등록
+3. `git add .github/workflows/claude.yml && git commit -m "ci: Claude Code Actions" && git push`
+
+### 사용법
+| 방법 | 트리거 | 동작 |
+|------|--------|------|
+| PR 오픈 | 자동 | 코드 리뷰 (버그·보안·?via=aifaction 파라미터 확인) |
+| `@claude 명령` | PR/이슈 코멘트 | 대화식 응답 |
+| `ai-pr` 레이블 | 이슈에 레이블 부착 | 자동 구현 + PR 생성 |
+
+**자세한 설정**: `claude-work/playbooks/github-자동화.md`
+
+---
+
 ## Phoney War (보류)
 
 기존 헥사곤 영토전 게임. Phase 3에서 AI 성향 테스트 미디어의 커뮤니티 이벤트로 부활 예정.

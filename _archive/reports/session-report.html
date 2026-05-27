@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세션 리포트 — AI 성향 테스트</title>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #1a1a24;
+    --surface2: #22222f;
+    --border: #2e2e42;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --claude: #d97706;
+    --gpt: #10b981;
+    --gemini: #3b82f6;
+    --grok: #8b5cf6;
+    --done: #10b981;
+    --warn: #f59e0b;
+    --err: #ef4444;
+    --info: #3b82f6;
+    --coordinator: #f59e0b;
+    --implementer: #10b981;
+    --docwriter: #3b82f6;
+    --researcher: #8b5cf6;
+    --reviewer: #ec4899;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 24px 16px 80px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 40px 20px 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .header .sub { color: var(--muted); font-size: 13px; }
+  .live-badge {
+    display: inline-block;
+    background: #10b98122;
+    color: var(--done);
+    border: 1px solid #10b98144;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  /* ── Section ── */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  /* ── Stat Cards ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-card .num { font-size: 28px; font-weight: 800; }
+  .stat-card .label { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .stat-card.green .num { color: var(--done); }
+  .stat-card.yellow .num { color: var(--warn); }
+  .stat-card.blue .num { color: var(--info); }
+  .stat-card.purple .num { color: #8b5cf6; }
+
+  /* ── Agent Cards ── */
+  .agents { display: flex; flex-direction: column; gap: 16px; }
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .agent-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .agent-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .agent-name { font-weight: 700; font-size: 15px; }
+  .agent-role { color: var(--muted); font-size: 12px; }
+  .agent-model {
+    margin-left: auto;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .agent-body { padding: 16px 20px; }
+
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--surface2);
+    font-size: 13px;
+  }
+  .task-item .badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 1px;
+    min-width: 42px;
+    text-align: center;
+  }
+  .badge.done { background: #10b98120; color: var(--done); border: 1px solid #10b98140; }
+  .badge.pending { background: #f59e0b20; color: var(--warn); border: 1px solid #f59e0b40; }
+  .badge.blocked { background: #ef444420; color: var(--err); border: 1px solid #ef444440; }
+  .badge.waiting { background: #3b82f620; color: var(--info); border: 1px solid #3b82f640; }
+  .badge.new { background: #8b5cf620; color: #8b5cf6; border: 1px solid #8b5cf640; }
+
+  .task-text { flex: 1; }
+  .task-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* agent accent colors */
+  .icon-coordinator { background: #f59e0b22; }
+  .icon-implementer { background: #10b98122; }
+  .icon-docwriter { background: #3b82f622; }
+  .icon-researcher { background: #8b5cf622; }
+  .icon-reviewer { background: #ec489922; }
+
+  /* ── Timeline ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex;
+    gap: 14px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item:last-child .tl-line { display: none; }
+  .tl-dot-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 28px;
+  }
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .tl-line { flex: 1; width: 2px; background: var(--border); margin-top: 4px; }
+  .tl-content { flex: 1; padding-top: 0; }
+  .tl-commit { font-family: monospace; font-size: 11px; color: var(--muted); }
+  .tl-msg { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .tl-desc { font-size: 12px; color: var(--muted); }
+  .dot-done { background: var(--done); }
+  .dot-current { background: var(--warn); box-shadow: 0 0 0 3px #f59e0b33; }
+
+  /* ── Next Actions ── */
+  .action-table { width: 100%; border-collapse: collapse; }
+  .action-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .action-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: top;
+  }
+  .action-table tr:last-child td { border-bottom: none; }
+  .action-table tr:hover td { background: var(--surface2); }
+  .who-chip {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .who-user { background: #f59e0b20; color: var(--warn); border: 1px solid #f59e0b40; }
+  .who-agent { background: #10b98120; color: var(--done); border: 1px solid #10b98140; }
+  .who-both { background: #3b82f620; color: var(--info); border: 1px solid #3b82f640; }
+  .who-wait { background: #6b728020; color: #9ca3af; border: 1px solid #6b728040; }
+
+  .pri-high { color: var(--err); font-weight: 700; }
+  .pri-mid { color: var(--warn); font-weight: 600; }
+  .pri-low { color: var(--muted); }
+
+  /* ── Ad System Status ── */
+  .ad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ad-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .ad-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .ad-status { font-size: 12px; }
+  .ad-note { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Affiliate Table ── */
+  .aff-table { width: 100%; border-collapse: collapse; }
+  .aff-table th {
+    text-align: left; padding: 8px 12px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .aff-table td {
+    padding: 9px 12px; border-bottom: 1px solid var(--border);
+    font-size: 12px; vertical-align: middle;
+  }
+  .aff-table tr:last-child td { border-bottom: none; }
+  code {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 11px;
+    color: #a5f3fc;
+  }
+  .check { color: var(--done); font-weight: 700; }
+  .warn-icon { color: var(--warn); font-weight: 700; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .ad-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .action-table th:nth-child(3), .action-table td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="sub">📋 세션 리포트 · 에이전트별 진행 현황</div>
+  <h1>AI 성향 테스트 — 프로젝트 현황</h1>
+  <div class="sub">기준일: 2026-05-09 &nbsp;·&nbsp; 최신 커밋: <code>fd2635b</code></div>
+  <div class="live-badge">🟢 LIVE — ai-faction-quiz.vercel.app</div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats">
+  <div class="stat-card green">
+    <div class="num">14</div>
+    <div class="label">완료된 커밋</div>
+  </div>
+  <div class="stat-card green">
+    <div class="num">5</div>
+    <div class="label">병합된 PR</div>
+  </div>
+  <div class="stat-card yellow">
+    <div class="num">8</div>
+    <div class="label">대기 중 액션</div>
+  </div>
+  <div class="stat-card blue">
+    <div class="num">✅</div>
+    <div class="label">AdSense 재심사 요청</div>
+  </div>
+  <div class="stat-card purple">
+    <div class="num">100%</div>
+    <div class="label">트래킹 파라미터 적용</div>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<div class="section">
+  <div class="section-title">에이전트별 진행 현황</div>
+  <div class="agents">
+
+    <!-- COORDINATOR -->
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon icon-coordinator">🧭</div>
+        <div>
+          <div class="agent-name">coordinator</div>
+          <div class="agent-role">총괄 · 작업 분해 · 에이전트 라우팅</div>
+        </div>
+        <div class="agent-model">claude-opus</div>
+      </div>
+      <div class="agent-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              전체 비즈니스 감사 — 광고·어필리에이트·SEO·법률·브랜드 전 영역
+              <div class="task-note">모든 에이전트 병렬 투입, 결과 취합 → audit-report.html 생성</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              PR #5 머지 결정 — 하우스→타입 리브랜딩 + 멀티턴 채팅
+              <div class="task-note">merge conflict 3건 직접 해결 (트래킹 파라미터 보존)</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              브랜드 용어 정책 수립 — 진영→하우스→타입 최종 확정
+              <div class="task-note">CLAUDE.md + brand-guide.html + HANDOFF.md 3파일 동기화</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              TikTok / Instagram Reels 콘텐츠 기획
+              <div class="task-note">영상 소스·스타일·언어 3가지 미확정 → 사용자 답변 대기</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              audit-report.html 처리 결정 — 커밋 / 삭제 / _archive 이동
+              <div class="task-note">현재 미커밋 로컬 파일, 배포 불필요</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CODE IMPLEMENTER -->
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon icon-implementer">⚙️</div>
+        <div>
+          <div class="agent-name">code-implementer</div>
+          <div class="agent-role">HTML / CSS / JS 편집 · Vercel 설정</div>
+        </div>
+        <div class="agent-model">claude-sonnet</div>
+      </div>
+      <div class="agent-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              <strong>어필리에이트 트래킹 전수 수정</strong> — KO + EN 양쪽
+              <div class="task-note">Writesonic, Perplexity, Copy.ai → <code>?via=aifaction</code> 모든 링크 적용</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              <code>lang=""</code> 수정 → <code>lang="ko"</code> (index.html)
+              <div class="task-note">AdSense 심사 요인 제거</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              Adsterra popunder 비활성화 확인 — <code>&lt;!-- DISABLED 2026-05-06 --&gt;</code>
+              <div class="task-note">AdSense 정책 충돌 방지. UX 가드 코드 보존</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              PR #5 머지 — 하우스→타입 텍스트 + 멀티턴 채팅 (<code>api/chat.js</code>)
+              <div class="task-note">deploy/ 디렉터리 삭제, api/analyze.js → api/chat.js 교체</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              Plausible Analytics 활성화 (옵션)
+              <div class="task-note">코드 주석 해제만 하면 됨 — 사용자 결정 대기</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge waiting">대기</span>
+            <div class="task-text">
+              AdSense 승인 후 popunder 재활성화
+              <div class="task-note">승인 결과 대기 중 (3일~2주)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DOC WRITER -->
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon icon-docwriter">📝</div>
+        <div>
+          <div class="agent-name">doc-writer</div>
+          <div class="agent-role">문서 · 카피 · 마케팅 가이드</div>
+        </div>
+        <div class="agent-model">claude-sonnet</div>
+      </div>
+      <div class="agent-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              <strong>brand-guide.html</strong> 생성 (v1.1)
+              <div class="task-note">6챕터: 사이트명·타입명·채널별 카피·해시태그·게시 템플릿·코드 예외</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              <strong>CLAUDE.md</strong> 브랜드 용어 정책 섹션 추가
+              <div class="task-note">모든 에이전트가 타입/Type 강제 준수하도록 지시서 등록</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              <strong>HANDOFF.md</strong> 세션 3 기준 전면 갱신
+              <div class="task-note">커밋 히스토리·다음 액션·광고 현황·파일 구조 최신화</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              audit-report.html 생성
+              <div class="task-note">AdSense 체크리스트 + Reddit/에펨코리아 초안 (로컬 전용)</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge new">신규</span>
+            <div class="task-text">
+              TikTok / Reels 스크립트 + 해시태그 작성
+              <div class="task-note">사용자 확인 후 착수 가능 (소스·스타일·언어 미확정)</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              에펨코리아 게시 카피 최종본 검수
+              <div class="task-note">brand-guide.html Chapter 5 초안 있음 — 게시 전 한번 더 확인 권장</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RESEARCHER -->
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon icon-researcher">🔍</div>
+        <div>
+          <div class="agent-name">researcher</div>
+          <div class="agent-role">데이터 조사 · 파일 검색 · 외부 리서치</div>
+        </div>
+        <div class="agent-model">claude-haiku</div>
+      </div>
+      <div class="agent-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              어필리에이트 프로그램 현실 조사
+              <div class="task-note">Claude/GPT/Gemini/Grok 직접 어필리에이트 없음 → Jasper/Writesonic/Copy.ai 래퍼툴이 실수익원</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              경쟁사 공백 분석
+              <div class="task-note">uQuiz·Bloomberg·JustPickAI 분석 → 타입 소속감+래퍼툴 BM 공백 확인</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              ads.txt, PR #5 상태, git 브랜치 현황 조사
+              <div class="task-note">git ls-remote, GitHub API 활용, pull 충돌 원인 파악</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              Writesonic <code>?via=aifaction</code> 트래킹 ID 실제 일치 여부 확인
+              <div class="task-note">Writesonic 대시보드에서 사용자가 직접 확인 필요</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              Reddit 카르마 현황 조사 (사용자 계정)
+              <div class="task-note">현재 추정 &lt;50 카르마 → r/FreeKarma4U 보강 후 r/SideProject 진출</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- REVIEWER -->
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon icon-reviewer">✅</div>
+        <div>
+          <div class="agent-name">reviewer</div>
+          <div class="agent-role">코드·문서·배포 품질 검증</div>
+        </div>
+        <div class="agent-model">claude-sonnet</div>
+      </div>
+      <div class="agent-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              AdSense 정책 적합성 2차 검토
+              <div class="task-note">콘텐츠 품질·법률 고지·광고 레이아웃 → 재심사 제출 가능 판정</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              브랜드 일관성 검증 — 진영/하우스/타입 혼용 감지
+              <div class="task-note">audit-report.html에서 진영 표현 발견 → brand-guide.html 생성 계기</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              PR #5 머지 후 전체 라우트 200 OK 검증
+              <div class="task-note">/, /en, /r/claude~grok, /privacy, /disclosure, /sitemap.xml</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge done">완료</span>
+            <div class="task-text">
+              어필리에이트 링크 전수 검증 (KO+EN 양파일)
+              <div class="task-note">Gemini/Grok EN, Copy.ai ally 누락 발견·수정 확인</div>
+            </div>
+          </li>
+          <li class="task-item">
+            <span class="badge pending">대기</span>
+            <div class="task-text">
+              GA4 신규 이벤트 도착 확인
+              <div class="task-note"><code>ai_analysis_button_clicked</code>, <code>ai_analysis_shown</code> 실시간 뷰 검증 필요</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /agents -->
+</div>
+
+<!-- COMMIT TIMELINE -->
+<div class="section">
+  <div class="section-title">커밋 타임라인 (이번 세션)</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 20px 16px;">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot dot-current"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-commit">fd2635b · HEAD</div>
+          <div class="tl-msg">docs: 타입/Type 리브랜딩 전 문서 동기화</div>
+          <div class="tl-desc">brand-guide.html v1.1 · CLAUDE.md 브랜드 정책 · HANDOFF.md 갱신</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot dot-done"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-commit">25a32de</div>
+          <div class="tl-msg">Merge PR #5: 하우스 → 타입 리브랜딩 + 멀티턴 채팅</div>
+          <div class="tl-desc">+850 / -3737 라인 · api/chat.js 추가 · deploy/ 삭제 · conflict 3건 수동 해결</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot dot-done"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-commit">3043a8d</div>
+          <div class="tl-msg">docs: 브랜드 용어 정책 추가 + 세션2 핸드오프 갱신</div>
+          <div class="tl-desc">CLAUDE.md 정책 섹션 · brand-guide.html 초안 · audit-report.html</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot dot-done"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-commit">dfb5684</div>
+          <div class="tl-msg">fix: 어필리에이트 트래킹 파라미터 + AdSense 재심사 준비</div>
+          <div class="tl-desc">KO+EN 전 링크 <code>?via=aifaction</code> 적용 · lang="ko" 수정</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot dot-done"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-commit">9eef6c2</div>
+          <div class="tl-msg">Merge: opt-in AI analysis toggle (세션 이전)</div>
+          <div class="tl-desc">LLM 분석 자동호출 → 버튼 클릭 시에만 호출로 변경</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AD SYSTEM -->
+<div class="section">
+  <div class="section-title">광고 시스템 현황</div>
+  <div class="ad-grid">
+    <div class="ad-card">
+      <div class="ad-title">Google AdSense</div>
+      <div class="ad-status">⏳ <strong>재심사 요청 완료</strong></div>
+      <div class="ad-note">2026-05-09 요청 · 결과 대기 (3일~2주)<br>승인 시 → 수익화 시작 가능</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-title">Adsterra Popunder</div>
+      <div class="ad-status">🔒 <strong>DISABLED</strong></div>
+      <div class="ad-note">2026-05-06 비활성화<br>AdSense 승인 후 재활성화 검토</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-title">어필리에이트 카드</div>
+      <div class="ad-status">✅ <strong>가동 중</strong></div>
+      <div class="ad-note">결과 페이지 인라인 카드<br>전 링크 트래킹 적용 완료</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-title">Plausible Analytics</div>
+      <div class="ad-status">💤 <strong>미활성화 (옵션)</strong></div>
+      <div class="ad-note">코드 주석 해제만 하면 됨<br>GA4로 충분할 경우 불필요</div>
+    </div>
+  </div>
+</div>
+
+<!-- AFFILIATE -->
+<div class="section">
+  <div class="section-title">어필리에이트 링크 현황</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <table class="aff-table">
+      <thead>
+        <tr>
+          <th>타입</th>
+          <th>CTA 1차 (직접 링크)</th>
+          <th>CTA 2차 (어필리에이트)</th>
+          <th>트래킹</th>
+          <th>수익 구조</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--claude)">Claude 타입</strong></td>
+          <td>claude.ai</td>
+          <td>writesonic.com</td>
+          <td><span class="check">✓</span> <code>?via=aifaction</code></td>
+          <td>30% 리커링</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--gpt)">GPT 타입</strong></td>
+          <td>chatgpt.com</td>
+          <td>writesonic.com</td>
+          <td><span class="check">✓</span> <code>?via=aifaction</code></td>
+          <td>30% 리커링</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--gemini)">Gemini 타입</strong></td>
+          <td>gemini.google.com</td>
+          <td>writesonic.com</td>
+          <td><span class="check">✓</span> <code>?via=aifaction</code></td>
+          <td>30% 리커링</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--grok)">Grok 타입</strong></td>
+          <td>grok.com</td>
+          <td>perplexity.ai</td>
+          <td><span class="check">✓</span> <code>?via=aifaction</code></td>
+          <td><span class="warn-icon">⚠</span> 프로그램 확인 필요</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:8px;font-size:12px;color:var(--warn);">
+    ⚠ Writesonic <code>?via=aifaction</code> — 실제 가입한 트래킹 ID와 일치하는지 대시보드에서 확인 필요
+  </div>
+</div>
+
+<!-- NEXT ACTIONS -->
+<div class="section">
+  <div class="section-title">다음 액션 (우선순위 순)</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>액션</th>
+          <th>누가</th>
+          <th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pri-high">1</span></td>
+          <td>
+            <strong>AdSense 심사 결과 모니터링</strong><br>
+            <span style="font-size:11px;color:var(--muted)">adsense.google.com 또는 AdSense 앱 (모바일 가능)</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--info)">⏳ 결과 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-high">2</span></td>
+          <td>
+            <strong>TikTok / Reels 영상 방향 확정</strong><br>
+            <span style="font-size:11px;color:var(--muted)">소스·스타일·언어 3가지 답변 → 에이전트가 스크립트+해시태그 작성</span>
+          </td>
+          <td><span class="who-chip who-both">🤝 둘 다</span></td>
+          <td><span style="color:#8b5cf6">🆕 논의 시작</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-high">3</span></td>
+          <td>
+            <strong>Writesonic 트래킹 ID 확인</strong><br>
+            <span style="font-size:11px;color:var(--muted)">Writesonic 대시보드 → <code>?via=aifaction</code> 파라미터 일치 여부</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--warn)">⚠ 미확인</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-mid">4</span></td>
+          <td>
+            <strong>에펨코리아 게시</strong><br>
+            <span style="font-size:11px;color:var(--muted)">brand-guide.html Chapter 5 한국어 카피 사용, 결과 스크린샷 첨부</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--warn)">🕐 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-mid">5</span></td>
+          <td>
+            <strong>X(트위터) 게시</strong><br>
+            <span style="font-size:11px;color:var(--muted)">brand-guide.html X 카피 사용 · #AITypeTest #AI타입테스트</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--warn)">🕐 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-mid">6</span></td>
+          <td>
+            <strong>GA4 이벤트 검증</strong><br>
+            <span style="font-size:11px;color:var(--muted)">Realtime 뷰에서 <code>ai_analysis_*</code> 이벤트 도착 확인</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--warn)">🕐 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-mid">7</span></td>
+          <td>
+            <strong>Search Console 사이트맵 제출</strong><br>
+            <span style="font-size:11px;color:var(--muted)">search.google.com/search-console → /sitemap.xml 제출</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--warn)">🕐 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-mid">8</span></td>
+          <td>
+            <strong>audit-report.html 처리</strong><br>
+            <span style="font-size:11px;color:var(--muted)">커밋 / 삭제 / _archive 이동 중 결정 (현재 로컬 전용)</span>
+          </td>
+          <td><span class="who-chip who-both">🤝 둘 다</span></td>
+          <td><span style="color:var(--warn)">🕐 결정 대기</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-low">9</span></td>
+          <td>
+            <strong>Reddit 게시</strong><br>
+            <span style="font-size:11px;color:var(--muted)">카르마 50+ 필요 → r/FreeKarma4U 보강 후 r/SideProject → r/ChatGPT</span>
+          </td>
+          <td><span class="who-chip who-user">👤 사용자</span></td>
+          <td><span style="color:var(--err)">🚫 보류</span></td>
+        </tr>
+        <tr>
+          <td><span class="pri-low">10</span></td>
+          <td>
+            <strong>AdSense 승인 후 Adsterra 재활성화</strong><br>
+            <span style="font-size:11px;color:var(--muted)">UX 가드 코드 주석 해제만 하면 됨</span>
+          </td>
+          <td><span class="who-chip who-agent">🤖 에이전트</span></td>
+          <td><span style="color:var(--wait)">⏳ AdSense 승인 후</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TIKTOK PENDING -->
+<div class="section">
+  <div class="section-title">🆕 TikTok / Reels — 확인 필요</div>
+  <div style="background:var(--surface);border:1px solid #8b5cf644;border-radius:14px;padding:20px;">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">아래 3가지를 알려주시면 스크립트+해시태그 바로 작성해드립니다</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="background:var(--surface2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;margin-bottom:8px;">Q1. 영상 소스</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">A) 퀴즈 화면 녹화 (폰/PC)</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">B) 직접 찍은 영상 있음</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">C) 아직 없음 → 새로 만들어야</span>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;margin-bottom:8px;">Q2. 스타일</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">A) 화면 녹화 + 자막 (얼굴 없음)</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">B) 얼굴 나오면서 설명</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">C) 결과 카드 슬라이드</span>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;margin-bottom:8px;">Q3. 언어</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">A) 한국어만</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">B) 영어만</span>
+          <span style="background:#8b5cf622;border:1px solid #8b5cf644;border-radius:6px;padding:4px 10px;font-size:12px;">C) 둘 다 따로</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  AI 성향 테스트 · 세션 리포트 v1.0 · 기준 2026-05-09<br>
+  최신 커밋 <code>fd2635b</code> · <a href="https://ai-faction-quiz.vercel.app" style="color:var(--info)" target="_blank">ai-faction-quiz.vercel.app</a>
+</div>
+
+</body>
+</html>
