@@ -321,6 +321,13 @@
   .option-btn.selected {
     border-color: #6C3FA8;
     background: #1E1230;
+    animation: selectPop 0.28s ease;
+  }
+  @keyframes selectPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.97); }
+    70%  { transform: scale(1.02); }
+    100% { transform: scale(1); }
   }
   .option-btn .opt-label {
     font-size: 11px;
@@ -329,6 +336,10 @@
     margin-bottom: 3px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: color 0.18s;
+  }
+  .option-btn.selected .opt-label {
+    color: #C17CE4;
   }
 
   /* ── REVEAL LOADING ── */
@@ -1649,6 +1660,12 @@ const FACTIONS  = ALL_FACTIONS[LANG];
 let scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
 let currentQ = 0;
 let answerHistory = [];
+// C7: per-question shuffle permutation. shuffleMap[q] = [originalIdx0, originalIdx1, …]
+// where each entry is the ORIGINAL option index for visual slot i. Computed once at
+// startQuiz, reused on every renderQuestion call so re-entry keeps order stable. Backend
+// (api/chat.js) receives ORIGINAL indices via answerHistory — its A=0/B=1/C=2/D=3 →
+// Claude/GPT/Gemini/Grok contract is preserved.
+let shuffleMap = [];
 let resultFaction = null;
 let currentAI = null;
 
@@ -1750,6 +1767,16 @@ function startQuiz() {
   scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
   currentQ = 0;
   answerHistory = [];
+  // C7: regenerate per-Q shuffle permutation. Same Q re-entry keeps order; retryQuiz
+  // calls startQuiz which regenerates fresh permutations.
+  shuffleMap = QUESTIONS.map(() => {
+    const p = [0, 1, 2, 3];
+    for (let i = p.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [p[i], p[j]] = [p[j], p[i]];
+    }
+    return p;
+  });
   if (window.trackEvent) trackEvent('quiz_start', { lang: document.documentElement.lang || 'ko' });
   show('screen-quiz');
   renderQuestion();
@@ -1757,6 +1784,7 @@ function startQuiz() {
 
 function renderQuestion() {
   const q = QUESTIONS[currentQ];
+  const perm = shuffleMap[currentQ] || [0, 1, 2, 3];
   const pct = ((currentQ) / QUESTIONS.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('q-num').textContent = `Q${currentQ + 1} / ${QUESTIONS.length}`;
@@ -1764,11 +1792,14 @@ function renderQuestion() {
 
   const opts = document.getElementById('options');
   opts.innerHTML = '';
-  q.options.forEach((opt, i) => {
+  // C7: paint options in shuffled visual order, but pass ORIGINAL index to selectOption
+  // so answerHistory and api/chat.js positional contract stay intact.
+  perm.forEach((originalIdx, visualSlot) => {
+    const opt = q.options[originalIdx];
     const btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + i)}</div>${opt.text}`;
-    btn.onclick = () => selectOption(opt.scores, btn, i);
+    btn.innerHTML = `<div class="opt-label">${String.fromCharCode(65 + visualSlot)}</div>${opt.text}`;
+    btn.onclick = () => selectOption(opt.scores, btn, originalIdx);
     opts.appendChild(btn);
   });
 }
