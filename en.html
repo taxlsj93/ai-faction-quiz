@@ -711,6 +711,22 @@ const QUESTIONS = [
   },
 ];
 
+// ── AFFILIATE single source of truth ──
+// (Note: en.html will be retired in C8 — /en will be served by index.html?lang=en.
+//  Keeping this block for Phase 1 parity until C8 lands.)
+window.AFFILIATE = {
+  WRITESONIC: 'https://writesonic.com/?via=aifaction',
+  PERPLEXITY: 'https://perplexity.ai/?via=aifaction',
+  COPYAI:     'https://copy.ai/?via=aifaction',
+  JASPER:     'https://jasper.ai',
+};
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-affiliate]').forEach((el) => {
+    const k = el.dataset.affiliate;
+    if (window.AFFILIATE[k]) el.href = window.AFFILIATE[k];
+  });
+});
+
 // Stats sourced: DemandSage, First Page Sage, fatjoe, Views4You (2025-2026)
 const FACTIONS = {
   claude: {
@@ -740,7 +756,7 @@ const FACTIONS = {
     ctaText: "Try Claude for Free →",
     ctaUrl: "https://claude.ai",
     ctaSecondaryText: "Best AI writing tools for Claude Type members",
-    ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+    ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
     alliesTitle: "🟣 Claude Type Picks — Tools for Deep Thinkers",
     allies: [
       {
@@ -762,7 +778,7 @@ const FACTIONS = {
         badge: "Long-Form Writing Unit",
         name: "Writesonic",
         desc: "Blog posts, social copy, and campaigns — written by AI with built-in SEO optimization",
-        url: "https://writesonic.com/?via=aifaction",
+        url: window.AFFILIATE.WRITESONIC,
       },
     ],
   },
@@ -793,7 +809,7 @@ const FACTIONS = {
     ctaText: "Start with ChatGPT →",
     ctaUrl: "https://chatgpt.com",
     ctaSecondaryText: "Top AI automation tools for GPT Type members",
-    ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+    ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
     alliesTitle: "🟢 GPT Type Picks — Tools for Action Takers",
     allies: [
       {
@@ -808,7 +824,7 @@ const FACTIONS = {
         badge: "Copywriting Assault Unit",
         name: "Copy.ai",
         desc: "Emails, ads, and product descriptions done in under a minute. Works in English and more",
-        url: "https://copy.ai/?via=aifaction",
+        url: window.AFFILIATE.COPYAI,
       },
       {
         icon: "⚡",
@@ -846,7 +862,7 @@ const FACTIONS = {
     ctaText: "Start with Gemini →",
     ctaUrl: "https://gemini.google.com",
     ctaSecondaryText: "Best AI content tools for Gemini Type members",
-    ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+    ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
     alliesTitle: "🔵 Gemini Type Picks — Tools for Methodical Strategists",
     allies: [
       {
@@ -854,14 +870,14 @@ const FACTIONS = {
         badge: "Intelligence Recon Unit",
         name: "Perplexity",
         desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data",
-        url: "https://perplexity.ai/?via=aifaction",
+        url: window.AFFILIATE.PERPLEXITY,
       },
       {
         icon: "📊",
         badge: "Content Strategy Division",
         name: "Writesonic",
         desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings",
-        url: "https://writesonic.com/?via=aifaction",
+        url: window.AFFILIATE.WRITESONIC,
       },
       {
         icon: "🗂️",
@@ -899,7 +915,7 @@ const FACTIONS = {
     ctaText: "Start Grok (X Premium) →",
     ctaUrl: "https://x.com/i/grok",
     ctaSecondaryText: "AI research tools for the Grok Type",
-    ctaSecondaryUrl: "https://perplexity.ai/?via=aifaction",
+    ctaSecondaryUrl: window.AFFILIATE.PERPLEXITY,
     alliesTitle: "🔴 Grok Type Picks — Tools for Contrarian Innovators",
     allies: [
       {
@@ -907,7 +923,7 @@ const FACTIONS = {
         badge: "Real-Time Intel Strike Force",
         name: "Perplexity",
         desc: "What's happening right now, from primary sources — not filtered through mainstream media",
-        url: "https://perplexity.ai/?via=aifaction",
+        url: window.AFFILIATE.PERPLEXITY,
       },
       {
         icon: "🎨",

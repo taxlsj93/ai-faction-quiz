@@ -955,14 +955,14 @@
     <div class="loading-sub" id="loading-sub">당신의 답변 패턴을 해석하고 있습니다</div>
     <div class="loading-ad ad-slot">
       <span class="ad-slot-label">후원</span>
-      <a href="https://writesonic.com/?via=aifaction" target="_blank" rel="noopener sponsored">
+      <a href="https://writesonic.com/?via=aifaction" data-affiliate="WRITESONIC" target="_blank" rel="noopener sponsored">
         <span class="ad-slot-icon">✍️</span>
         <div class="ad-slot-body">
           <div class="ad-slot-name">Writesonic — AI 글쓰기 플랫폼</div>
           <div class="ad-slot-desc">블로그·광고 카피·이메일을 AI로 10배 빠르게. SEO 최적화까지 한 번에.</div>
         </div>
       </a>
-      <a class="ad-slot-cta" href="https://writesonic.com/?via=aifaction" target="_blank" rel="noopener sponsored">무료 체험 시작 →</a>
+      <a class="ad-slot-cta" href="https://writesonic.com/?via=aifaction" data-affiliate="WRITESONIC" target="_blank" rel="noopener sponsored">무료 체험 시작 →</a>
     </div>
   </div>
 
@@ -1301,6 +1301,25 @@ const ALL_QUESTIONS = {
   ],
 };
 
+// ── AFFILIATE single source of truth ──
+// 어필리에이트 URL을 한 곳에 모아 관리. 실 트래킹 ID 교체 시 여기 1곳만 변경.
+// 미래 affiliate 추가 시: ① 여기 새 키 추가 ② FACTIONS의 url을 새 키로 ③
+// index.html:131 affiliate 클릭 위임 regex도 함께 업데이트 (Phase 3 #1 백로그 — 자동화 예정).
+window.AFFILIATE = {
+  WRITESONIC: 'https://writesonic.com/?via=aifaction',
+  PERPLEXITY: 'https://perplexity.ai/?via=aifaction',
+  COPYAI:     'https://copy.ai/?via=aifaction',
+  JASPER:     'https://jasper.ai',  // placeholder for C5b remap
+};
+// loading-ad 정적 <a>는 data-affiliate="WRITESONIC" 속성을 갖고,
+// DOMContentLoaded 시 window.AFFILIATE에서 href를 다시 주입한다 (단일 소스 보장).
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-affiliate]').forEach((el) => {
+    const k = el.dataset.affiliate;
+    if (window.AFFILIATE[k]) el.href = window.AFFILIATE[k];
+  });
+});
+
 // ── ALL FACTIONS (both languages) ──
 // Stats sourced: DemandSage, First Page Sage, fatjoe, Views4You (2025-2026)
 const ALL_FACTIONS = {
@@ -1332,12 +1351,12 @@ const ALL_FACTIONS = {
       ctaText: "Claude 무료로 시작하기 →",
       ctaUrl: "https://claude.ai",
       ctaSecondaryText: "Claude 타입에 맞는 AI 글쓰기 툴 추천받기",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🟣 Claude 타입 추천 — 사색가의 도구들",
       allies: [
         { icon: "📝", badge: "기획·메모 지원대", name: "Notion AI", desc: "생각을 글로, 글을 기획서로. 회의록·할일·아이디어를 AI가 자동 정리해줌", url: "https://notion.so" },
         { icon: "🎙️", badge: "녹취·요약 지원대", name: "Otter.ai", desc: "회의, 강의, 인터뷰를 자동 녹취·요약. 나중에 다시 들을 필요 없음", url: "https://otter.ai" },
-        { icon: "✍️", badge: "글쓰기 특수부대", name: "Writesonic", desc: "블로그·SNS·카피라이팅을 AI가 대신. SEO 최적화까지 한 번에 해결", url: "https://writesonic.com/?via=aifaction" },
+        { icon: "✍️", badge: "글쓰기 특수부대", name: "Writesonic", desc: "블로그·SNS·카피라이팅을 AI가 대신. SEO 최적화까지 한 번에 해결", url: window.AFFILIATE.WRITESONIC },
       ],
     },
     gpt: {
@@ -1367,11 +1386,11 @@ const ALL_FACTIONS = {
       ctaText: "ChatGPT 시작하기 →",
       ctaUrl: "https://chatgpt.com",
       ctaSecondaryText: "GPT 타입 유저를 위한 AI 자동화 툴",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🟢 GPT 타입 추천 — 실행가의 도구들",
       allies: [
         { icon: "🎨", badge: "디자인 즉결부대", name: "Canva AI", desc: "디자인 몰라도 OK. 클릭 몇 번으로 SNS 카드·발표자료·로고 완성", url: "https://canva.com" },
-        { icon: "📧", badge: "카피라이팅 돌격대", name: "Copy.ai", desc: "이메일·광고 문구·상품 설명을 1분 안에 완성. 영어·한국어 모두 가능", url: "https://copy.ai/?via=aifaction" },
+        { icon: "📧", badge: "카피라이팅 돌격대", name: "Copy.ai", desc: "이메일·광고 문구·상품 설명을 1분 안에 완성. 영어·한국어 모두 가능", url: window.AFFILIATE.COPYAI },
         { icon: "⚡", badge: "자동화 공병부대", name: "Zapier", desc: "코딩 없이 앱끼리 자동 연결. '폼 제출 → 이메일 발송 → 시트 기록' 자동화", url: "https://zapier.com" },
       ],
     },
@@ -1402,11 +1421,11 @@ const ALL_FACTIONS = {
       ctaText: "Gemini 시작하기 →",
       ctaUrl: "https://gemini.google.com",
       ctaSecondaryText: "Gemini 타입을 위한 AI 콘텐츠 툴",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🔵 Gemini 타입 추천 — 전략가의 도구들",
       allies: [
-        { icon: "🔍", badge: "정보 수집 정찰대", name: "Perplexity", desc: "구글처럼 검색하면 AI가 답을 바로 정리해줌. 뉴스·논문·최신 정보에 강함", url: "https://perplexity.ai/?via=aifaction" },
-        { icon: "📊", badge: "콘텐츠 전략부대", name: "Writesonic", desc: "블로그·뉴스레터·마케팅 글을 SEO에 맞게 자동 작성. 구글 상위노출 목표", url: "https://writesonic.com/?via=aifaction" },
+        { icon: "🔍", badge: "정보 수집 정찰대", name: "Perplexity", desc: "구글처럼 검색하면 AI가 답을 바로 정리해줌. 뉴스·논문·최신 정보에 강함", url: window.AFFILIATE.PERPLEXITY },
+        { icon: "📊", badge: "콘텐츠 전략부대", name: "Writesonic", desc: "블로그·뉴스레터·마케팅 글을 SEO에 맞게 자동 작성. 구글 상위노출 목표", url: window.AFFILIATE.WRITESONIC },
         { icon: "🗂️", badge: "지식 관리 사령부", name: "Notion AI", desc: "프로젝트·정보·일정을 한 곳에서. AI가 알아서 정리·요약·분류해줌", url: "https://notion.so" },
       ],
     },
@@ -1437,10 +1456,10 @@ const ALL_FACTIONS = {
       ctaText: "Grok 시작하기 (X Premium) →",
       ctaUrl: "https://x.com/i/grok",
       ctaSecondaryText: "반골 성향의 AI 리서치 툴",
-      ctaSecondaryUrl: "https://perplexity.ai/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.PERPLEXITY,
       alliesTitle: "🔴 Grok 타입 추천 — 혁신가의 도구들",
       allies: [
-        { icon: "🔍", badge: "실시간 정보 특공대", name: "Perplexity", desc: "지금 이 순간 일어나는 일을 바로 검색. 주류 미디어 대신 원본 소스 직접 확인", url: "https://perplexity.ai/?via=aifaction" },
+        { icon: "🔍", badge: "실시간 정보 특공대", name: "Perplexity", desc: "지금 이 순간 일어나는 일을 바로 검색. 주류 미디어 대신 원본 소스 직접 확인", url: window.AFFILIATE.PERPLEXITY },
         { icon: "🎨", badge: "이미지 창작 돌격대", name: "Midjourney", desc: "머릿속 이미지를 그대로 생성. 광고·썸네일·아이디어 시각화를 텍스트 한 줄로", url: "https://midjourney.com" },
         { icon: "🎙️", badge: "음성 복제 특수부대", name: "ElevenLabs", desc: "내 목소리로 AI 나레이션·팟캐스트·콘텐츠 제작. 언어도 자동 번역", url: "https://elevenlabs.io" },
       ],
@@ -1473,12 +1492,12 @@ const ALL_FACTIONS = {
       ctaText: "Try Claude for Free →",
       ctaUrl: "https://claude.ai",
       ctaSecondaryText: "Best AI writing tools for Claude Type members",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🟣 Claude Type Picks — Tools for Deep Thinkers",
       allies: [
         { icon: "📝", badge: "Planning & Notes Division", name: "Notion AI", desc: "Turn thoughts into plans, plans into docs. AI auto-organizes your meetings, tasks, and ideas", url: "https://notion.so" },
         { icon: "🎙️", badge: "Transcription & Summary Corps", name: "Otter.ai", desc: "Auto-transcribes meetings, lectures, and interviews. Never listen back to a recording again", url: "https://otter.ai" },
-        { icon: "✍️", badge: "Long-Form Writing Unit", name: "Writesonic", desc: "Blog posts, social copy, and campaigns — written by AI with built-in SEO optimization", url: "https://writesonic.com/?via=aifaction" },
+        { icon: "✍️", badge: "Long-Form Writing Unit", name: "Writesonic", desc: "Blog posts, social copy, and campaigns — written by AI with built-in SEO optimization", url: window.AFFILIATE.WRITESONIC },
       ],
     },
     gpt: {
@@ -1507,7 +1526,7 @@ const ALL_FACTIONS = {
       ctaText: "Start with ChatGPT →",
       ctaUrl: "https://chatgpt.com",
       ctaSecondaryText: "Top AI automation tools for GPT Type members",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🟢 GPT Type Picks — Tools for Action Takers",
       allies: [
         { icon: "🎨", badge: "Rapid Design Strike Team", name: "Canva AI", desc: "No design skills needed. Build social posts, decks, and logos in a few clicks", url: "https://canva.com" },
@@ -1541,11 +1560,11 @@ const ALL_FACTIONS = {
       ctaText: "Start with Gemini →",
       ctaUrl: "https://gemini.google.com",
       ctaSecondaryText: "Best AI content tools for Gemini Type members",
-      ctaSecondaryUrl: "https://writesonic.com/?via=aifaction",
+      ctaSecondaryUrl: window.AFFILIATE.WRITESONIC,
       alliesTitle: "🔵 Gemini Type Picks — Tools for Methodical Strategists",
       allies: [
-        { icon: "🔍", badge: "Intelligence Recon Unit", name: "Perplexity", desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data", url: "https://perplexity.ai/?via=aifaction" },
-        { icon: "📊", badge: "Content Strategy Division", name: "Writesonic", desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings", url: "https://writesonic.com/?via=aifaction" },
+        { icon: "🔍", badge: "Intelligence Recon Unit", name: "Perplexity", desc: "Search like Google, get answers like an analyst. Strong on news, papers, and live data", url: window.AFFILIATE.PERPLEXITY },
+        { icon: "📊", badge: "Content Strategy Division", name: "Writesonic", desc: "SEO-optimized blog posts and newsletters written automatically. Built for Google rankings", url: window.AFFILIATE.WRITESONIC },
         { icon: "🗂️", badge: "Knowledge Management HQ", name: "Notion AI", desc: "One place for projects, info, and schedules. AI auto-sorts, summarizes, and categorizes", url: "https://notion.so" },
       ],
     },
@@ -1578,7 +1597,7 @@ const ALL_FACTIONS = {
       ctaSecondaryUrl: "https://perplexity.ai",
       alliesTitle: "🔴 Grok Type Picks — Tools for Contrarian Innovators",
       allies: [
-        { icon: "🔍", badge: "Real-Time Intel Strike Force", name: "Perplexity", desc: "What's happening right now, from primary sources — not filtered through mainstream media", url: "https://perplexity.ai/?via=aifaction" },
+        { icon: "🔍", badge: "Real-Time Intel Strike Force", name: "Perplexity", desc: "What's happening right now, from primary sources — not filtered through mainstream media", url: window.AFFILIATE.PERPLEXITY },
         { icon: "🎨", badge: "Visual Concept Assault Unit", name: "Midjourney", desc: "Generate exactly what's in your head. One line of text becomes a finished visual", url: "https://midjourney.com" },
         { icon: "🎙️", badge: "Voice & Audio Special Ops", name: "ElevenLabs", desc: "Clone your voice for narration, podcasts, and content. Auto-translates across languages", url: "https://elevenlabs.io" },
       ],
