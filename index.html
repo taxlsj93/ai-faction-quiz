@@ -595,21 +595,22 @@
   .ai-analysis-body strong { color: #F4F4F8; font-weight: 700; }
   .ai-analysis-body ul { padding-left: 18px; margin: 6px 0 12px; }
   .ai-analysis-body li { margin-bottom: 4px; }
+  /* F6 + designer #7: chat-entry button visibility ↑ — alpha 0.15→0.25 base, 0.35 on hover */
   .ai-analysis-cta {
     display: block; width: 100%;
     margin-top: 16px;
     padding: 13px 16px;
-    background: linear-gradient(135deg, rgba(193,124,228,0.15), rgba(108,63,168,0.15));
-    border: 1px solid rgba(193,124,228,0.4);
+    background: linear-gradient(135deg, rgba(193,124,228,0.25), rgba(108,63,168,0.25));
+    border: 1.5px solid rgba(193,124,228,0.55);
     border-radius: 12px;
     color: #F4F4F8;
-    font-size: 14px; font-weight: 600;
+    font-size: 15px; font-weight: 700;
     letter-spacing: 0.2px;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s, transform 0.05s;
     position: relative;
   }
-  .ai-analysis-cta:hover { background: linear-gradient(135deg, rgba(193,124,228,0.25), rgba(108,63,168,0.25)); border-color: rgba(193,124,228,0.7); }
+  .ai-analysis-cta:hover { background: linear-gradient(135deg, rgba(193,124,228,0.35), rgba(108,63,168,0.35)); border-color: rgba(193,124,228,0.8); }
   .ai-analysis-cta:active { transform: scale(0.99); }
   .ai-analysis-cta:disabled { opacity: 0.6; cursor: wait; }
   .ai-analysis-cta-hint {
@@ -1907,12 +1908,24 @@ function showLoading() {
   show('screen-loading');
   const msgs = T.loadingMsgs;
   let i = 0;
+  // F6 + designer #3: 700ms → 500ms (총 2.1s → 1.5s, 모바일 이탈 28%↓ 기대)
+  // + 3번째 메시지 시점에 loading-ring 색을 결정될 타입 컬러로 전환 → 긴장감
+  const ring = document.querySelector('.loading-ring');
+  if (ring) ring.style.borderTopColor = '#6C3FA8'; // 1·2단계 기본 보라
   const iv = setInterval(() => {
     if (i >= msgs.length) { clearInterval(iv); showResult(); return; }
     document.getElementById('loading-text').textContent = msgs[i][0];
     document.getElementById('loading-sub').textContent = msgs[i][1];
+    // 3번째 메시지(인덱스 2) 진입 시 결정될 타입 컬러로 ring 전환
+    if (i === 2 && ring) {
+      try {
+        const dom = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+        const c = FACTIONS[dom] && FACTIONS[dom].color;
+        if (c) ring.style.borderTopColor = c;
+      } catch (_) {}
+    }
     i++;
-  }, 700);
+  }, 500);
 }
 
 function showResult() {
@@ -1994,9 +2007,11 @@ function showResult() {
       const isEN = (document.documentElement.lang || 'ko') === 'en';
       const factionPct = { claude: 32, gpt: 30, gemini: 22, grok: 16 }; // 추정 baseline
       const fp = factionPct[resultFaction] || 25;
+      // F6 (Codex Low): baseline은 실데이터가 아닌 추정. quiz_complete 분포가 누적되면
+      // 실수치로 교체. 사용자에게 추정임을 명시해 데이터 신뢰성 보호.
       fcEl.textContent = isEN
-        ? `≈ ${fp}% of takers share your type. Send to a friend to compare?`
-        : `≈ 응답자 ${fp}%가 같은 타입. 친구는 무슨 타입일까?`;
+        ? `≈ ${fp}% of takers share your type (estimate). What about your friends?`
+        : `응답자 약 ${fp}%가 같은 타입 (추정). 친구는 무슨 타입일까?`;
       fcEl.style.display = 'block';
       if (window.trackEvent) trackEvent('friend_compare_row_shown', { faction: resultFaction });
     } catch (_) {}
