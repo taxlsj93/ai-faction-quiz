@@ -509,11 +509,15 @@
     border-top: 1px solid var(--border);
   }
 
-  /* C6 + designer #4: Newsletter card (placeholder-gated) */
+  /* C6 + designer #4: Newsletter card (placeholder-gated)
+     Uses --faction-color CSS variable (set by JS) instead of currentColor,
+     since the button has its own color:#fff which would otherwise make
+     currentColor resolve to white (button background = white = invisible). */
   .newsletter-card {
+    --faction-color: #6C3FA8; /* fallback when JS hasn't set faction color yet */
     background: var(--card);
     border: 1px solid var(--border);
-    border-left: 3px solid currentColor; /* JS sets currentColor to faction color */
+    border-left: 3px solid var(--faction-color);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
@@ -539,10 +543,10 @@
     transition: border-color 0.15s;
   }
   .newsletter-form input[type="email"]:focus {
-    outline: none; border-color: currentColor;
+    outline: none; border-color: var(--faction-color);
   }
   .newsletter-form button {
-    background: currentColor; color: #fff;
+    background: var(--faction-color); color: #fff;
     border: none; border-radius: 10px;
     padding: 12px 20px; font-size: 14px; font-weight: 700;
     cursor: pointer; font-family: inherit;
@@ -2137,7 +2141,9 @@ function renderNewsletter() {
   }
   // Live mode: render with faction color, wire submit to ConvertKit.
   const faction = FACTIONS[resultFaction];
-  card.style.color = faction.color;  // currentColor propagates to border-left + button bg + focus border
+  // Use --faction-color CSS variable so button background isn't confused with
+  // its own color:#fff (which would make currentColor resolve to white).
+  card.style.setProperty('--faction-color', faction.color);
   card.style.display = 'block';
   const isEN = (document.documentElement.lang || 'ko') === 'en';
   document.getElementById('newsletter-title').textContent = isEN
