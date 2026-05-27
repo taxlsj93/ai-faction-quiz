@@ -58,6 +58,23 @@
   footer { font-size: 13px; color: var(--muted); padding-top: 24px; border-top: 1px solid var(--border); }
   footer a { color: var(--muted); text-decoration: none; margin: 0 8px; }
   footer a:hover { color: var(--text); }
+  /* C4 + designer #5: re-share CTA + mobile padding */
+  .share-btn {
+    display: block; width: 100%;
+    background: transparent; color: var(--accent);
+    border: 1.5px solid var(--accent);
+    font-size: 16px; font-weight: 700;
+    padding: 14px 24px; border-radius: 12px;
+    margin-bottom: 18px; cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    font-family: inherit;
+  }
+  .share-btn:hover { background: var(--accent); color: #fff; }
+  @media (max-width:480px) {
+    .card { padding: 32px 20px; }
+    .type-name { font-size: 34px; }
+    body { padding: 24px 12px; }
+  }
 </style>
 </head>
 <body>
@@ -67,7 +84,15 @@
   <h1 class="type-name">Gemini 타입</h1>
   <p class="short-tag">체계형 전략가</p>
   <p class="long-tag">당신은 체계를 사랑합니다. 데이터를 정리하고<br>전략을 세우는 조직화의 달인.</p>
-  <a class="cta-btn" href="/">나도 테스트 해보기 →</a>
+  <a class="cta-btn" href="/" onclick="if(window.gtag)gtag('event','landing_take_quiz_click',{faction:'gemini'})">나도 테스트 해보기 →</a>
+  <button class="share-btn" onclick="reshareGemini()">📣 친구는 무슨 타입? — 공유하기</button>
+  <script>
+    function reshareGemini() {
+      var t = '나는 Gemini 타입! 체계형 전략가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app\n\n#AI성향테스트 #Gemini타입';
+      if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'gemini' });
+      window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
+    }
+  </script>
   <p class="other-types">다른 타입 보기:
     <a href="/r/claude">Claude 타입</a>
     <a href="/r/gpt">GPT 타입</a>
