@@ -23,11 +23,9 @@
 <link rel="alternate" hreflang="en" href="https://ai-faction-quiz.vercel.app/en">
 <link rel="alternate" hreflang="x-default" href="https://ai-faction-quiz.vercel.app">
 <script>
-// C8: LANG-conditional canonical / og:* / JSON-LD. Inline so it runs before parsing finishes.
-// /en (rewrite → index.html?lang=en) and /?lang=en (redirect to /en) → English metas.
-// Note: FB/Twitter crawlers don't execute JS; main share path is /r/{faction} (per-type
-// static OG, unchanged). For /en main page, KO static defaults remain as the safe baseline
-// that crawlers see; Google does execute JS so canonical/hreflang signals stay correct.
+// C8 + F4: per-LANG canonical / og:* / JSON-LD. /en is now served by static en.html
+// (full EN meta for crawlers). This block handles /?lang=en (legacy/redirected URLs)
+// so that JS-capable clients see EN canonical even when index.html is the served file.
 (function () {
   try {
     var u = new URL(location.href);
@@ -1186,7 +1184,9 @@
 <script>
 // ── LANGUAGE DETECTION ──
 const params = new URLSearchParams(location.search);
-// C8: detect EN via pathname (/en rewrite) OR ?lang= query (legacy), then navigator fallback.
+// C8 + F4: /en serves static en.html (with EN meta for crawlers) → JS redirects users to
+// /?lang=en. So index.html only ever runs on / and /?lang=*. Pathname check kept as a
+// safety net (in case Vercel routing changes); ?lang query is the primary signal.
 const LANG = (location.pathname === '/en') ? 'en' : (params.get('lang') || (navigator.language.startsWith('ko') ? 'ko' : 'en'));
 document.documentElement.lang = LANG;
 

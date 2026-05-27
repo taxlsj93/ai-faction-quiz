@@ -1,16 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/en", "destination": "/index.html" }
-  ],
   "redirects": [
-    { "source": "/en.html", "destination": "/en", "permanent": true },
-    {
-      "source": "/",
-      "has": [{ "type": "query", "key": "lang", "value": "en" }],
-      "destination": "/en",
-      "permanent": true
-    }
+    { "source": "/en.html", "destination": "/en", "permanent": true }
   ]
 }
