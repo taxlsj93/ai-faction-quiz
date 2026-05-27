@@ -1,10 +1,41 @@
 # 📊 STATUS — AI 성향 테스트 미디어
 
-> **마지막 업데이트**: 2026-05-23 (세션 4)
-> **사업 단계**: Phase 1 — 런치 직후
+> **마지막 업데이트**: 2026-05-27 (세션 5 — 리뉴얼 Phase 1 완료)
+> **사업 단계**: Phase 1 (리뉴얼 진행 중) — Phase 2 진입 예정
 > **메인 제품**: ai-faction-quiz (배포 완료)
->
-> ⚠️ **세션 4 메모**: 이번 세션은 제품과 무관한 **개인 요청(기초화장품 사업 로드맵)** 작업이었음.
+
+---
+
+## 🆕 세션 5 (2026-05-27) — 리뉴얼 Phase 1 완료
+
+진단(IMPROVEMENT_NOTES.md) 기반 ralplan v3.2 합의 → Phase 1 5 커밋 라이브.
+
+| 커밋 | 의미 | 라이브 검증 |
+|------|------|------|
+| C0 `5f148b7` chore: 워크트리 정리 | IMPROVEMENT_NOTES + CLAUDE.md(M) + reports → _archive | ✅ |
+| C1a `43dfe59` feat(og): SVG→PNG 14 surface | 공유 미리보기 부활 (FB·X·카카오 OG 지원) | ✅ `/og-image.png` 200, `image/png`, 112.5KB |
+| C1b `50f0c1b` chore(build): build-og.mjs + devDep | 재현성용. Vercel 빌드 무영향 | ✅ |
+| C2 `9fcaf18` fix(a11y): viewport pinch-zoom | WCAG 1.4.4 해소 | ✅ `maximum-scale` 제거 확인 |
+| C5a `35fc85b` refactor(affiliate): window.AFFILIATE 단일 소스 | URL 무변경, U1 받으면 1줄로 전체 교체 | ✅ |
+
+**라이브 헬스체크 결과** (2026-05-27):
+- `/`, `/en`, `/r/{claude,gpt,gemini,grok}` → 모두 200
+- `/og-image.png`, `/og/claude.png`, `/og/grok.png` → 200, `Content-Type: image/png`
+- 메인·EN OG meta: `og:image=...png`, viewport 핀치줌 허용
+
+**사용자 작업 큐(U)**:
+- **U3 (즉시·중요)**: FB Sharing Debugger / X Card Validator / 카카오 디버거에서 강제 캐시 무효화 — Phase 1 OG 부활 측정 시작.
+- U1: 어필리에이트 실 ID 4종 (C5b 차단)
+- U2: ConvertKit form ID (C6는 placeholder 가드로 출시 가능)
+- U4: GA4 전환 표시 + Search Console
+- U5: GitHub Secrets `ANTHROPIC_API_KEY` (.github/ 별도)
+
+**Phase 2 진입 예정** (designer 진단 받고 적용):
+- C3 결과 차별화 / C4 재공유 CTA / C8 EN URL 통일 / C7 옵션 셔플 / C6 뉴스레터 / C5b U1 후 매핑 / C9p2 최종 보고
+
+---
+
+> ⚠️ **세션 4 메모**: 제품과 무관한 **개인 요청(기초화장품 사업 로드맵)** 작업.
 > 산출물 `cosmetics-business-plan.md` / `cosmetics-roadmap.html` / `cosmetics-roadmap.pdf` 가 master에 추가됨(제품 아님). 상세는 `HANDOFF.md` §13.
 
 ---
@@ -22,11 +53,11 @@
 | 💸 광고 (AdSense)      | ✅ 작동 중 | `ca-pub-3036702261797984` |
 | 💸 광고 네트워크 (3rd) | ✅ UX 가드 적용 | profitablecpmratenetwork — KO만, 30초 또는 quiz_complete 후 지연 로드, popunder/리다이렉트 차단, 닫기 버튼 |
 | 📨 뉴스레터            | ❌ 미설치 | ConvertKit 무료 플랜 권장 |
-| 💰 어필리에이트        | ⚠️ 링크 삽입됨 | Jasper / Copy.ai / Writesonic / Perplexity — 실 가입·트래킹 ID 교체 필요 |
+| 💰 어필리에이트        | ⚠️ 단일 소스 리팩 완료 (URL 무변경) | `window.AFFILIATE` 1곳 — U1 받으면 1줄로 전체 교체 |
 | ⚖️ 개인정보처리방침   | ✅ 게재됨 | /privacy (KO), /privacy-en (EN) |
 | ⚖️ 어필리에이트 고지  | ✅ 게재됨 | /disclosure (KO+EN, FTC 16 CFR Part 255 준수) |
 | 🔍 SEO (robots/sitemap)| ✅ 게재됨 | /robots.txt, /sitemap.xml |
-| 🔍 OG / Twitter Cards  | ✅ 완비 | og-image.svg 작동 (1200×630) |
+| 🔍 OG / Twitter Cards  | ✅ **PNG로 전환** (세션 5) | og-image.png + og/{4}.png (1200×630, ≤200KB) — FB·X·카카오 미리보기 정상 |
 | 🔍 canonical / hreflang| ✅ 완비 | KO/EN/x-default 모두 |
 
 ---

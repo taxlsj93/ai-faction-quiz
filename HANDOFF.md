@@ -5,6 +5,36 @@
 
 ---
 
+## 🆕 세션 5 (2026-05-27) — 리뉴얼 진행 중
+
+`IMPROVEMENT_NOTES.md` 진단 + `/ralplan v3.2` 합의(Architect APPROVE → Critic ACCEPT) 결과로
+14 커밋 2-Phase 계획. **Phase 1(5 커밋) 라이브 반영 완료**, Phase 2 진입 직전.
+
+**Phase 1 라이브 (push→deploy 검증)**:
+| 커밋 | 효과 |
+|------|------|
+| C0  `5f148b7` | 워크트리 정리 (IMPROVEMENT_NOTES + CLAUDE.md(M) + reports archive) |
+| C1a `43dfe59` | OG SVG→PNG 14 surface — 공유 미리보기 부활 |
+| C1b `50f0c1b` | scripts/build-og.mjs + sharp/puppeteer-core devDep (재현성) |
+| C2  `9fcaf18` | viewport `maximum-scale` 제거 (WCAG 1.4.4) |
+| C5a `35fc85b` | `window.AFFILIATE` 단일 소스 (URL 무변경, U1 받으면 1줄로) |
+
+**라이브 확인**: `/`, `/en`, `/r/{4타입}`, `/og-image.png`, `/og/{4}.png` 전부 200·image/png.
+
+**Phase 2 진입 직전 — designer 진단 받는 중**:
+designer 에이전트가 `DESIGN_AUDIT.md` 작성 중. 산출물 받으면 C3/C4/C6 구현 시 반영.
+
+**Phase 2 커밋 큐**: C3(결과 차별화) → C4(재공유 CTA) → C8(/en 통일·atomic) → C7(옵션 셔플) → C6(뉴스레터) → C5b(타입↔툴 매핑·U1 게이트) → C9p2(최종 보고)
+
+**사용자 작업 큐(U)**:
+- 🔴 **U3 (즉시)**: FB Sharing Debugger / X Card Validator / 카카오 디버거 캐시 무효화 → Phase 1 OG 부활 시작
+- U1: 어필리에이트 실 ID 4종 (C5b 차단)
+- U2: ConvertKit form ID (C6는 가드 출시)
+- U4: GA4 전환 표시 + Search Console sitemap 제출
+- U5: GitHub Secrets `ANTHROPIC_API_KEY` 등록 → .github/ 별도 커밋 가능
+
+---
+
 ## 0. 사용자 운영 원칙 (필독 — 항상 적용)
 
 - **사용자는 거의 항상 모바일** → 결정 부담 주지 말고 합리적 기본값으로 진행, 결과만 보고
