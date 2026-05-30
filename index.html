@@ -1318,113 +1318,113 @@ const T = STRINGS[LANG];
 const ALL_QUESTIONS = {
   ko: [
     {
-      text: "친구가 \"AI가 곧 내 일자리를 빼앗을 것 같아\"라고 한다. 당신의 반응은?",
+      text: "월요일 아침, 폰을 보자마자 당신의 첫 행동은?",
       options: [
-        { text: "\"어떤 부분이 걱정돼? 같이 생각해보자\"", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "\"그럼 네가 AI를 먼저 배우면 되잖아, 지금 당장\"", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "\"통계적으로 보면 새 일자리가 더 많이 생겨...\" 자료 공유", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "\"이미 빼앗겼어. 근데 아무도 말 안 하는 거야\"", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "잠시 멍하니 천장 보며 한 주를 그려본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "메일·메시지·캘린더를 한 번에 다 훑는다", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
+        { text: "우선순위부터 — 오늘 무조건 끝낼 거 3개 적는다", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "\"또 월요일?\" 한 마디 던지고 시작", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "새로운 AI 모델이 출시됐다. 당신은?",
+      text: "친구가 새벽 2시에 \"진로 고민…\" 카톡을 보냈다. 첫 반응은?",
       options: [
-        { text: "며칠 뒤 심층 리뷰를 읽고 천천히 써본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "출시 당일 바로 써보고 한계를 테스트한다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "공식 벤치마크와 비교표를 먼저 확인한다", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "\"또 과대광고겠지\" — 비판 글을 먼저 찾는다", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "\"무슨 일이야? 일단 들어볼게\" — 다 들어준다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "\"지금 통화할까? 직접 말하는 게 빠를 거야\"", scores: { claude: 1, gpt: 3, gemini: 0, grok: 0 } },
+        { text: "\"고민이 뭔지 정확히 말해줘 — 같이 정리해보자\"", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "\"야 솔직히 너 그거 안 맞잖아\" — 본 그대로 말한다", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "회의에서 아무도 문제를 지적하지 않는 분위기. 당신은?",
+      text: "처음 가본 카페, 메뉴판 앞에서 당신은?",
       options: [
-        { text: "분위기를 읽고 나중에 따로 이야기한다", scores: { claude: 3, gpt: 0, gemini: 2, grok: 0 } },
-        { text: "바로 대안을 제시하며 분위기를 전환한다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "데이터를 근거로 조심스럽게 문제를 꺼낸다", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
-        { text: "눈치 보지 않고 직접 말한다. 불편해도 어쩔 수 없다", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+        { text: "분위기 살피면서 다른 사람들 뭐 마시는지 슬쩍 본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "평소 마시던 거 + 시그니처 한 잔, 일단 시킨다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+        { text: "가격·옵션·리뷰 빠르게 비교한 뒤 결정", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "사장님께 \"오늘 뭐가 제일 잘 나가요?\" 직접 물어본다", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "친구가 \"ChatGPT 써봤는데 진짜 신기해\"라고 자랑한다. 당신의 반응은?",
+      text: "회사 단톡방에 누가 잘못된 정보를 공유했다. 당신은?",
       options: [
-        { text: "\"나는 다른 AI 써봤는데 글쓰기엔 그쪽이 더 낫더라\"", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "\"맞아 나도 써! 이런 기능도 써봤어?\" 열정적 공감", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
-        { text: "\"Gemini도 한번 비교해봐, 구글이랑 연동되거든\"", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
-        { text: "\"GPT? 이미 옛날 얘기야. 더 좋은 거 많아\"", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "굳이 공개 정정 안 하고 나중에 개인 DM으로 슬쩍", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "답글로 \"이 부분 한 번만 확인해 주세요\" 빠르게", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
+        { text: "\"출처 어디였죠? 다시 보면…\" 근거부터 묻는다", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "\"이거 사실이 아니에요\" 즉시 답글로 짚는다", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "일이 계획대로 안 풀릴 때 당신은?",
+      text: "일이 계획대로 안 풀린다. 당신은?",
       options: [
         { text: "왜 안 됐는지 혼자 조용히 곱씹어본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
         { text: "플랜 B로 즉시 전환. 고민보다 실행", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "무엇이 잘못됐는지 원인부터 체계적으로 분석한다", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "애초에 계획이 문제였던 거라고 결론 내린다", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "원인부터 데이터·기록으로 체계 분석", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "애초에 계획이 문제였다고 결론 내린다", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "SNS에서 논란이 되는 주제가 올라왔다. 당신은?",
+      text: "SNS에서 논란 글이 올라왔다. 당신의 반응은?",
       options: [
-        { text: "충분히 생각한 뒤 신중하게 댓글을 쓴다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "충분히 생각한 뒤 신중하게 댓글을 단다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
         { text: "내 경험을 빠르게 공유하고 대화에 참여한다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "관련 자료를 정리해서 링크와 함께 공유한다", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
-        { text: "대세 의견이 틀렸다면 반대 의견을 올린다", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "관련 자료·통계 정리해서 링크와 함께 공유한다", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "대세가 틀렸다면 반대 의견을 그대로 올린다", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "팀 프로젝트에서 내 의견이 아무 이유 없이 묵살됐다. 당신은?",
+      text: "회의에서 내 아이디어가 묵살됐다. 당신은?",
       options: [
-        { text: "왜 내 의견이 받아들여지지 않았는지 혼자 생각해본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "다른 방식·다른 타이밍으로 다시 설득해본다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
-        { text: "데이터와 근거를 보강해서 재제안한다", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "\"왜 내 의견 무시했어요?\" 바로 직접 물어본다", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "일단 받아들이고 나중에 다시 생각해본다", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "다른 방식·다른 각도로 한 번 더 시도한다", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
+        { text: "데이터·사례로 보강해서 재제안한다", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "\"왜 안 된다는 거예요?\" 즉석에서 반문한다", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "당신에게 가장 중요한 가치는?",
+      text: "친구가 \"너 뭘 제일 잘해?\" 묻는다. 가장 자신 있는 한 가지는?",
       options: [
-        { text: "진정성 — 말과 행동이 일치하는 것", scores: { claude: 3, gpt: 0, gemini: 1, grok: 1 } },
-        { text: "효율 — 같은 시간에 더 많이 해내는 것", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
-        { text: "정확성 — 근거 없는 말은 하지 않는 것", scores: { claude: 1, gpt: 0, gemini: 3, grok: 1 } },
-        { text: "자유 — 눈치 보지 않고 말하고 행동하는 것", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+        { text: "사람 마음 잘 헤아리는 거", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "일단 해보고 안 되면 고치는 거", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+        { text: "정리·기획·우선순위 잡는 거", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "남이 말 못 하는 거 솔직하게 말하는 거", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
   ],
   en: [
     {
-      text: "A friend says 'AI is going to take my job.' What's your reaction?",
+      text: "Monday morning. You unlock your phone — what's your first move?",
       options: [
-        { text: "\"Let's think through which parts worry you most\"", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "\"Then learn AI first — what are you waiting for?\"", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "Share a statistic about net job creation across industries", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "\"It already has. Nobody wants to admit it.\"", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "Stare at the ceiling for a beat, picture how the week should go", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "Sweep through email · messages · calendar all at once", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
+        { text: "Prioritize — write down the 3 must-finish items first", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "Mutter \"Monday again?\" and just get on with it", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "A major new AI model just dropped. What do you do?",
+      text: "A friend texts at 2 a.m.: \"Need to talk about my career…\" Your first reply?",
       options: [
-        { text: "Wait a few days, read the deep-dive reviews, then try it", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "Open it on launch day and start stress-testing its limits", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "Pull up the official benchmarks and comparison charts first", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "\"Another hype cycle\" — hunt for the critical takes first", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "\"What happened? I'll just listen first.\"", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "\"Want to call now? Easier to talk it through live.\"", scores: { claude: 1, gpt: 3, gemini: 0, grok: 0 } },
+        { text: "\"Tell me exactly what's bothering you — let's sort it out together.\"", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "\"Honestly though — that path was never you, was it?\"", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "Everyone in the meeting can see a problem — but nobody's saying it. You:",
+      text: "New cafe you've never been to. Menu in front of you. You:",
       options: [
-        { text: "Read the room and bring it up privately afterward", scores: { claude: 3, gpt: 0, gemini: 2, grok: 0 } },
-        { text: "Pivot the energy — propose an alternative on the spot", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "Carefully raise it with data to back you up", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
-        { text: "Say it directly. Discomfort is fine if the truth matters", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+        { text: "Peek at what other tables are drinking before deciding", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "Your usual + the signature — just order, move on", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+        { text: "Scan prices, reviews, options — pick the optimal one", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "Ask the barista \"What sells the most today?\" — straight up", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "What do you actually use AI for most?",
+      text: "Someone posts wrong info in the work group chat. You:",
       options: [
-        { text: "Writing, planning, and creative work — making the quality better", scores: { claude: 3, gpt: 1, gemini: 0, grok: 0 } },
-        { text: "Coding, automation, and killing repetitive tasks", scores: { claude: 0, gpt: 3, gemini: 1, grok: 1 } },
-        { text: "Research, summaries, and getting up to speed fast", scores: { claude: 1, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "Fact-checking, argument stress-testing, catching what's wrong", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "Skip the public correction — DM them privately later", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "Reply quickly: \"Could you double-check this part?\"", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
+        { text: "\"Where was the source? Let's look again…\" — ask for evidence", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "\"That's not accurate.\" — call it out in the thread", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
@@ -1441,26 +1441,26 @@ const ALL_QUESTIONS = {
       options: [
         { text: "Think it through carefully, then write a considered comment", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
         { text: "Jump in fast — share your take from personal experience", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
-        { text: "Compile the key sources and post them with context", scores: { claude: 0, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "Compile the key sources and post them with context", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
         { text: "If the consensus is wrong, post the opposing view", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "When you meet someone new, you tend to:",
+      text: "Your idea got dismissed in the meeting — no reason given. You:",
       options: [
-        { text: "Listen more than talk — let them set the direction", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
-        { text: "Find common ground fast and take the lead in conversation", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
-        { text: "Ask questions — understand their background and context", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
-        { text: "Say exactly what you think, unfiltered, from the start", scores: { claude: 1, gpt: 0, gemini: 0, grok: 3 } },
+        { text: "Take it in, sit with it, revisit later when you're clearer", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "Re-frame it. Different angle, different timing — try again", scores: { claude: 0, gpt: 3, gemini: 0, grok: 0 } },
+        { text: "Back it with data and cases — re-propose with evidence", scores: { claude: 0, gpt: 1, gemini: 3, grok: 0 } },
+        { text: "\"Why isn't this working for you?\" — ask it on the spot", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
       ]
     },
     {
-      text: "What matters most to you?",
+      text: "A friend asks \"What are you actually good at?\" Your one honest answer:",
       options: [
-        { text: "Authenticity — meaning what you say and saying what you mean", scores: { claude: 3, gpt: 0, gemini: 1, grok: 1 } },
-        { text: "Efficiency — getting more done in less time", scores: { claude: 0, gpt: 3, gemini: 1, grok: 0 } },
-        { text: "Accuracy — never claiming more than you can back up", scores: { claude: 1, gpt: 0, gemini: 3, grok: 1 } },
-        { text: "Freedom — saying and doing what you think without apology", scores: { claude: 0, gpt: 1, gemini: 0, grok: 3 } },
+        { text: "Reading people — sensing what they need before they say it", scores: { claude: 3, gpt: 0, gemini: 1, grok: 0 } },
+        { text: "Just doing it — and fixing it on the way if it breaks", scores: { claude: 0, gpt: 3, gemini: 0, grok: 1 } },
+        { text: "Structuring messes — priorities, plans, putting things in order", scores: { claude: 1, gpt: 0, gemini: 3, grok: 0 } },
+        { text: "Saying the thing everyone else won't say out loud", scores: { claude: 0, gpt: 0, gemini: 0, grok: 3 } },
       ]
     },
   ],
