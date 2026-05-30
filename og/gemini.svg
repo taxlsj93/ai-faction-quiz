@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FBF6EE"/>
+      <stop offset="100%" style="stop-color:#F5EFE6"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4285F4"/>
+      <stop offset="100%" style="stop-color:#82AEFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accent)"/>
+  <circle cx="950" cy="315" r="230" fill="#4285F4" opacity="0.10"/>
+  <rect x="60" y="60" width="240" height="36" rx="18" fill="none" stroke="#6F3D9E" stroke-opacity="0.45" stroke-width="1.5"/>
+  <text x="180" y="83" font-family="-apple-system, Inter, sans-serif" font-size="13" font-weight="700" fill="#6F3D9E" text-anchor="middle" letter-spacing="2">WHICH AI TYPE?</text>
+  <text x="950" y="345" font-size="160" text-anchor="middle" dominant-baseline="middle">🔵</text>
+  <text x="60" y="210" font-family="Georgia, 'Apple SD Gothic Neo', serif" font-size="56" font-weight="600" fill="#5C5C5C" text-anchor="start">나의 AI 타입은</text>
+  <text x="60" y="310" font-family="Georgia, 'Apple SD Gothic Neo', serif" font-size="92" font-weight="700" fill="#4285F4" text-anchor="start">Gemini 타입</text>
+  <text x="60" y="376" font-family="-apple-system, Inter, sans-serif" font-size="28" font-weight="600" fill="#1F1F1F" text-anchor="start">체계형 전략가</text>
+  <text x="60" y="430" font-family="-apple-system, Inter, sans-serif" font-size="22" fill="#5C5C5C" text-anchor="start">데이터로 전략을 세우는 조직화의 달인.</text>
+  <text x="60" y="462" font-family="-apple-system, Inter, sans-serif" font-size="22" fill="#5C5C5C" text-anchor="start">너는 무슨 AI 타입?</text>
+  <text x="60" y="600" font-family="-apple-system, Inter, sans-serif" font-size="17" fill="#8B8B8B" text-anchor="start">ai-faction-quiz.vercel.app</text>
+</svg>

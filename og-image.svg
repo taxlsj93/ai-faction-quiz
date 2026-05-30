@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FBF6EE"/>
+      <stop offset="100%" style="stop-color:#F5EFE6"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C17CE4"/>
+      <stop offset="33%" style="stop-color:#10A37F"/>
+      <stop offset="66%" style="stop-color:#4285F4"/>
+      <stop offset="100%" style="stop-color:#E7425D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accentLine)"/>
+  <!-- Soft decorative circles -->
+  <circle cx="160" cy="160" r="120" fill="#6F3D9E" opacity="0.05"/>
+  <circle cx="1040" cy="470" r="150" fill="#E7425D" opacity="0.05"/>
+  <!-- Badge -->
+  <rect x="460" y="120" width="280" height="36" rx="18" fill="none" stroke="#6F3D9E" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="600" y="143" font-family="-apple-system, Inter, sans-serif" font-size="13" font-weight="700" fill="#6F3D9E" text-anchor="middle" letter-spacing="2">WHICH AI TYPE?</text>
+  <!-- Main title (Korean) -->
+  <text x="600" y="265" font-family="Georgia, 'Apple SD Gothic Neo', serif" font-size="72" font-weight="700" fill="#1F1F1F" text-anchor="middle">당신의 AI는</text>
+  <text x="600" y="345" font-family="Georgia, 'Apple SD Gothic Neo', serif" font-size="72" font-weight="700" fill="#6F3D9E" text-anchor="middle">당신을 닮았다</text>
+  <!-- Subtitle -->
+  <text x="600" y="410" font-family="-apple-system, Inter, sans-serif" font-size="22" fill="#5C5C5C" text-anchor="middle">한국 일상 시나리오 8문항 · 1분 30초</text>
+  <!-- Faction chips -->
+  <g>
+    <rect x="160" y="470" width="190" height="62" rx="14" fill="#FFFFFF" stroke="#C17CE4" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="255" y="498" font-family="-apple-system, Inter, sans-serif" font-size="18" font-weight="700" fill="#C17CE4" text-anchor="middle">🟣 Claude</text>
+    <text x="255" y="519" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#5C5C5C" text-anchor="middle">사색형 창작자</text>
+
+    <rect x="370" y="470" width="190" height="62" rx="14" fill="#FFFFFF" stroke="#10A37F" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="465" y="498" font-family="-apple-system, Inter, sans-serif" font-size="18" font-weight="700" fill="#10A37F" text-anchor="middle">🟢 GPT</text>
+    <text x="465" y="519" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#5C5C5C" text-anchor="middle">실행형 만능인</text>
+
+    <rect x="580" y="470" width="190" height="62" rx="14" fill="#FFFFFF" stroke="#4285F4" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="675" y="498" font-family="-apple-system, Inter, sans-serif" font-size="18" font-weight="700" fill="#4285F4" text-anchor="middle">🔵 Gemini</text>
+    <text x="675" y="519" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#5C5C5C" text-anchor="middle">체계형 전략가</text>
+
+    <rect x="790" y="470" width="190" height="62" rx="14" fill="#FFFFFF" stroke="#E7425D" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="885" y="498" font-family="-apple-system, Inter, sans-serif" font-size="18" font-weight="700" fill="#E7425D" text-anchor="middle">🔴 Grok</text>
+    <text x="885" y="519" font-family="-apple-system, Inter, sans-serif" font-size="13" fill="#5C5C5C" text-anchor="middle">반골형 혁신가</text>
+  </g>
+  <!-- Bottom URL -->
+  <text x="600" y="600" font-family="-apple-system, Inter, sans-serif" font-size="17" fill="#8B8B8B" text-anchor="middle">ai-faction-quiz.vercel.app</text>
+</svg>
