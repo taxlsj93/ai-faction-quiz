@@ -461,6 +461,25 @@
   .super-power-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; color: var(--text); }
   .super-power-desc  { font-size: 13px; color: var(--ink-secondary); line-height: 1.5; }
 
+  /* C3: 이 AI로 할 수 있는 5 (활용형 환상 부여) */
+  .tool-picks-section { margin-bottom: 24px; }
+  .tool-picks-title {
+    font-size: 13px; font-weight: 700; color: var(--ink-secondary);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 12px;
+  }
+  .tool-picks-list {
+    list-style: none; padding: 0; margin: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 18px;
+  }
+  .tool-picks-list li {
+    font-size: 14px; color: var(--text);
+    padding: 9px 0; line-height: 1.5;
+    border-bottom: 1px dashed var(--border);
+  }
+  .tool-picks-list li:last-child { border-bottom: none; }
+
   /* Trait bars */
   .traits { margin-bottom: 24px; }
   .trait-row { margin-bottom: 14px; }
@@ -1198,6 +1217,9 @@
     <!-- C2: 슈퍼파워 3 (designer #6 환상 부여) — 결과 헤더·공유 직후 가장 눈에 띄는 자리 -->
     <div class="super-powers-section" id="super-powers-section" style="display:none"></div>
 
+    <!-- C3: 이 AI로 할 수 있는 5 (사용자 §3 "내가 무엇을 할 수 있겠구나" 환상 — utility) -->
+    <div class="tool-picks-section" id="tool-picks-section" style="display:none"></div>
+
     <div class="traits" id="traits-section"></div>
 
     <div class="stats-card" id="stats-card"></div>
@@ -1536,6 +1558,13 @@ const ALL_FACTIONS = {
         { icon: "📚", title: "신중한 판단력",                desc: "빠른 결정보다 옳은 결정에서 빛난다" },
         { icon: "🪞", title: "표면 밑의 진짜 마음",            desc: "남이 말하지 않는 감정까지 읽어낸다" },
       ],
+      toolPicks: [
+        "📄 긴 보고서·논문을 출처 인용까지 깔끔하게 요약",
+        "✍️ 글의 톤 바꾸기 (격식 ↔ 친근, 뉘앙스 보존)",
+        "💡 복잡한 의사결정 정리 (찬반·트레이드오프 한 화면에)",
+        "🌐 한↔영 자연스러운 번역 (직역 아닌 의역, 문화 맥락까지)",
+        "🧠 막막한 생각을 같이 풀어주는 사고 파트너",
+      ],
       stats: [
         { num: "34.7분", desc: "하루 평균 사용 시간\n전체 AI 앱 중 1위" },
         { num: "+190%", desc: "연간 성장률\n가장 빠른 성장세" },
@@ -1575,6 +1604,13 @@ const ALL_FACTIONS = {
         { icon: "⚡", title: "즉시 실행",         desc: "매뉴얼 없이도 일단 굴러가게 만드는 본능" },
         { icon: "🔄", title: "범용 적응력",        desc: "새 도구·새 환경을 가장 빠르게 흡수" },
         { icon: "🚀", title: "문제 해결 속도",     desc: "멈춰 있는 것보다 움직이는 게 낫다는 확신" },
+      ],
+      toolPicks: [
+        "🤖 일상 자동화 — 이메일 답장·일정 정리·메모 한 번에",
+        "💻 코드 작성·디버깅 (처음 보는 언어도 OK)",
+        "🎨 이미지·영상·음성을 한 도구 안에서 (multimodal)",
+        "📚 새 분야 1시간 만에 입문 (전문 용어까지 친절 해설)",
+        "🛠️ 플러그인·GPT 스토어로 끝없는 기능 확장",
       ],
       stats: [
         { num: "1억+", desc: "월간 활성 유저\n전체 AI 시장 45% 점유" },
@@ -1616,6 +1652,13 @@ const ALL_FACTIONS = {
         { icon: "🎯", title: "전략적 우선순위",      desc: "무엇이 진짜 중요한지 즉시 분류" },
         { icon: "🧩", title: "다단계 분석",          desc: "결정 전에 시나리오 3개를 굴려본다" },
       ],
+      toolPicks: [
+        "📧 Gmail·Docs·Drive 즉시 연동 (Workspace 통합)",
+        "🔍 실시간 웹·뉴스 검색 + 핵심만 요약",
+        "📊 스프레드시트 데이터 분석·시각화",
+        "🎥 YouTube 영상을 안 보고도 핵심 요약",
+        "🌍 외국어 자료를 즉시 한국어로 정리",
+      ],
       stats: [
         { num: "7.5억", desc: "월간 활성 유저\n모바일 점유율 25%" },
         { num: "+70.7%", desc: "1년간 점유율 성장\n전체 AI 중 최대 상승" },
@@ -1655,6 +1698,13 @@ const ALL_FACTIONS = {
         { icon: "🔥", title: "통념에 도전",          desc: "\"원래 그런 거\"라는 말이 가장 거슬린다" },
         { icon: "🎯", title: "직설적 피드백",        desc: "듣기 좋은 말보다 진짜 도움이 되는 한마디" },
         { icon: "🦅", title: "숨겨진 진실 발견",     desc: "다수가 못 본 각도를 가장 먼저 짚어낸다" },
+      ],
+      toolPicks: [
+        "🐦 X 실시간 트렌드·뉴스 즉시 검색",
+        "🎯 검열 적은 직설적 답변 (도발적 질문도 회피 X)",
+        "🔥 논쟁적 주제 다각도 분석 (소수 의견까지)",
+        "📰 주류 미디어가 안 다루는 시각 발굴",
+        "💬 X 통합으로 게시물 즉시 작성·반응",
       ],
       stats: [
         { num: "6,000만+", desc: "월간 활성 유저\n모바일 점유율 15%" },
@@ -1697,6 +1747,13 @@ const ALL_FACTIONS = {
         { icon: "📚", title: "Careful judgment",                desc: "Shines when right matters more than fast" },
         { icon: "🪞", title: "Reading what's beneath the words", desc: "Sees the real feeling people don't say out loud" },
       ],
+      toolPicks: [
+        "📄 Summarize long reports & papers with proper citations",
+        "✍️ Rewrite your tone (formal ↔ casual) without losing nuance",
+        "💡 Lay out a tough decision (pros · cons · tradeoffs) on one screen",
+        "🌐 EN ↔ KO translation that keeps the actual meaning, not just words",
+        "🧠 A thinking partner for when your head is too full to start",
+      ],
       stats: [
         { num: "34.7 min", desc: "Average daily session\n#1 among all AI apps" },
         { num: "+190%", desc: "Annual growth rate\nFastest-growing AI" },
@@ -1735,6 +1792,13 @@ const ALL_FACTIONS = {
         { icon: "⚡", title: "Just doing it",             desc: "Making things move without needing the manual" },
         { icon: "🔄", title: "Versatile adaptation",      desc: "Picks up new tools and new contexts faster than anyone" },
         { icon: "🚀", title: "Problem-solving velocity",  desc: "Moving beats waiting — every time" },
+      ],
+      toolPicks: [
+        "🤖 Daily automation — reply email, organize calendar, capture notes in one flow",
+        "💻 Write & debug code (even in a language you've never touched)",
+        "🎨 Image, video, voice — all in one multimodal tool",
+        "📚 Get up to speed on a new field in an hour (jargon explained kindly)",
+        "🛠️ Endless extension via plugins and the GPT Store",
       ],
       stats: [
         { num: "100M+", desc: "Monthly active users\n45% of the AI market" },
@@ -1775,6 +1839,13 @@ const ALL_FACTIONS = {
         { icon: "🎯", title: "Strategic prioritization", desc: "What matters, sorted instantly" },
         { icon: "🧩", title: "Multi-step analysis",      desc: "Runs three scenarios before committing" },
       ],
+      toolPicks: [
+        "📧 Native Workspace integration — Gmail, Docs, Drive in one motion",
+        "🔍 Live web & news search with the highlights pulled out",
+        "📊 Spreadsheet data analysis with auto-generated charts",
+        "🎥 YouTube video summaries without watching",
+        "🌍 Pull a foreign-language source and get it in your language clean",
+      ],
       stats: [
         { num: "750M", desc: "Monthly active users\n25% mobile market share" },
         { num: "+70.7%", desc: "Share growth in one year\nBiggest jump of any AI" },
@@ -1813,6 +1884,13 @@ const ALL_FACTIONS = {
         { icon: "🔥", title: "Challenging convention",   desc: "Allergic to \"that's just how it is\"" },
         { icon: "🎯", title: "Direct feedback",          desc: "Real help over polite noise" },
         { icon: "🦅", title: "Spotting hidden truths",   desc: "The angle nobody else mentions — first" },
+      ],
+      toolPicks: [
+        "🐦 Real-time X trends & news search, instantly",
+        "🎯 Less filtered, more direct answers (doesn't dodge edgy questions)",
+        "🔥 Multi-angle takes on controversial topics (minority views included)",
+        "📰 Surfaces angles mainstream outlets skip",
+        "💬 X integration — draft & react to posts in one place",
       ],
       stats: [
         { num: "60M+", desc: "Monthly active users\n15% mobile market share" },
@@ -2260,6 +2338,25 @@ function showResult() {
       `;
       spSection.style.display = 'block';
       if (window.trackEvent) trackEvent('super_powers_shown', { faction: resultFaction });
+    }
+  } catch (_) {}
+
+  // C3: Tool Picks — "이 AI로 할 수 있는 5" (utility 환상 부여)
+  try {
+    const tpSection = document.getElementById('tool-picks-section');
+    if (tpSection && Array.isArray(faction.toolPicks) && faction.toolPicks.length) {
+      const isEN = (document.documentElement.lang || 'ko') === 'en';
+      const tpTitle = isEN
+        ? `WHAT ${faction.name.toUpperCase()}S DO WITH IT`
+        : `${faction.name} 사용자가 실제로 하는 것`;
+      tpSection.innerHTML = `
+        <div class="tool-picks-title">⚡ ${tpTitle}</div>
+        <ul class="tool-picks-list">
+          ${faction.toolPicks.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      `;
+      tpSection.style.display = 'block';
+      if (window.trackEvent) trackEvent('tool_picks_shown', { faction: resultFaction });
     }
   } catch (_) {}
 
