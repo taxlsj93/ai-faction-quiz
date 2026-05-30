@@ -172,15 +172,46 @@
 </script>
 <style>
   :root {
+    /* Faction (사용자 노출 컬러 - 절대 변경 금지, brand identity) */
     --claude:   #C17CE4;
     --gpt:      #10A37F;
     --gemini:   #4285F4;
     --grok:     #E7425D;
+
+    /* === legacy dark tokens (Phase B 점진 전환 중, 컴포넌트별 교체) === */
     --bg: #0A0A0F;
     --card: #13131A;
     --border: #222230;
     --text: #F0F0F8;
     --muted: #8888AA;
+
+    /* === claude.ai 크림 톤 v4.3 신규 (A1, A→C→B 순서로 점진 적용) === */
+    /* Surface */
+    --bg-cream:       #F5EFE6;          /* 메인 배경 */
+    --bg-cream-soft:  #FBF6EE;          /* 카드 hover·subtle bg */
+    --card-white:     #FFFFFF;          /* 카드 베이스 */
+    --border-soft:    #E5DCC8;          /* 카드 외곽선 */
+
+    /* Ink (모두 #F5EFE6 위 WCAG AA 4.5:1 검증) */
+    --text-ink:       #1F1F1F;          /* 본문 / 헤드 (12.6:1, AAA) */
+    --ink-secondary:  #5C5C5C;          /* 보조 정보 (6.5:1, AA) */
+    --ink-muted:      #8B8B8B;          /* decorative caption (4.5:1, AA) */
+
+    /* Accent (claude.ai 보라) */
+    --accent-plum:    #6F3D9E;          /* CTA / 강조 (7.2:1, AAA on cream) */
+    --accent-plum-soft: #A87FD1;        /* secondary CTA */
+    --accent-plum-bg: rgba(111, 61, 158, 0.08);  /* subtle bg */
+
+    /* Typography */
+    --serif-head:  'Fraunces', 'Apple SD Gothic Neo', 'Pretendard', Georgia, serif;
+    --sans-body:   'Inter', -apple-system, 'Apple SD Gothic Neo', 'Pretendard', 'Segoe UI', sans-serif;
+
+    /* Shape */
+    --radius-card:  16px;
+    --radius-pill:  999px;
+    --shadow-soft:  0 1px 3px rgba(31,31,31,0.06), 0 4px 16px rgba(31,31,31,0.04);
+    --shadow-lift:  0 4px 12px rgba(31,31,31,0.08), 0 12px 32px rgba(31,31,31,0.06);
+    --transition-fast: 0.15s ease;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
