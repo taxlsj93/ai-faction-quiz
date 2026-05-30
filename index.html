@@ -305,46 +305,52 @@
   .faction-chip .f-name { font-size: 13px; font-weight: 700; }
   .faction-chip .f-label { font-size: 11px; color: var(--ink-secondary); margin-top: 2px; }
 
-  .faction-chip[data-f="claude"] { border-color: #3A2448; }
-  .faction-chip[data-f="gpt"]    { border-color: #0D3D2E; }
-  .faction-chip[data-f="gemini"] { border-color: #1A2F5A; }
-  .faction-chip[data-f="grok"]   { border-color: #4A1820; }
+  /* B2: faction chip 외곽선을 부드러운 cream 톤 + faction 컬러 알파로 */
+  .faction-chip[data-f="claude"] { border-color: rgba(193,124,228,0.35); }
+  .faction-chip[data-f="gpt"]    { border-color: rgba(16,163,127,0.32); }
+  .faction-chip[data-f="gemini"] { border-color: rgba(66,133,244,0.32); }
+  .faction-chip[data-f="grok"]   { border-color: rgba(231,66,93,0.32); }
 
+  /* B2: btn-start claude.ai 보라 솔리드 + soft shadow */
   .btn-start {
     width: 100%;
     padding: 18px;
     border: none;
     border-radius: 14px;
-    background: linear-gradient(135deg, #6C3FA8, #3B5FD4);
+    background: var(--accent-plum);
     color: #fff;
     font-size: 17px;
     font-weight: 700;
     cursor: pointer;
     letter-spacing: 0.3px;
-    transition: opacity 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(111,61,158,0.25);
+    transition: background 0.18s, transform 0.1s, box-shadow 0.18s;
   }
-  .btn-start:active { transform: scale(0.98); opacity: 0.9; }
+  .btn-start:hover { background: #5D2E8C; box-shadow: 0 6px 20px rgba(111,61,158,0.32); }
+  .btn-start:active { transform: scale(0.98); }
 
   .quiz-count { font-size: 13px; color: var(--ink-secondary); text-align: center; margin-top: 14px; }
 
   /* ── QUIZ ── */
+  /* B2: progress-bar 트랙은 cream-soft, fill은 보라 솔리드 (대비 명확) */
   .progress-bar {
     width: 100%;
-    height: 4px;
-    background: var(--border);
-    border-radius: 4px;
+    height: 6px;
+    background: #EBE2D2;
+    border-radius: 999px;
     margin-bottom: 28px;
     overflow: hidden;
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #6C3FA8, #3B5FD4);
-    border-radius: 4px;
+    background: var(--accent-plum);
+    border-radius: 999px;
     transition: width 0.4s ease;
   }
 
-  .q-num { font-size: 12px; color: var(--ink-secondary); font-weight: 600; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
-  .q-text { font-size: clamp(18px, 5vw, 22px); font-weight: 700; line-height: 1.4; margin-bottom: 24px; }
+  .q-num { font-size: 12px; color: var(--ink-secondary); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+  /* B2: q-text serif 헤드라인 (질문이 더 인상 깊게) */
+  .q-text { font-family: var(--serif-head); font-size: clamp(20px, 5.2vw, 24px); font-weight: 600; line-height: 1.35; margin-bottom: 24px; color: var(--text); letter-spacing: -0.01em; }
 
   .options { display: flex; flex-direction: column; gap: 10px; }
 
@@ -361,10 +367,11 @@
     line-height: 1.4;
   }
   .option-btn:active { transform: scale(0.99); }
-  .option-btn:hover { border-color: #444466; background: #1A1A2A; }
+  /* B2: 크림 톤 hover/selected — 보라 알파 */
+  .option-btn:hover { border-color: rgba(111,61,158,0.35); background: var(--bg-cream-soft); }
   .option-btn.selected {
-    border-color: #6C3FA8;
-    background: #1E1230;
+    border-color: var(--accent-plum);
+    background: var(--accent-plum-bg);
     animation: selectPop 0.28s ease;
   }
   @keyframes selectPop {
@@ -383,7 +390,7 @@
     transition: color 0.18s;
   }
   .option-btn.selected .opt-label {
-    color: #C17CE4;
+    color: var(--accent-plum);
   }
 
   /* ── REVEAL LOADING ── */
