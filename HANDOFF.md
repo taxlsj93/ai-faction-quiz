@@ -5,6 +5,32 @@
 
 ---
 
+## 🆕 세션 6 (2026-05-28) — v4.3 리뉴얼 (claude.ai 크림 톤 + 환상 + 공유)
+
+ralplan v4.3 합의(Arch ITERATE → Crit ITERATE 2 라운드 → ACCEPT) → 22 커밋 5 Phase
+자율 실행. 세션 5(19) + 세션 6(22) = **누적 41 커밋**.
+
+핵심 결과:
+- **다크 → claude.ai 크림 톤** 전면 시각 전환 (cream/white/ink/plum, serif 헤딩)
+- **8문항 시나리오형 재작성** (AI 단어 0회, 한국 일상)
+- **결과 화면 "환상" 3-stack**: 슈퍼파워 3 → 할수있는것 5 → 지금당장 1
+- **OG 카드 5장 재생성** + build-og.mjs 200KB hard gate
+- **인스타 캔버스 크림 톤** + 한글 자형 안정
+- **share-copy.js 단일 소스** (r/4 카피 통합)
+- **api/chat.js SYSTEM_PROMPT 동기화** (silent regression 차단)
+- **A2 contract assertion** (Phase C 회귀 게이트, type max=24 검증)
+
+신규 GA4 이벤트 5종 (Phase B+C+D):
+super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_type_shown / friend_compare_row_shown / landing_*
+
+라이브 확인 (E1): / cream 배경 + 8문항 시나리오 + OG PNG 73.6KB image/png 200.
+
+상세 22 커밋·Phase별 효과는 STATUS.md §세션 6 참조.
+
+**남은 작업**: C5b(어필리에이트 매핑·U1 게이트) — 사용자가 실 ID 알려주면 진행.
+
+---
+
 ## 🆕 세션 5 (2026-05-27) — 리뉴얼 라이브 완료
 
 `IMPROVEMENT_NOTES.md` 진단 + `DESIGN_AUDIT.md`(designer) + `/ralplan v3.2` consensus 합의
