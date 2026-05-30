@@ -1767,6 +1767,83 @@ const ALL_FACTIONS = {
 const QUESTIONS = ALL_QUESTIONS[LANG];
 const FACTIONS  = ALL_FACTIONS[LANG];
 
+
+// ── CONTRACT ASSERTION (Phase A2) ──
+// Validates option-position↔faction mapping and score bounds.
+// Runs on every page load. Failures are visible via console.error + window.__quizContractError.
+function assertQuizContract() {
+  const FACTION_ORDER = ['claude', 'gpt', 'gemini', 'grok'];
+  let passed = true;
+
+  for (const lang of Object.keys(ALL_QUESTIONS)) {
+    const questions = ALL_QUESTIONS[lang];
+
+    // D. Quiz length
+    if (questions.length !== 8) {
+      const reason = 'QUESTIONS length != 8, got ' + questions.length;
+      console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx: null, optIdx: null, reason });
+      window.__quizContractError = { lang, qIdx: null, optIdx: null, reason };
+      return;
+    }
+
+    for (let qIdx = 0; qIdx < questions.length; qIdx++) {
+      const opts = questions[qIdx].options;
+
+      // D. Option count
+      if (opts.length !== 4) {
+        const reason = 'options.length != 4, got ' + opts.length;
+        console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx: null, reason });
+        window.__quizContractError = { lang, qIdx, optIdx: null, reason };
+        return;
+      }
+
+      for (let optIdx = 0; optIdx < opts.length; optIdx++) {
+        const scores = opts[optIdx].scores;
+
+        // A. Key order
+        const keys = Object.keys(scores);
+        const expectedKeys = FACTION_ORDER;
+        if (keys.length !== 4 || keys.some((k, i) => k !== expectedKeys[i])) {
+          const reason = 'scores key order wrong: got [' + keys.join(',') + '] expected [' + expectedKeys.join(',') + ']';
+          console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx, reason });
+          window.__quizContractError = { lang, qIdx, optIdx, reason };
+          return;
+        }
+
+        // C. Score bounds
+        const vals = Object.values(scores);
+        const sum = vals.reduce((a, b) => a + b, 0);
+        const maxVal = Math.max(...vals);
+        if (sum > 4) {
+          const reason = 'scores sum > 4, got ' + sum;
+          console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx, reason });
+          window.__quizContractError = { lang, qIdx, optIdx, reason };
+          return;
+        }
+        if (maxVal > 3) {
+          const reason = 'max score > 3, got ' + maxVal;
+          console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx, reason });
+          window.__quizContractError = { lang, qIdx, optIdx, reason };
+          return;
+        }
+
+        // B. Option position ↔ faction mapping
+        const expectedFaction = FACTION_ORDER[optIdx];
+        const tiedKeys = keys.filter(k => scores[k] === maxVal);
+        if (!tiedKeys.includes(expectedFaction)) {
+          const reason = 'option ' + optIdx + ' max faction mismatch: expected ' + expectedFaction + ', tied keys=[' + tiedKeys.join(',') + ']';
+          console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx, reason });
+          window.__quizContractError = { lang, qIdx, optIdx, reason };
+          return;
+        }
+      }
+    }
+  }
+
+  console.log('[QUIZ CONTRACT OK] %d Qs, %d options each, max %d points', 8, 4, 24);
+}
+assertQuizContract();
+
 // ── STATE ──
 let scores = { claude: 0, gpt: 0, gemini: 0, grok: 0 };
 let currentQ = 0;
