@@ -651,7 +651,7 @@
   }
   .newsletter-form input[type="email"] {
     flex: 1 1 180px; min-width: 0;
-    background: #0E0E14; color: var(--text);
+    background: var(--bg-cream-soft); color: var(--text);
     border: 1.5px solid var(--border);
     border-radius: 10px; padding: 12px 14px;
     font-size: 14px; font-family: inherit;
@@ -675,10 +675,11 @@
     margin-top: 12px;
   }
 
-  /* AI Analysis (LLM-generated personalized) */
+  /* B6: AI Analysis 크림 톤 — soft cream-soft 배경 + 보라 알파 액센트 */
   .ai-analysis-section {
-    background: linear-gradient(135deg, rgba(108,63,168,0.10), rgba(59,95,212,0.10));
-    border: 1px solid #2A2A40;
+    background: var(--bg-cream-soft);
+    border: 1px solid var(--accent-plum-bg);
+    border-left: 3px solid var(--accent-plum);
     border-radius: 16px;
     padding: 20px 18px;
     margin-bottom: 24px;
@@ -709,25 +710,26 @@
     position: relative;
   }
   .ai-analysis-body p { margin-bottom: 10px; }
-  .ai-analysis-body strong { color: #F4F4F8; font-weight: 700; }
+  .ai-analysis-body strong { color: var(--text-ink); font-weight: 700; }
   .ai-analysis-body ul { padding-left: 18px; margin: 6px 0 12px; }
   .ai-analysis-body li { margin-bottom: 4px; }
-  /* F6 + designer #7: chat-entry button visibility ↑ — alpha 0.15→0.25 base, 0.35 on hover */
+  /* B6: chat-entry button 크림 톤 — 보라 솔리드 (cream 위 강한 대비) */
   .ai-analysis-cta {
     display: block; width: 100%;
     margin-top: 16px;
     padding: 13px 16px;
-    background: linear-gradient(135deg, rgba(193,124,228,0.25), rgba(108,63,168,0.25));
-    border: 1.5px solid rgba(193,124,228,0.55);
+    background: var(--accent-plum);
+    border: 1.5px solid var(--accent-plum);
     border-radius: 12px;
-    color: #F4F4F8;
+    color: #fff;
     font-size: 15px; font-weight: 700;
     letter-spacing: 0.2px;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, transform 0.05s;
+    box-shadow: 0 3px 10px rgba(111,61,158,0.18);
+    transition: background 0.15s, box-shadow 0.18s, transform 0.05s;
     position: relative;
   }
-  .ai-analysis-cta:hover { background: linear-gradient(135deg, rgba(193,124,228,0.35), rgba(108,63,168,0.35)); border-color: rgba(193,124,228,0.8); }
+  .ai-analysis-cta:hover { background: #5D2E8C; box-shadow: 0 5px 16px rgba(111,61,158,0.28); }
   .ai-analysis-cta:active { transform: scale(0.99); }
   .ai-analysis-cta:disabled { opacity: 0.6; cursor: wait; }
   .ai-analysis-cta-hint {
@@ -777,15 +779,16 @@
     white-space: pre-wrap;
     word-wrap: break-word;
   }
+  /* B6: chat 메시지 크림 톤 — user는 보라 알파, assistant는 cream-soft */
   .ai-chat-msg.user {
     align-self: flex-end;
-    background: rgba(193,124,228,0.18);
-    border: 1px solid rgba(193,124,228,0.3);
+    background: var(--accent-plum-bg);
+    border: 1px solid rgba(111,61,158,0.18);
     border-bottom-right-radius: 4px;
   }
   .ai-chat-msg.assistant {
     align-self: flex-start;
-    background: rgba(40,40,60,0.55);
+    background: var(--bg-cream-soft);
     border: 1px solid var(--border);
     border-bottom-left-radius: 4px;
     color: var(--text);
@@ -831,28 +834,31 @@
     font-size: 14px;
     font-family: inherit;
     min-width: 0;
+    transition: border-color 0.15s, box-shadow 0.18s;
   }
   .ai-chat-input:focus {
     outline: none;
-    border-color: rgba(193,124,228,0.5);
+    border-color: var(--accent-plum);
+    box-shadow: 0 0 0 3px var(--accent-plum-bg);
   }
   .ai-chat-input:disabled {
     opacity: 0.5;
   }
+  /* B6: chat send 버튼 보라 솔리드 (cream 위 강조) */
   .ai-chat-send {
     padding: 12px 18px;
-    background: linear-gradient(135deg, #C17CE4, #6C3FA8);
+    background: var(--accent-plum);
     border: none;
     border-radius: 11px;
     color: white;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     font-family: inherit;
-    transition: opacity 0.15s, transform 0.05s;
+    transition: background 0.18s, transform 0.05s;
     flex-shrink: 0;
   }
-  .ai-chat-send:hover:not(:disabled) { opacity: 0.9; }
+  .ai-chat-send:hover:not(:disabled) { background: #5D2E8C; }
   .ai-chat-send:active:not(:disabled) { transform: scale(0.98); }
   .ai-chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
   .ai-chat-meta {
