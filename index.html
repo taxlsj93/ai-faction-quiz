@@ -440,6 +440,27 @@
     padding: 0 8px;
   }
 
+  /* C2: 슈퍼파워 3 카드 (designer #6 환상 부여) */
+  .super-powers-section { margin-bottom: 24px; }
+  .super-powers-title {
+    font-size: 13px; font-weight: 700; color: var(--ink-secondary);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 12px;
+  }
+  .super-power-card {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid currentColor;
+    border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: transform 0.18s, border-color 0.18s;
+  }
+  .super-power-card:hover { transform: translateY(-1px); }
+  .super-power-icon { font-size: 24px; flex-shrink: 0; line-height: 1.1; }
+  .super-power-body { flex: 1; min-width: 0; }
+  .super-power-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; color: var(--text); }
+  .super-power-desc  { font-size: 13px; color: var(--ink-secondary); line-height: 1.5; }
+
   /* Trait bars */
   .traits { margin-bottom: 24px; }
   .trait-row { margin-bottom: 14px; }
@@ -1174,6 +1195,9 @@
       </div>
     </div>
 
+    <!-- C2: 슈퍼파워 3 (designer #6 환상 부여) — 결과 헤더·공유 직후 가장 눈에 띄는 자리 -->
+    <div class="super-powers-section" id="super-powers-section" style="display:none"></div>
+
     <div class="traits" id="traits-section"></div>
 
     <div class="stats-card" id="stats-card"></div>
@@ -1507,6 +1531,11 @@ const ALL_FACTIONS = {
         { label: "윤리적 판단력", value: 85 },
         { label: "실행 속도",     value: 52 },
       ],
+      superPowers: [
+        { icon: "🎨", title: "복잡한 감정을 글로 옮기는 힘", desc: "누가 위로받고 싶을 때 가장 먼저 찾는 사람" },
+        { icon: "📚", title: "신중한 판단력",                desc: "빠른 결정보다 옳은 결정에서 빛난다" },
+        { icon: "🪞", title: "표면 밑의 진짜 마음",            desc: "남이 말하지 않는 감정까지 읽어낸다" },
+      ],
       stats: [
         { num: "34.7분", desc: "하루 평균 사용 시간\n전체 AI 앱 중 1위" },
         { num: "+190%", desc: "연간 성장률\n가장 빠른 성장세" },
@@ -1541,6 +1570,11 @@ const ALL_FACTIONS = {
         { label: "범용 적응력",    value: 90 },
         { label: "문제 해결 속도", value: 88 },
         { label: "철학적 깊이",   value: 48 },
+      ],
+      superPowers: [
+        { icon: "⚡", title: "즉시 실행",         desc: "매뉴얼 없이도 일단 굴러가게 만드는 본능" },
+        { icon: "🔄", title: "범용 적응력",        desc: "새 도구·새 환경을 가장 빠르게 흡수" },
+        { icon: "🚀", title: "문제 해결 속도",     desc: "멈춰 있는 것보다 움직이는 게 낫다는 확신" },
       ],
       stats: [
         { num: "1억+", desc: "월간 활성 유저\n전체 AI 시장 45% 점유" },
@@ -1577,6 +1611,11 @@ const ALL_FACTIONS = {
         { label: "생태계 통합력", value: 91 },
         { label: "창의적 일탈",   value: 40 },
       ],
+      superPowers: [
+        { icon: "📊", title: "정보 정리·체계화",     desc: "흩어진 데이터를 한 화면에 정렬" },
+        { icon: "🎯", title: "전략적 우선순위",      desc: "무엇이 진짜 중요한지 즉시 분류" },
+        { icon: "🧩", title: "다단계 분석",          desc: "결정 전에 시나리오 3개를 굴려본다" },
+      ],
       stats: [
         { num: "7.5억", desc: "월간 활성 유저\n모바일 점유율 25%" },
         { num: "+70.7%", desc: "1년간 점유율 성장\n전체 AI 중 최대 상승" },
@@ -1611,6 +1650,11 @@ const ALL_FACTIONS = {
         { label: "독창적 관점",   value: 91 },
         { label: "직설적 커뮤니케이션", value: 88 },
         { label: "사회적 조화",   value: 35 },
+      ],
+      superPowers: [
+        { icon: "🔥", title: "통념에 도전",          desc: "\"원래 그런 거\"라는 말이 가장 거슬린다" },
+        { icon: "🎯", title: "직설적 피드백",        desc: "듣기 좋은 말보다 진짜 도움이 되는 한마디" },
+        { icon: "🦅", title: "숨겨진 진실 발견",     desc: "다수가 못 본 각도를 가장 먼저 짚어낸다" },
       ],
       stats: [
         { num: "6,000만+", desc: "월간 활성 유저\n모바일 점유율 15%" },
@@ -1648,6 +1692,11 @@ const ALL_FACTIONS = {
         { label: "Ethical reasoning",    value: 85 },
         { label: "Execution speed",      value: 52 },
       ],
+      superPowers: [
+        { icon: "🎨", title: "Putting feelings into words",     desc: "The one people text first when they need to be heard" },
+        { icon: "📚", title: "Careful judgment",                desc: "Shines when right matters more than fast" },
+        { icon: "🪞", title: "Reading what's beneath the words", desc: "Sees the real feeling people don't say out loud" },
+      ],
       stats: [
         { num: "34.7 min", desc: "Average daily session\n#1 among all AI apps" },
         { num: "+190%", desc: "Annual growth rate\nFastest-growing AI" },
@@ -1681,6 +1730,11 @@ const ALL_FACTIONS = {
         { label: "Versatile adaptability", value: 90 },
         { label: "Problem-solving speed", value: 88 },
         { label: "Philosophical depth",  value: 48 },
+      ],
+      superPowers: [
+        { icon: "⚡", title: "Just doing it",             desc: "Making things move without needing the manual" },
+        { icon: "🔄", title: "Versatile adaptation",      desc: "Picks up new tools and new contexts faster than anyone" },
+        { icon: "🚀", title: "Problem-solving velocity",  desc: "Moving beats waiting — every time" },
       ],
       stats: [
         { num: "100M+", desc: "Monthly active users\n45% of the AI market" },
@@ -1716,6 +1770,11 @@ const ALL_FACTIONS = {
         { label: "Ecosystem integration",   value: 91 },
         { label: "Creative rule-breaking",  value: 40 },
       ],
+      superPowers: [
+        { icon: "📊", title: "Organizing chaos",         desc: "Turning scattered info into one clean view" },
+        { icon: "🎯", title: "Strategic prioritization", desc: "What matters, sorted instantly" },
+        { icon: "🧩", title: "Multi-step analysis",      desc: "Runs three scenarios before committing" },
+      ],
       stats: [
         { num: "750M", desc: "Monthly active users\n25% mobile market share" },
         { num: "+70.7%", desc: "Share growth in one year\nBiggest jump of any AI" },
@@ -1749,6 +1808,11 @@ const ALL_FACTIONS = {
         { label: "Original perspective",       value: 91 },
         { label: "Direct communication",       value: 88 },
         { label: "Social diplomacy",           value: 35 },
+      ],
+      superPowers: [
+        { icon: "🔥", title: "Challenging convention",   desc: "Allergic to \"that's just how it is\"" },
+        { icon: "🎯", title: "Direct feedback",          desc: "Real help over polite noise" },
+        { icon: "🦅", title: "Spotting hidden truths",   desc: "The angle nobody else mentions — first" },
       ],
       stats: [
         { num: "60M+", desc: "Monthly active users\n15% mobile market share" },
@@ -2174,6 +2238,30 @@ function showResult() {
     matchEl.textContent = '';
     document.getElementById('score-dist-card').style.display = 'none';
   }
+
+  // C2: Super Powers (designer #6 환상 부여 — 결과 헤더·공유 직후 가장 강한 hook)
+  try {
+    const spSection = document.getElementById('super-powers-section');
+    if (spSection && Array.isArray(faction.superPowers) && faction.superPowers.length) {
+      const isEN = (document.documentElement.lang || 'ko') === 'en';
+      const spTitle = isEN ? 'YOUR SUPER POWERS' : '당신의 슈퍼파워';
+      spSection.style.color = faction.color;
+      spSection.innerHTML = `
+        <div class="super-powers-title">✦ ${spTitle}</div>
+        ${faction.superPowers.map(p => `
+          <div class="super-power-card">
+            <div class="super-power-icon">${p.icon}</div>
+            <div class="super-power-body">
+              <div class="super-power-title">${p.title}</div>
+              <div class="super-power-desc">${p.desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+      spSection.style.display = 'block';
+      if (window.trackEvent) trackEvent('super_powers_shown', { faction: resultFaction });
+    }
+  } catch (_) {}
 
   // Traits
   document.getElementById('traits-section').innerHTML = `
