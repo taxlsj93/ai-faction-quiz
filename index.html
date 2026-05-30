@@ -480,6 +480,23 @@
   }
   .tool-picks-list li:last-child { border-bottom: none; }
 
+  /* C4: 지금 당장 1가지 — faction 컬러 강조 CTA */
+  .first-action-section { margin-bottom: 24px; }
+  .first-action-card {
+    background: var(--card);
+    border: 1.5px solid currentColor;
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  }
+  .first-action-title {
+    font-size: 15px; font-weight: 800; color: var(--text);
+    margin-bottom: 4px; line-height: 1.4;
+  }
+  .first-action-desc {
+    font-size: 13px; color: var(--ink-secondary); line-height: 1.55;
+  }
+
   /* Trait bars */
   .traits { margin-bottom: 24px; }
   .trait-row { margin-bottom: 14px; }
@@ -1220,6 +1237,9 @@
     <!-- C3: 이 AI로 할 수 있는 5 (사용자 §3 "내가 무엇을 할 수 있겠구나" 환상 — utility) -->
     <div class="tool-picks-section" id="tool-picks-section" style="display:none"></div>
 
+    <!-- C4: 지금 당장 1가지 (faction 컬러 CTA, 결과 받고 즉시 행동 유도) -->
+    <div class="first-action-section" id="first-action-section" style="display:none"></div>
+
     <div class="traits" id="traits-section"></div>
 
     <div class="stats-card" id="stats-card"></div>
@@ -1565,6 +1585,10 @@ const ALL_FACTIONS = {
         "🌐 한↔영 자연스러운 번역 (직역 아닌 의역, 문화 맥락까지)",
         "🧠 막막한 생각을 같이 풀어주는 사고 파트너",
       ],
+      firstAction: {
+        title: "🪞 지금 당장 시작 — 글 한 편 다듬어보기",
+        desc: "최근 쓴 카톡·이메일·메모 하나 복붙해서 \"좀 더 정중하게/친근하게 다듬어줘\" 한 줄. 결과의 깊이를 1분 만에 체감.",
+      },
       stats: [
         { num: "34.7분", desc: "하루 평균 사용 시간\n전체 AI 앱 중 1위" },
         { num: "+190%", desc: "연간 성장률\n가장 빠른 성장세" },
@@ -1612,6 +1636,10 @@ const ALL_FACTIONS = {
         "📚 새 분야 1시간 만에 입문 (전문 용어까지 친절 해설)",
         "🛠️ 플러그인·GPT 스토어로 끝없는 기능 확장",
       ],
+      firstAction: {
+        title: "⚡ 지금 당장 시작 — 자동화 1개 만들기",
+        desc: "\"매일 아침 받은 이메일 3줄 요약해줘\" 한 줄로 시작. 5분 만에 평생 쓸 자동화 1개 완성. 실행이 빠른 너에게 딱.",
+      },
       stats: [
         { num: "1억+", desc: "월간 활성 유저\n전체 AI 시장 45% 점유" },
         { num: "25~34세", desc: "가장 많은 연령대\n(전체 유저의 30%)" },
@@ -1659,6 +1687,10 @@ const ALL_FACTIONS = {
         "🎥 YouTube 영상을 안 보고도 핵심 요약",
         "🌍 외국어 자료를 즉시 한국어로 정리",
       ],
+      firstAction: {
+        title: "🎯 지금 당장 시작 — 정보 한 묶음 요약",
+        desc: "오늘 본 긴 기사 URL이나 YouTube 영상 링크 하나 던지고 \"핵심 5줄로 정리해줘\". 정리·체계화 본능을 1분 만에 검증.",
+      },
       stats: [
         { num: "7.5억", desc: "월간 활성 유저\n모바일 점유율 25%" },
         { num: "+70.7%", desc: "1년간 점유율 성장\n전체 AI 중 최대 상승" },
@@ -1706,6 +1738,10 @@ const ALL_FACTIONS = {
         "📰 주류 미디어가 안 다루는 시각 발굴",
         "💬 X 통합으로 게시물 즉시 작성·반응",
       ],
+      firstAction: {
+        title: "🔥 지금 당장 시작 — 도발적 질문 하나",
+        desc: "다른 AI가 항상 회피하던 그 질문, Grok에 그대로 던져봐. \"솔직하게, 사실대로\" 한 줄 붙이면 더 직설. 너만 듣고 싶은 답 확인.",
+      },
       stats: [
         { num: "6,000만+", desc: "월간 활성 유저\n모바일 점유율 15%" },
         { num: "+1,343,408%", desc: "1년간 방문자 증가\n51K → 6.87억" },
@@ -1754,6 +1790,10 @@ const ALL_FACTIONS = {
         "🌐 EN ↔ KO translation that keeps the actual meaning, not just words",
         "🧠 A thinking partner for when your head is too full to start",
       ],
+      firstAction: {
+        title: "🪞 Try this first — polish one piece of writing",
+        desc: "Paste in the last email or note you wrote and say \"make it warmer (or sharper).\" Feel the depth in under a minute.",
+      },
       stats: [
         { num: "34.7 min", desc: "Average daily session\n#1 among all AI apps" },
         { num: "+190%", desc: "Annual growth rate\nFastest-growing AI" },
@@ -1800,6 +1840,10 @@ const ALL_FACTIONS = {
         "📚 Get up to speed on a new field in an hour (jargon explained kindly)",
         "🛠️ Endless extension via plugins and the GPT Store",
       ],
+      firstAction: {
+        title: "⚡ Try this first — build one automation",
+        desc: "Tell it: \"Summarize my morning email in 3 bullets.\" Five minutes for a workflow you'll use forever. Built for movers.",
+      },
       stats: [
         { num: "100M+", desc: "Monthly active users\n45% of the AI market" },
         { num: "Ages 25–34", desc: "Largest user segment\n(30% of all users)" },
@@ -1846,6 +1890,10 @@ const ALL_FACTIONS = {
         "🎥 YouTube video summaries without watching",
         "🌍 Pull a foreign-language source and get it in your language clean",
       ],
+      firstAction: {
+        title: "🎯 Try this first — summarize one info chunk",
+        desc: "Drop a long article URL or YouTube link and ask for \"the 5-line essence.\" Test your organizing instinct in a minute.",
+      },
       stats: [
         { num: "750M", desc: "Monthly active users\n25% mobile market share" },
         { num: "+70.7%", desc: "Share growth in one year\nBiggest jump of any AI" },
@@ -1892,6 +1940,10 @@ const ALL_FACTIONS = {
         "📰 Surfaces angles mainstream outlets skip",
         "💬 X integration — draft & react to posts in one place",
       ],
+      firstAction: {
+        title: "🔥 Try this first — ask the edgy question",
+        desc: "That question other AIs always sidestepped? Send it to Grok. Add \"straight up, no hedging\" for sharper output.",
+      },
       stats: [
         { num: "60M+", desc: "Monthly active users\n15% mobile market share" },
         { num: "+1,343,408%", desc: "Visitor growth in one year\n51K → 687M visits" },
@@ -2357,6 +2409,22 @@ function showResult() {
       `;
       tpSection.style.display = 'block';
       if (window.trackEvent) trackEvent('tool_picks_shown', { faction: resultFaction });
+    }
+  } catch (_) {}
+
+  // C4: First Action — "지금 당장 시작" CTA (실행 욕구 유도)
+  try {
+    const faSection = document.getElementById('first-action-section');
+    if (faSection && faction.firstAction && faction.firstAction.title) {
+      faSection.style.color = faction.color;
+      faSection.innerHTML = `
+        <div class="first-action-card">
+          <div class="first-action-title">${faction.firstAction.title}</div>
+          <div class="first-action-desc">${faction.firstAction.desc}</div>
+        </div>
+      `;
+      faSection.style.display = 'block';
+      if (window.trackEvent) trackEvent('first_action_shown', { faction: resultFaction });
     }
   } catch (_) {}
 
