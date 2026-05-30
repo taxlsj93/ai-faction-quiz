@@ -395,16 +395,17 @@
 
   /* ── REVEAL LOADING ── */
   #screen-loading { text-align: center; padding: 60px 0; }
+  /* B3: loading 화면 크림 톤 */
   .loading-ring {
     width: 72px; height: 72px;
     border: 4px solid var(--border);
-    border-top-color: #6C3FA8;
+    border-top-color: var(--accent-plum);
     border-radius: 50%;
     margin: 0 auto 24px;
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .loading-text { font-family: var(--serif-head); font-size: 22px; font-weight: 600; margin-bottom: 8px; color: var(--text); letter-spacing: -0.01em; }
   .loading-sub { font-size: 14px; color: var(--ink-secondary); }
 
   /* ── RESULT ── */
@@ -2255,7 +2256,7 @@ function showLoading() {
   // F6 + designer #3: 700ms → 500ms (총 2.1s → 1.5s, 모바일 이탈 28%↓ 기대)
   // + 3번째 메시지 시점에 loading-ring 색을 결정될 타입 컬러로 전환 → 긴장감
   const ring = document.querySelector('.loading-ring');
-  if (ring) ring.style.borderTopColor = '#6C3FA8'; // 1·2단계 기본 보라
+  if (ring) ring.style.borderTopColor = ''; // 1·2단계 기본 (CSS var(--accent-plum)) 사용
   const iv = setInterval(() => {
     if (i >= msgs.length) { clearInterval(iv); showResult(); return; }
     document.getElementById('loading-text').textContent = msgs[i][0];
