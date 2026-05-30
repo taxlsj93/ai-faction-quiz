@@ -223,7 +223,9 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, 'Segoe UI', sans-serif;
+    /* A4: --sans-body 토큰 적용 (Inter > Apple SD Gothic Neo > Pretendard > 시스템).
+       KO는 Inter에 한글 글리프 없어 자동 폴백, EN은 Inter 첫 적용. */
+    font-family: var(--sans-body);
     min-height: 100dvh;
     display: flex;
     align-items: center;
@@ -231,6 +233,12 @@
     padding: 16px;
     overflow-x: hidden;
   }
+
+  /* A4: input·button·textarea가 시스템 폰트로 떨어지지 않도록 강제 inherit. */
+  input, button, textarea, select { font-family: inherit; }
+
+  /* A4: 텍스트 선택 시 claude.ai 톤 보라 강조. */
+  ::selection { background: var(--accent-plum-bg); color: var(--text); }
 
   #app {
     width: 100%;
