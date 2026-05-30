@@ -182,12 +182,12 @@
     --gemini:   #4285F4;
     --grok:     #E7425D;
 
-    /* === legacy dark tokens (Phase B 점진 전환 중, 컴포넌트별 교체) === */
-    --bg: #0A0A0F;
-    --card: #13131A;
-    --border: #222230;
-    --text: #F0F0F8;
-    --muted: #8888AA;
+    /* === B1: legacy tokens 크림 톤으로 전환 (B1 단일 커밋으로 전체 라이브) === */
+    --bg: #F5EFE6;       /* was #0A0A0F dark */
+    --card: #FFFFFF;     /* was #13131A dark */
+    --border: #E5DCC8;   /* was #222230 dark */
+    --text: #1F1F1F;     /* was #F0F0F8 light-on-dark */
+    --muted: #5C5C5C;    /* WCAG AA 4.5:1 on cream (was #8888AA) */
 
     /* === claude.ai 크림 톤 v4.3 신규 (A1, A→C→B 순서로 점진 적용) === */
     /* Surface */
@@ -265,12 +265,15 @@
     margin-bottom: 24px;
   }
 
+  /* B1: claude.ai 톤 serif 헤드라인 + 보라 그라디언트 (legacy 흰색 그라디언트 교체) */
   .intro-title {
-    font-size: clamp(28px, 8vw, 42px);
-    font-weight: 800;
-    line-height: 1.15;
+    font-family: var(--serif-head);
+    font-size: clamp(32px, 9vw, 48px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, #fff 40%, #8888CC);
+    background: linear-gradient(135deg, var(--text-ink) 45%, var(--accent-plum));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
