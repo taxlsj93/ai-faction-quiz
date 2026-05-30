@@ -1811,11 +1811,14 @@ function assertQuizContract() {
         }
 
         // C. Score bounds
+        // 옵션 내 점수 분포: dominant=3, secondary 최대=2, 기타=0 가능 → sum 최대 5.
+        // architect 추정 sum≤4는 실데이터(KO Q2 opt0 sum=5)와 불일치 — 임계 5로 완화.
+        // 진짜 contract는 ① 옵션 max≤3 ② 한 타입 max 가능 합=24 (매치율 공식 의존).
         const vals = Object.values(scores);
         const sum = vals.reduce((a, b) => a + b, 0);
         const maxVal = Math.max(...vals);
-        if (sum > 4) {
-          const reason = 'scores sum > 4, got ' + sum;
+        if (sum > 5) {
+          const reason = 'scores sum > 5, got ' + sum;
           console.error('[QUIZ CONTRACT FAIL]', { lang, qIdx, optIdx, reason });
           window.__quizContractError = { lang, qIdx, optIdx, reason };
           return;
@@ -1838,9 +1841,26 @@ function assertQuizContract() {
         }
       }
     }
+
+    // E. Per-type max possible score = 24 (매치율 공식 `min(99, round(top/24*100))` 의존)
+    // 옵션 i의 max-score가 FACTION_ORDER[i]이므로 한 타입이 8문항 모두 자기 위치 옵션
+    // 선택 시 자기 타입 점수 = max-score 합. dominant=3 8문항이면 24.
+    for (let fIdx = 0; fIdx < FACTION_ORDER.length; fIdx++) {
+      const faction = FACTION_ORDER[fIdx];
+      let typeMax = 0;
+      for (let q = 0; q < questions.length; q++) {
+        typeMax += questions[q].options[fIdx].scores[faction];
+      }
+      if (typeMax !== 24) {
+        const reason = 'type ' + faction + ' max possible score != 24, got ' + typeMax;
+        console.error('[QUIZ CONTRACT FAIL]', { lang, faction, reason });
+        window.__quizContractError = { lang, faction, reason };
+        return;
+      }
+    }
   }
 
-  console.log('[QUIZ CONTRACT OK] %d Qs, %d options each, max %d points', 8, 4, 24);
+  console.log('[QUIZ CONTRACT OK] %d Qs, %d options each, type max %d points (8×3)', 8, 4, 24);
 }
 assertQuizContract();
 
