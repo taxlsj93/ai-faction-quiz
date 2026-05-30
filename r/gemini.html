@@ -86,9 +86,11 @@
   <p class="long-tag">당신은 체계를 사랑합니다. 데이터를 정리하고<br>전략을 세우는 조직화의 달인.</p>
   <a class="cta-btn" href="/" onclick="if(window.gtag)gtag('event','landing_take_quiz_click',{faction:'gemini'})">나도 테스트 해보기 →</a>
   <button class="share-btn" onclick="reshareGemini()">📣 친구는 무슨 타입? — 공유하기</button>
+  <script src="/share-copy.js"></script>
   <script>
     function reshareGemini() {
-      var t = '나는 Gemini 타입! 체계형 전략가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app/r/gemini\n\n#AI성향테스트 #Gemini타입';
+      // D4: 카피·해시태그는 share-copy.js 단일 소스에서.
+      var t = window.buildShareTweet('gemini', 'https://ai-faction-quiz.vercel.app/r/gemini', 'ko');
       if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'gemini' });
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
     }

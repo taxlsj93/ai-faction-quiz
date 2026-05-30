@@ -86,9 +86,11 @@
   <p class="long-tag">당신은 통념에 도전합니다. 불편한 진실도 직시하는<br>반골 정신의 혁신 선구자.</p>
   <a class="cta-btn" href="/" onclick="if(window.gtag)gtag('event','landing_take_quiz_click',{faction:'grok'})">나도 테스트 해보기 →</a>
   <button class="share-btn" onclick="reshareGrok()">📣 친구는 무슨 타입? — 공유하기</button>
+  <script src="/share-copy.js"></script>
   <script>
     function reshareGrok() {
-      var t = '나는 Grok 타입! 반골형 혁신가래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app/r/grok\n\n#AI성향테스트 #Grok타입';
+      // D4: 카피·해시태그는 share-copy.js 단일 소스에서.
+      var t = window.buildShareTweet('grok', 'https://ai-faction-quiz.vercel.app/r/grok', 'ko');
       if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'grok' });
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
     }

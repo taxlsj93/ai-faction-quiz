@@ -86,9 +86,11 @@
   <p class="long-tag">당신은 깊이 생각하고 신중하게 말합니다.<br>빠른 답보다 옳은 답을 추구하는 사색형 창작자.</p>
   <a class="cta-btn" href="/" onclick="if(window.gtag)gtag('event','landing_take_quiz_click',{faction:'claude'})">나도 테스트 해보기 →</a>
   <button class="share-btn" onclick="reshareClaude()">📣 친구는 무슨 타입? — 공유하기</button>
+  <script src="/share-copy.js"></script>
   <script>
     function reshareClaude() {
-      var t = '나는 Claude 타입! 사색형 창작자래 ㅋㅋ\n너는 무슨 AI 타입?\n\nhttps://ai-faction-quiz.vercel.app/r/claude\n\n#AI성향테스트 #Claude타입';
+      // D4: 카피·해시태그는 share-copy.js 단일 소스에서.
+      var t = window.buildShareTweet('claude', 'https://ai-faction-quiz.vercel.app/r/claude', 'ko');
       if (window.gtag) gtag('event', 'landing_reshare_click', { faction: 'claude' });
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t), '_blank');
     }
