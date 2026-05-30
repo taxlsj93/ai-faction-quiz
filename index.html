@@ -2904,6 +2904,8 @@ function shareKakao() {
 }
 
 function shareInsta() {
+  // D3: 인스타 1080×1080 캔버스 — claude.ai 크림 톤. 한글 폰트는 KO 시스템 폴백
+  // (Apple SD Gothic Neo / Malgun Gothic / Pretendard / Noto Sans KR) 체인 사용.
   const faction = FACTIONS[resultFaction];
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
@@ -2912,19 +2914,26 @@ function shareInsta() {
   const W = 1080, H = 1080;
   const col = faction.color;
 
-  // Background
-  ctx.fillStyle = '#0a0a14';
+  // Font stacks (한글 안정성 우선)
+  const KO_SANS = `-apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', Pretendard, 'Noto Sans KR', sans-serif`;
+  const SERIF = `Georgia, 'Apple SD Gothic Neo', 'Malgun Gothic', serif`;
+
+  // D3: 크림 배경 (gradient FBF6EE → F5EFE6)
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, '#FBF6EE');
+  bgGrad.addColorStop(1, '#F5EFE6');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // Glow
+  // Glow (faction color soft halo)
   const glow = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, 520);
-  glow.addColorStop(0, col + '44');
+  glow.addColorStop(0, col + '1F');  // ~12% alpha
   glow.addColorStop(1, 'transparent');
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, W, H);
 
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+  // Subtle grid (warm beige lines)
+  ctx.strokeStyle = 'rgba(31,31,31,0.025)';
   ctx.lineWidth = 1;
   for (let i = 0; i < W; i += 54) {
     ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke();
@@ -2944,26 +2953,29 @@ function shareInsta() {
     ctx.closePath();
   }
 
-  // Top badge
-  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  // Top badge (cream-soft pill, plum border)
+  ctx.fillStyle = '#FFFFFF';
   roundRect(340, 60, 400, 56, 28);
   ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '500 22px Arial';
+  ctx.strokeStyle = 'rgba(111,61,158,0.4)';
+  ctx.lineWidth = 1.5;
+  roundRect(340, 60, 400, 56, 28);
+  ctx.stroke();
+  ctx.fillStyle = '#6F3D9E';
+  ctx.font = `700 22px ${KO_SANS}`;
   ctx.textAlign = 'center';
   ctx.fillText('WHICH AI TYPE?', W/2, 97);
 
   // "YOUR TYPE IS" label
-  ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  ctx.font = '700 28px Arial';
-  ctx.letterSpacing = '4px';
+  ctx.fillStyle = '#8B8B8B';
+  ctx.font = `700 26px ${KO_SANS}`;
   ctx.textAlign = 'center';
-  ctx.fillText('YOUR TYPE IS', W/2, 210);
+  ctx.fillText(LANG === 'ko' ? '당신의 타입은' : 'YOUR TYPE IS', W/2, 210);
 
-  // Big faction circle
-  ctx.fillStyle = col + '22';
+  // Big faction circle (faction-tinted)
+  ctx.fillStyle = col + '15';
   ctx.beginPath(); ctx.arc(W/2, 430, 200, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = col + '88';
+  ctx.strokeStyle = col + '99';
   ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(W/2, 430, 200, 0, Math.PI*2); ctx.stroke();
   ctx.strokeStyle = col + '33';
@@ -2971,35 +2983,35 @@ function shareInsta() {
   ctx.beginPath(); ctx.arc(W/2, 430, 220, 0, Math.PI*2); ctx.stroke();
 
   // Emoji in circle
-  ctx.font = '140px Arial';
+  ctx.font = `140px ${KO_SANS}`;
   ctx.textAlign = 'center';
   ctx.fillText(faction.emoji, W/2, 480);
 
-  // Faction name
+  // Faction name (serif, faction color)
   ctx.fillStyle = col;
-  ctx.font = 'bold 80px Arial';
+  ctx.font = `700 86px ${SERIF}`;
   ctx.textAlign = 'center';
   ctx.fillText(faction.name, W/2, 690);
 
-  // Tagline (line 1)
+  // Tagline (cream-friendly ink-secondary)
   const tagLines = faction.tagline.split('\n');
-  ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.font = '32px Arial';
+  ctx.fillStyle = '#5C5C5C';
+  ctx.font = `32px ${KO_SANS}`;
   ctx.fillText(tagLines[0] || '', W/2, 760);
   if (tagLines[1]) ctx.fillText(tagLines[1], W/2, 802);
 
   // Divider
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.strokeStyle = '#E5DCC8';
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(140, 860); ctx.lineTo(940, 860); ctx.stroke();
 
   // Bottom URL
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.font = 'bold 34px Arial';
+  ctx.fillStyle = '#1F1F1F';
+  ctx.font = `700 34px ${KO_SANS}`;
   ctx.fillText('ai-faction-quiz.vercel.app', W/2, 940);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.font = '24px Arial';
+  ctx.fillStyle = '#8B8B8B';
+  ctx.font = `24px ${KO_SANS}`;
   ctx.fillText(LANG === 'ko' ? '나는 어떤 AI 타입일까? 👆' : 'Which AI Type are you? 👆', W/2, 990);
 
   // Download
