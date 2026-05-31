@@ -1794,6 +1794,7 @@ const ALL_FACTIONS = {
       emoji: "🟣",
       color: "#C17CE4",
       tagline: "You think deeply and choose words carefully.\nYou'd rather be right than fast — a true creative thinker.",
+      staticAnalysis: "**Why you're a Claude Type**\nYou spend more time arriving at the right answer than the fast one. When someone drops a sentence offhandedly, you find yourself chewing on it days later. You instinctively trust careful responses over snap decisions — and you obsess over finding 'the one accurate word,' whether in writing or in conversation.\n\n**Your daily signals**\n- You re-read messages before sending (sometimes twice)\n- When someone asks for comfort, you listen first instead of fixing\n- 'Why?' lands in your head before 'what's the answer?'",
       mbti: ["INFJ", "INFP", "INTJ"],
       traits: [
         { label: "Creative thinking",    value: 92 },
@@ -1844,6 +1845,7 @@ const ALL_FACTIONS = {
       emoji: "🟢",
       color: "#10A37F",
       tagline: "You act first, reflect later.\nA versatile, unstoppable executor who gets things done.",
+      staticAnalysis: "**Why you're a GPT Type**\nYour hands move at the same speed as your thoughts. You believe starting now and making it run beats spending that time on the perfect plan. A new tool drops — you skip the manual and just press the button. 'Try it, fix it if broken' is basically your life motto.\n\n**Your daily signals**\n- Install a new app, skip the tutorial, dive straight in\n- Don't know the route — start driving, find it on the way\n- 'I'll just handle that' comes out of your mouth a lot in meetings",
       mbti: ["ENTJ", "ENTP", "ESTP"],
       traits: [
         { label: "Drive & execution",    value: 94 },
@@ -1894,6 +1896,7 @@ const ALL_FACTIONS = {
       emoji: "🔵",
       color: "#4285F4",
       tagline: "You love structure. You collect data, build systems,\nand turn information into strategy.",
+      staticAnalysis: "**Why you're a Gemini Type**\nScattered information makes you uncomfortable. You feel safe in Notion, spreadsheets, folder trees. Before a decision, you need enough data to feel settled. What looks like impulsivity from the outside is actually you having already mentally run three scenarios.\n\n**Your daily signals**\n- Build an Excel itinerary + budget before a trip\n- Hear new info, immediately think 'where does this go?'\n- Envy how 'spontaneous' others seem — but secretly find that more anxiety-inducing",
       mbti: ["ISTJ", "INTJ", "ESTJ"],
       traits: [
         { label: "Research & organization", value: 95 },
@@ -1944,6 +1947,7 @@ const ALL_FACTIONS = {
       emoji: "🔴",
       color: "#E7425D",
       tagline: "You challenge the consensus. You stare down\nuncomfortable truths and call them out anyway.",
+      staticAnalysis: "**Why you're a Grok Type**\nWhen the majority says 'this is right,' your instinct says 'really?' You'd rather risk discomfort than stay silent for harmony, and you believe direct truth helps everyone more in the end. You're allergic to authority, convention, and 'that's just how it is.'\n\n**Your daily signals**\n- Everyone in the group chat agrees — you're the one who starts with 'but…'\n- 'That's just the way' is the answer you tolerate least\n- Honest criticism feels more grateful than praise",
       mbti: ["ENTP", "ISTP", "INTP"],
       traits: [
         { label: "Critical thinking",         value: 95 },
@@ -2548,7 +2552,8 @@ function showResult() {
   window.dispatchEvent(new Event('quiz_complete_signal'));
   show('screen-result');
 
-  if (LANG === 'ko' && answerHistory.length === 8) {
+  // F9: EN faction에 staticAnalysis 4종 추가됨 → LANG 가드 해제. 8문항 완료만 체크.
+  if (answerHistory.length === 8) {
     renderStaticAnalysis(faction, scores);
   }
 }
