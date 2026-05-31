@@ -591,7 +591,7 @@
     transition: border-color 0.15s, color 0.15s;
     line-height: 1.4; text-align: center;
   }
-  .current-ai-btn:hover { border-color: #444466; color: var(--text); }
+  .current-ai-btn:hover { border-color: var(--accent-plum-soft); color: var(--text); }
   .current-ai-btn.selected { color: var(--text); }
   .current-ai-btn[data-ai="claude"].selected { border-color: var(--claude); }
   .current-ai-btn[data-ai="gpt"].selected    { border-color: var(--gpt); }
@@ -870,7 +870,7 @@
 
   .ai-skeleton {
     height: 11px;
-    background: linear-gradient(90deg, #1E1E2E, #2A2A40, #1E1E2E);
+    background: linear-gradient(90deg, #EBE2D2, #F5EFE6, #EBE2D2);
     background-size: 200% 100%;
     border-radius: 4px;
     margin-bottom: 9px;
@@ -899,7 +899,7 @@
     text-decoration: none;
     transition: border-color 0.15s, background 0.15s;
   }
-  .ally-card:hover { background: #1A1A2A; }
+  .ally-card:hover { background: var(--bg-cream-soft); }
   .ally-icon { font-size: 28px; flex-shrink: 0; }
   .ally-info { flex: 1; min-width: 0; }
   .ally-badge {
@@ -923,7 +923,7 @@
     margin-bottom: 8px;
     transition: border-color 0.2s;
   }
-  .btn-share:hover { border-color: #555575; }
+  .btn-share:hover { border-color: var(--accent-plum-soft); }
 
   .btn-retry {
     width: 100%;
@@ -987,9 +987,9 @@
   .share-whatsapp { background: #25D366; border-color: #25D366; color: #fff; }
   .share-insta { background: linear-gradient(135deg, #833AB4, #E1306C, #F77737); border-color: transparent; color: #fff; }
   .share-copy { border-color: var(--border); }
-  .share-copy:hover { border-color: #555575; }
+  .share-copy:hover { border-color: var(--accent-plum-soft); }
   .affiliate-notice {
-    font-size: 10px; color: #555570; text-align: center;
+    font-size: 10px; color: var(--ink-secondary); text-align: center;
     margin-bottom: 16px;
   }
 
@@ -1004,7 +1004,7 @@
   }
   .ad-slot-label {
     position: absolute; top: 8px; right: 10px;
-    font-size: 9px; color: #444460; font-weight: 600;
+    font-size: 9px; color: var(--ink-muted); font-weight: 600;
     letter-spacing: 0.5px; text-transform: uppercase;
   }
   .ad-slot a {
@@ -1035,7 +1035,7 @@
   #screen-preview { text-align: center; padding: 48px 0 32px; }
   .preview-badge {
     display: inline-block;
-    background: #1E1E2E;
+    background: var(--bg-cream-soft);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 6px 16px;
@@ -1087,12 +1087,12 @@
   /* Lang toggle */
   #lang-toggle {
     position: fixed; top: 16px; right: 16px; z-index: 999;
-    background: #1E1E2E; border: 1px solid #333355;
-    color: #8888AA; padding: 6px 12px;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--ink-secondary); padding: 6px 12px;
     border-radius: 20px; font-size: 12px; font-weight: 600;
     cursor: pointer;
   }
-  #lang-toggle:hover { color: var(--text); border-color: #555575; }
+  #lang-toggle:hover { color: var(--text); border-color: var(--accent-plum-soft); }
 </style>
 </head>
 <body>
