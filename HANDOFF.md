@@ -111,7 +111,7 @@ super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_
 |------|--------|
 | `/` | KO 메인 퀴즈 (index.html) — 8문항 |
 | `/en` | EN 메인 퀴즈 (en.html) |
-| `/r/claude`, `/r/gpt`, `/r/gemini`, `/r/grok` | 하우스별 결과 랜딩 (개별 OG 카드) |
+| `/r/claude`, `/r/gpt`, `/r/gemini`, `/r/grok` | 타입별 결과 랜딩 (개별 OG 카드) |
 | `/privacy`, `/privacy-en` | 개인정보처리방침 |
 | `/disclosure` | 어필리에이트 + AdSense 고지 (이중 언어) |
 | `/sitemap.xml`, `/robots.txt` | SEO |
@@ -120,14 +120,11 @@ super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_
 ### Vercel ↔ GitHub 자동배포
 ✅ **작동 확인** (push → live ~60–90초)
 
-### 미커밋 변경사항 (working tree)
-- `M CLAUDE.md` — "브랜드 용어 정책" 섹션 추가됨, **미커밋** → origin에 반영 안 됨
+### 커밋 상태 (2026-05-09 갱신)
+- ✅ `CLAUDE.md` 브랜드 용어 정책 — 커밋됨 (`3043a8d`)
+- ✅ `brand-guide.html` — 커밋됨 (`3043a8d`)
+- ✅ PR #5 (하우스→타입 리브랜드 + 멀티턴 챗) — master 머지 완료 (`25a32de`), 프로덕션 라이브
 - `?? .claude/settings.local.json` (개인 설정, 커밋 X)
-- `?? audit-report.html` — 이번 세션 생성, 미커밋 (내부 참고용, 배포 불필요)
-- `?? brand-guide.html` — 이번 세션 생성, 미커밋 (내부 참고용, 배포 불필요)
-- `?? HANDOFF.md` — 이번 세션 갱신, 미커밋
-
-→ **다음 세션 시작 시 CLAUDE.md + HANDOFF.md 커밋 권장 (브랜드 정책 origin 반영)**
 
 ---
 
@@ -165,9 +162,12 @@ super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_
 | `cta_secondary_click` | 2차 CTA(어필리에이트) 클릭 | `{faction, url}` |
 | `affiliate_card_click` | 결과 페이지 인라인 카드 클릭 | `{url, label, faction}` |
 | `ad_network_loaded` | 광고망 지연 로드 발화 | `{trigger}` (현재 미발화 — 광고망 비활성) |
-| `ai_analysis_button_clicked` | "AI에게 분석 받기" 버튼 클릭 | `{faction}` |
-| `ai_analysis_shown` | LLM 분석 결과 표시 성공 | `{faction}` |
-| `ai_analysis_failed` | LLM 분석 호출 실패 | `{faction, reason}` |
+| `chat_opened` | "내 AI에게 직접 질문하기" 버튼 클릭 → 챗 패널 오픈 | `{faction}` |
+| `chat_message_sent` | 사용자가 챗 메시지 전송 | `{faction, turn}` |
+| `chat_response_shown` | AI 캐릭터 응답 표시 성공 | `{faction}` |
+| `chat_failed` | 챗 호출 실패 | `{faction, reason}` |
+
+> ⚠️ 구버전 `ai_analysis_button_clicked` / `ai_analysis_shown` / `ai_analysis_failed` 이벤트는 **PR #5에서 멀티턴 챗으로 교체되며 제거됨**. 위 `chat_*` 이벤트로 대체됨.
 
 전송 헬퍼: `window.trackEvent(name, params)` — GA4 + Plausible(활성화 시) 동시 전송.
 
@@ -175,12 +175,20 @@ super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_
 
 ---
 
-## 5. LLM 분석 기능 (Haiku 4.5, opt-in)
+## 5. LLM 기능 — 멀티턴 챗 (Haiku 4.5, opt-in) ★ PR #5에서 변경됨
 
-- 결과 페이지에서 "AI에게 더 자세한 개인 분석 받기" 버튼 — **opt-in 토글** 방식
-- 정적 콘텐츠("왜 당신이 X 타입인가" + 일상 시그널 + 보조 타입 비율)는 즉시 표시
-- 버튼 클릭 시에만 LLM 호출 → 비용 최적화 (예상 5–20% click-through)
-- 관련 커밋: `565de53 refactor(ai): switch LLM analysis from auto-call to opt-in toggle`
+**흐름**: 결과 페이지 → 정적 분석 즉시 표시 → "💬 내 AI에게 직접 질문하기" 버튼 → 멀티턴 챗 패널 오픈
+
+- **정적 분석** (LLM 호출 없음, 즉시): "왜 당신이 X 타입인가" + 일상 시그널 + 보조 타입 비율
+- **멀티턴 챗** (`/api/chat.js`, Vercel serverless):
+  - 사용자가 받은 타입의 의인화 캐릭터(Claude 사색 / GPT 실행 / Gemini 전략 / Grok 반골)와 반말 대화
+  - 시스템 프롬프트(타입 페르소나 + 8문항 메타) **ephemeral 캐싱** → 입력 비용 ~90% 절감
+  - 제한: 세션당 사용자 메시지 5턴(`CHAT_LIMIT=5`), 한 메시지 1000자, 출력 600토큰, role 교차 검증
+  - 실패 시 user 메시지 history 롤백 + 에러 버블 표시
+  - 타입별 starter 칩 3종 제공
+- **구버전 1회성 분석(`/api/analyze.js`)은 제거됨** — 8문항 고정 입력이라 사람마다 결과가 거의 동일해 LLM 가치 없었음
+- 관련 커밋: `f0fe4b3 feat(chat): replace one-shot analyze with multi-turn house chat` (PR #5)
+- ⚙️ Vercel 환경변수 `ANTHROPIC_API_KEY` 필요 (설정됨)
 
 ---
 
@@ -188,9 +196,12 @@ super_powers_shown / tool_picks_shown / first_action_shown / (기존) secondary_
 
 ```
 /                          # repo root (Vercel 빌드 경로)
-├── index.html             # KO 메인 (8문항, 2115 lines)
-├── en.html                # EN 메인 (1207 lines)
-├── r/                     # 하우스별 OG 랜딩
+├── index.html             # KO 메인 (8문항) — 정적 분석 + 멀티턴 챗 UI
+├── en.html                # EN 메인 (챗 기능 없음 — KO 전용)
+├── api/
+│   └── chat.js            # 멀티턴 챗 serverless 엔드포인트 (Haiku 4.5)
+├── launch-copy.md         # KO/EN 배포 채널 카피 초안 (PR #5)
+├── r/                     # 타입별 OG 랜딩
 │   ├── claude.html
 │   ├── gpt.html
 │   ├── gemini.html
